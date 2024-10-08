@@ -14,7 +14,6 @@ export class ProducerApplicationDtoTranslator {
       id: producer.id,
       slug: producer.slug,
       name: producer.name,
-      brandHexColor: producer.brandHexColor,
       createdAt: producer.createdAt.toISO(),
       description: producer.description,
       imageUrl: producer.imageUrl,

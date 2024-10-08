@@ -1,0 +1,5 @@
+.report-modal {
+  &__container {
+    @apply flex flex-col gap-y-2 p-5;
+  }
+}

@@ -4,10 +4,13 @@ import {
 } from '~/modules/Posts/Application/CreatePostReaction/CreatePostReactionApplicationRequest'
 
 export class CreatePostReactionRequestTranslator {
-  public static fromApiDto (request: CreatePostReactionApiRequest): CreatePostReactionApplicationRequest {
+  public static fromApiDto (
+    request: CreatePostReactionApiRequest,
+    userIp: string
+  ): CreatePostReactionApplicationRequest {
     return {
       postId: request.postId,
-      userId: request.userId,
+      userIp,
       reactionType: request.reactionType,
     }
   }

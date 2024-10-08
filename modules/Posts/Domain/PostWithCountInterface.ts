@@ -8,13 +8,11 @@ export interface PostReactionsInterface {
 export interface PostWithViewsCommentsReactionsInterface {
   post: Post
   postComments: number
-  postViews: number
   reactions: PostReactionsInterface
 }
 
 export interface PostWithViewsInterface {
   post: Post
-  postViews: number
 }
 
 export interface PostsWithViewsInterfaceWithTotalCount {

@@ -10,18 +10,20 @@ export type PostWithActors = Prisma.PostGetPayload<{
   }
 }>
 
-export type PostWithTags = Prisma.PostGetPayload<{
+export type PostWithReports = Prisma.PostGetPayload<{
   include: {
-    tags: {
-      include: {
-        tag: true
-      }
-    }
+    reports: true
   }
 }>
 
-export type PostWithMeta = Prisma.PostGetPayload<{
-  include: { meta: true }
+export type PostWithCategories = Prisma.PostGetPayload<{
+  include: {
+    categories: {
+      include: {
+        category: true
+      }
+    }
+  }
 }>
 
 export type PostWithComments = Prisma.PostGetPayload<{

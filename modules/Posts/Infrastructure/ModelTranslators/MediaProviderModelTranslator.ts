@@ -8,6 +8,14 @@ export class MediaProviderModelTranslator {
       prismaMediaProviderModel.id,
       prismaMediaProviderModel.name,
       prismaMediaProviderModel.logoUrl,
+      prismaMediaProviderModel.advertisingLevel,
+      prismaMediaProviderModel.downloadSpeed,
+      prismaMediaProviderModel.paymentRequired,
+      prismaMediaProviderModel.freeDownloadsDay,
+      prismaMediaProviderModel.delayBetweenDownloads,
+      prismaMediaProviderModel.refUrl,
+      prismaMediaProviderModel.multiQuality,
+      prismaMediaProviderModel.maxResolution,
       DateTime.fromJSDate(prismaMediaProviderModel.createdAt),
       DateTime.fromJSDate(prismaMediaProviderModel.updatedAt)
     )

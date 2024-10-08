@@ -81,7 +81,6 @@ export const ActorPage: NextPage<ActorPageProps> = ({
         name={ actor.name }
         imageAlt={ t('actor_image_alt_title', { actorName: actor.name }) }
         imageUrl={ actor.imageUrl }
-        customColor={ getRandomColor(actor.name) }
         rounded={ true }
       />
 

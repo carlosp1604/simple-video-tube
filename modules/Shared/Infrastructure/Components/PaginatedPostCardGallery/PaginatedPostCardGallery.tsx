@@ -16,10 +16,6 @@ import { useGetPosts } from '~/hooks/GetPosts'
 import { useFirstRender } from '~/hooks/FirstRender'
 import { FetchFilter } from '~/modules/Shared/Infrastructure/FrontEnd/FetchFilter'
 import dynamic from 'next/dynamic'
-import {
-  PostCardDeletableOptions,
-  PostCardOption, PostCardOptionConfiguration
-} from '~/hooks/PostCardOptions'
 import { SortingMenuDropdown } from '~/components/SortingMenuDropdown/SortingMenuDropdown'
 import {
   CommonGalleryHeader, HeaderTag,
@@ -46,17 +42,6 @@ export type PaginationStateChange = (
   filters: FetchFilter<PostFilterOptions>[]
 ) => void
 
-export type PaginatedPostCardGalleryPostCardOption = PostCardOption
-export interface PaginatedPostCardGalleryPostCardDeletableOption {
-  type: PostCardDeletableOptions
-  onDelete: (posts: PostCardComponentDto[], postId: string, setPosts: (posts: PostCardComponentDto[]) => void) => void
-  ownerId: string
-}
-
-export type PaginatedPostCardGalleryConfiguration =
-  Partial<PaginatedPostCardGalleryPostCardOption> & Pick<PaginatedPostCardGalleryPostCardOption, 'type'> |
-    PaginatedPostCardGalleryPostCardDeletableOption
-
 interface PaginationState {
   page: number
   order: PostsPaginationSortingType
@@ -74,7 +59,6 @@ export interface Props {
   initialPostsNumber: number | undefined
   filters: FetchFilter<PostFilterOptions>[]
   filtersToParse: PostFilterOptions[]
-  paginatedPostCardGalleryPostCardOptions: PaginatedPostCardGalleryConfiguration[]
   linkMode: ElementLinkMode | undefined
   sortingOptions: PostsPaginationSortingType[]
   defaultSortingOption: PostsPaginationSortingType
@@ -97,7 +81,6 @@ export const PaginatedPostCardGallery: FC<Partial<Props> & Omit<Props,
   order,
   filtersToParse,
   filters,
-  paginatedPostCardGalleryPostCardOptions,
   linkMode = undefined,
   sortingOptions,
   defaultSortingOption,
@@ -167,7 +150,7 @@ export const PaginatedPostCardGallery: FC<Partial<Props> & Omit<Props,
 
     if (newPosts) {
       const newPostsCards = newPosts.posts.map((post) => {
-        return PostCardComponentDtoTranslator.fromApplication(post.post, post.postViews, locale ?? 'en')
+        return PostCardComponentDtoTranslator.fromApplication(post, locale ?? 'en')
       })
 
       setPostsNumber(newPosts.postsNumber)
@@ -240,22 +223,6 @@ export const PaginatedPostCardGallery: FC<Partial<Props> & Omit<Props,
       })
   }, [query])
 
-  const parsePosCardOptions = (
-    paginatedPostCardGalleryPostCardOptions: PaginatedPostCardGalleryConfiguration[]
-  ): PostCardOptionConfiguration[] => {
-    return paginatedPostCardGalleryPostCardOptions.map((postCardOption) => {
-      if (postCardOption.type === 'deleteSavedPost') {
-        return {
-          type: 'deleteSavedPost',
-          ownerId: postCardOption.ownerId,
-          onDelete: (postId) => postCardOption.onDelete(posts, postId, setPosts),
-        }
-      }
-
-      return postCardOption
-    })
-  }
-
   const onClickSortingMenu = async (option: PaginationSortingType) => {
     if (!linkMode) {
       setPaginationState({ ...paginationState, order: option as PostsPaginationSortingType, page: 1 })
@@ -308,7 +275,6 @@ export const PaginatedPostCardGallery: FC<Partial<Props> & Omit<Props,
       { headerContent }
       <PostCardGallery
         posts={ posts }
-        postCardOptions={ parsePosCardOptions(paginatedPostCardGalleryPostCardOptions) }
         loading={ loading }
         emptyState={ emptyState }
         showAds={ true }

@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from 'react'
+import { FC, useState } from 'react'
 import styles from './PostCommentWithOptions.module.scss'
 import { PostCommentComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostCommentComponentDto'
 import { ReactionComponentDto } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDto'
@@ -6,15 +6,7 @@ import { PostCommentCard } from '~/modules/Posts/Infrastructure/Components/PostC
 import toast from 'react-hot-toast'
 import { CommentsApiService } from '~/modules/Posts/Infrastructure/Frontend/CommentsApiService'
 import { APIException } from '~/modules/Shared/Infrastructure/FrontEnd/ApiException'
-import {
-  POST_COMMENT_REACTION_USER_NOT_FOUND,
-  POST_COMMENT_USER_NOT_FOUND
-} from '~/modules/Posts/Infrastructure/Api/PostApiExceptionCodes'
-import { signOut, useSession } from 'next-auth/react'
 import useTranslation from 'next-translate/useTranslation'
-import { BsThreeDotsVertical } from 'react-icons/bs'
-import { MenuDropdown } from '~/components/MenuDropdown/MenuDropdown'
-import { FiTrash } from 'react-icons/fi'
 import {
   ReactionComponentDtoTranslator
 } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDtoTranslator'
@@ -45,7 +37,6 @@ export const PostCommentWithOptions: FC<Props> = ({
   const locale = useRouter().locale ?? 'en'
 
   const { t } = useTranslation('post_comments')
-  const { status, data } = useSession()
 
   const onClickDelete = async () => {
     if (!onDeletePostComment) {
@@ -72,10 +63,6 @@ export const PostCommentWithOptions: FC<Props> = ({
         return
       }
 
-      if (exception.code === POST_COMMENT_USER_NOT_FOUND) {
-        await signOut({ redirect: false })
-      }
-
       toast.error(t(`api_exceptions:${exception.translationKey}`))
     } finally {
       setLoading(false)
@@ -83,12 +70,6 @@ export const PostCommentWithOptions: FC<Props> = ({
   }
 
   const onReact = async () => {
-    if (status !== 'authenticated') {
-      toast.error(t('user_must_be_authenticated_error_message'))
-
-      return
-    }
-
     if (postComment.userReaction !== null) {
       toast.error(t('post_comment_reaction_user_already_reacted'))
 
@@ -124,10 +105,6 @@ export const PostCommentWithOptions: FC<Props> = ({
         return
       }
 
-      if (exception.code === POST_COMMENT_REACTION_USER_NOT_FOUND) {
-        await signOut({ redirect: false })
-      }
-
       toast.error(t(`api_exceptions:${exception.translationKey}`))
     } finally {
       setLoading(false)
@@ -135,12 +112,6 @@ export const PostCommentWithOptions: FC<Props> = ({
   }
 
   const onDeleteReaction = async () => {
-    if (status !== 'authenticated') {
-      toast.error(t('user_must_be_authenticated_error_message'))
-
-      return
-    }
-
     if (postComment.userReaction === null) {
       toast.error(t('post_comment_reaction_user_has_not_reacted'))
 
@@ -170,42 +141,10 @@ export const PostCommentWithOptions: FC<Props> = ({
         return
       }
 
-      if (exception.code === POST_COMMENT_REACTION_USER_NOT_FOUND) {
-        await signOut({ redirect: false })
-      }
-
       toast.error(t(`api_exceptions:${exception.translationKey}`))
     } finally {
       setLoading(false)
     }
-  }
-
-  let postCommentOptionsElement: ReactNode | null = null
-
-  if (status === 'authenticated' && data && postComment.user.id === data.user.id && showOptions) {
-    postCommentOptionsElement = (
-      <MenuDropdown
-        buttonIcon={
-          <button className={ `
-            ${styles.postCommentWithOptions__optionsButton}
-            ${optionsMenuOpen ? styles.postCommentWithOptions__optionsButton_open : ''}
-          ` }
-            disabled={ optionsDisabled || loading }
-            onClick={ () => setOptionsMenuOpen(!optionsMenuOpen) }
-          >
-            <BsThreeDotsVertical className={ styles.postCommentWithOptions__optionsIcon }/>
-          </button>
-        }
-        isOpen={ optionsMenuOpen }
-        setIsOpen={ setOptionsMenuOpen }
-        options={ [{
-          title: t('delete_comment_option_title'),
-          icon: <FiTrash />,
-          onClick: async () => { await onClickDelete() },
-        }] }
-        title={ t('post_comment_menu_options_title') }
-      />
-    )
   }
 
   return (
@@ -214,8 +153,10 @@ export const PostCommentWithOptions: FC<Props> = ({
         ${styles.postCommentWithOptions__commentWithOptionsContainer}
         ${loading ? styles.postCommentWithOptions__commentWithOptionsContainer_loading : ''}
       ` }>
-        <PostCommentCard postComment={ postComment } />
-        { postCommentOptionsElement }
+        <PostCommentCard
+          key={ postComment.id }
+          postComment={ postComment }
+        />
       </div>
       <div className={ styles.postCommentWithOptions__interactionSectionContainer }>
         <button className={ `

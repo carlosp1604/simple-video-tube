@@ -10,13 +10,11 @@ import { AddPostView } from '~/modules/Posts/Application/AddPostView/AddPostView
 import {
   AddPostViewApplicationException
 } from '~/modules/Posts/Application/AddPostView/AddPostViewApplicationException'
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '~/pages/api/auth/[...nextauth]'
 import { AddPostViewApiRequest } from '~/modules/Posts/Infrastructure/Api/Requests/AddPostViewApiRequest'
 import {
   POST_BAD_REQUEST, POST_METHOD,
   POST_POST_NOT_FOUND,
-  POST_SERVER_ERROR, POST_USER_NOT_FOUND, POST_VALIDATION
+  POST_SERVER_ERROR, POST_VALIDATION
 } from '~/modules/Posts/Infrastructure/Api/PostApiExceptionCodes'
 
 export default async function handler (
@@ -27,8 +25,6 @@ export default async function handler (
     return handleMethod(request, response)
   }
 
-  const session = await getServerSession(request, response, authOptions)
-
   const { postId } = request.query
 
   if (!postId) {
@@ -36,7 +32,6 @@ export default async function handler (
   }
 
   const apiRequest: AddPostViewApiRequest = {
-    userId: session !== null ? session.user.id : null,
     postId: String(postId),
   }
 
@@ -64,9 +59,6 @@ export default async function handler (
     switch (exception.id) {
       case AddPostViewApplicationException.postNotFoundId:
         return handleNotFound(response, POST_POST_NOT_FOUND, exception.message)
-
-      case AddPostViewApplicationException.userNotFoundId:
-        return handleNotFound(response, POST_USER_NOT_FOUND, exception.message)
 
       default: {
         console.error(exception)

@@ -24,14 +24,14 @@ export class MysqlPostCommentRepository implements PostCommentRepositoryInterfac
    * @param postId Post ID
    * @param offset Comment offset
    * @param limit Comment limit
-   * @param userId User ID
+   * @param userIp User IP
    * @return Array of PostCommentWithCountAndUserInteraction
    */
   public async findWithOffsetAndLimit (
     postId: Post['id'],
     offset: number,
     limit: number,
-    userId: PostComment['userId'] | null
+    userIp: PostComment['userIp'] | null
   ): Promise<PostCommentWithCountAndUserInteraction[]> {
     let queryIncludes: boolean | PostCommentInclude<DefaultArgs> | undefined = {
       _count: {
@@ -44,17 +44,16 @@ export class MysqlPostCommentRepository implements PostCommentRepositoryInterfac
           },
         },
       },
-      user: true,
     }
 
-    if (userId !== null) {
+    if (userIp !== null) {
       queryIncludes = {
         ...queryIncludes,
         reactions: {
           where: {
             AND: [
               {
-                userId,
+                userIp,
               },
               {
                 reactionType: ReactionType.LIKE,
@@ -76,12 +75,12 @@ export class MysqlPostCommentRepository implements PostCommentRepositoryInterfac
     return comments.map((postComment): PostCommentWithCountAndUserInteraction => {
       let userReaction: Reaction | null = null
 
-      if (userId !== null && postComment.reactions.length > 0) {
+      if (userIp !== null && postComment.reactions.length > 0) {
         userReaction = ReactionModelTranslator.toDomain(postComment.reactions[0])
       }
 
       return {
-        postComment: PostCommentModelTranslator.toDomain(postComment, ['comments.user']),
+        postComment: PostCommentModelTranslator.toDomain(postComment, []),
         childComments: postComment._count.childComments,
         reactions: postComment._count.reactions,
         userReaction,
@@ -94,13 +93,14 @@ export class MysqlPostCommentRepository implements PostCommentRepositoryInterfac
    * @param parentCommentId Parent comment ID
    * @param offset Comment offset
    * @param limit Comment limit
+   * @param userIp User IP
    * @return Array of PostChildCommentWithReactionCount
    */
   public async findChildWithOffsetAndLimit (
     parentCommentId: PostChildComment['id'],
     offset: number,
     limit: number,
-    userId: PostChildComment['userId'] | null
+    userIp: PostChildComment['userIp'] | null
   ): Promise<PostChildCommentWithReactionCountAndUserInteraction[]> {
     let queryIncludes: boolean | PostCommentInclude<DefaultArgs> | undefined = {
       _count: {
@@ -113,17 +113,16 @@ export class MysqlPostCommentRepository implements PostCommentRepositoryInterfac
           },
         },
       },
-      user: true,
     }
 
-    if (userId !== null) {
+    if (userIp !== null) {
       queryIncludes = {
         ...queryIncludes,
         reactions: {
           where: {
             AND: [
               {
-                userId,
+                userIp,
               },
               {
                 reactionType: ReactionType.LIKE,
@@ -145,12 +144,12 @@ export class MysqlPostCommentRepository implements PostCommentRepositoryInterfac
     return childComments.map((childComment): PostChildCommentWithReactionCountAndUserInteraction => {
       let userReaction: Reaction | null = null
 
-      if (userId !== null && childComment.reactions.length > 0) {
+      if (userIp !== null && childComment.reactions.length > 0) {
         userReaction = ReactionModelTranslator.toDomain(childComment.reactions[0])
       }
 
       return {
-        postChildComment: PostChildCommentModelTranslator.toDomain(childComment, ['comments.user']),
+        postChildComment: PostChildCommentModelTranslator.toDomain(childComment, []),
         reactions: childComment._count.reactions,
         userReaction,
       }
@@ -165,27 +164,22 @@ export class MysqlPostCommentRepository implements PostCommentRepositoryInterfac
   public async countPostComments (
     postId: Post['id']
   ): Promise<number> {
-    const commentsNumber = await prisma.postComment.count({
+    return prisma.postComment.count({
       where: { postId },
     })
-
-    return commentsNumber
   }
 
   /**
    * Count Child Comments from a Post
-   * @param postId Post ID
    * @param parentCommentId Parent comment ID
    * @return Child Post's comments number
    */
   public async countPostChildComments (
     parentCommentId: PostChildComment['parentCommentId']
   ): Promise<number> {
-    const childCommentsNumber = await prisma.postComment.count({
+    return prisma.postComment.count({
       where: { parentCommentId },
     })
-
-    return childCommentsNumber
   }
 
   /**

@@ -28,8 +28,8 @@ export class ProducerModelTranslator {
       prismaProducerModel.name,
       prismaProducerModel.description,
       prismaProducerModel.imageUrl,
+      Number.parseInt(prismaProducerModel.viewsCount.toString()),
       prismaProducerModel.parentProducerId,
-      prismaProducerModel.brandHexColor,
       DateTime.fromJSDate(prismaProducerModel.createdAt),
       DateTime.fromJSDate(prismaProducerModel.updatedAt),
       deletedAt,
@@ -37,11 +37,10 @@ export class ProducerModelTranslator {
     )
   }
 
-  public static toDatabase (producer: Producer, viewsCount: number): PrismaProducerModel {
+  public static toDatabase (producer: Producer): PrismaProducerModel {
     return {
       id: producer.id,
       slug: producer.slug,
-      brandHexColor: producer.brandHexColor,
       imageUrl: producer.imageUrl,
       name: producer.name,
       description: producer.description,
@@ -49,7 +48,7 @@ export class ProducerModelTranslator {
       createdAt: producer.createdAt.toJSDate(),
       deletedAt: producer.deletedAt?.toJSDate() ?? null,
       updatedAt: producer.updatedAt.toJSDate(),
-      viewsCount: BigInt(viewsCount),
+      viewsCount: BigInt(producer.viewsCount),
     }
   }
 }

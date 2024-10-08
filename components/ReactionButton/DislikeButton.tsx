@@ -3,9 +3,9 @@ import styles from './DislikeButton.module.scss'
 import useTranslation from 'next-translate/useTranslation'
 import { BiDislike, BiSolidDislike } from 'react-icons/bi'
 import * as uuid from 'uuid'
-import { Tooltip } from '~/components/Tooltip/Tooltip'
 import { AiOutlineLoading } from 'react-icons/ai'
 import toast from 'react-hot-toast'
+import { Tooltip2 } from '~/components/Tooltip2/Tooltip'
 
 interface Props {
   disliked: boolean
@@ -47,21 +47,9 @@ export const DislikeButton: FC<Props> = ({ disliked, onDislike, onDeleteDislike,
 
   if (!loading) {
     if (disliked) {
-      iconElement = (
-        <BiSolidDislike
-          className={ styles.dislikeButton__dislikeIcon }
-          data-tooltip-id={ tooltipId }
-          data-tooltip-content={ t('dislike_reaction_active_title_button') }
-        />
-      )
+      iconElement = (<BiSolidDislike className={ styles.dislikeButton__dislikeIcon } />)
     } else {
-      iconElement = (
-        <BiDislike
-          className={ styles.dislikeButton__dislikeIcon }
-          data-tooltip-id={ tooltipId }
-          data-tooltip-content={ t('dislike_reaction_title_button') }
-        />
-      )
+      iconElement = (<BiDislike className={ styles.dislikeButton__dislikeIcon } />)
     }
   } else {
     iconElement = (<AiOutlineLoading className={ styles.dislikeButton__loadingIcon } />)
@@ -78,14 +66,17 @@ export const DislikeButton: FC<Props> = ({ disliked, onDislike, onDeleteDislike,
       ` }
         disabled={ disabled }
         onClick={ onClickButton }
+        tooltip-id={ tooltipId }
       >
         { iconElement }
       </button>
       { mounted && !disabled && !loading &&
-        <Tooltip
-          tooltipId={ tooltipId }
+        <Tooltip2
+          id={ tooltipId }
           place={ 'bottom' }
-        /> }
+          content={ disliked ? t('dislike_reaction_active_title_button') : t('dislike_reaction_title_button') }
+        />
+      }
     </div>
   )
 }

@@ -7,11 +7,12 @@ import {
 
 export class DeletePostCommentReactionRequestTranslator {
   public static fromApiDto (
-    request: DeletePostCommentReactionApiRequestDto
+    request: DeletePostCommentReactionApiRequestDto,
+    userIp: string
   ): DeletePostCommentReactionApplicationRequestDto {
     return {
       postCommentId: request.postCommentId,
-      userId: request.userId,
+      userIp,
       parentCommentId: request.parentCommentId,
     }
   }

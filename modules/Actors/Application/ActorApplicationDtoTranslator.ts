@@ -9,7 +9,7 @@ export class ActorApplicationDtoTranslator {
       slug: actor.slug,
       name: actor.name,
       imageUrl: actor.imageUrl,
-      description: actor.description,
+      viewsCount: actor.viewsCount,
       createdAt: actor.createdAt.toISO(),
     }
   }

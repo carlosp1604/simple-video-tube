@@ -2,11 +2,11 @@ import * as fs from 'fs'
 import { randomUUID } from 'crypto'
 import { DateTime } from 'luxon'
 import { Collection } from '~/modules/Shared/Domain/Relationship/Collection'
-import { PostTag } from '~/modules/PostTag/Domain/PostTag'
+import { Category } from '~/modules/Categories/Domain/Category'
 import { Translation } from '~/modules/Translations/Domain/Translation'
-import { MysqlPostTagRepository } from '~/modules/PostTag/Infrastructure/MysqlPostTagRepository'
+import { MysqlCategoryRepository } from '~/modules/Categories/Infrastructure/MysqlCategoryRepository'
 
-const tagRepository = new MysqlPostTagRepository()
+const tagRepository = new MysqlCategoryRepository()
 
 const findOrCreateTag = async (tag: any): Promise<void> => {
   console.log(`  - Finding tag with slug: ${tag.slug}`)
@@ -44,7 +44,7 @@ const findOrCreateTag = async (tag: any): Promise<void> => {
 
   console.log('\t  - Translations built')
 
-  const newTag = new PostTag(
+  const newTag = new Category(
     randomUUID(),
     tag.slug,
     tag.name,
@@ -87,7 +87,7 @@ const buildTranslation = (
 }
 
 async function run () {
-  const tags = fs.readFileSync('data/tags-to-import.json', 'utf-8')
+  const tags = fs.readFileSync('data/categories-to-import.json', 'utf-8')
   const tagsToImport = JSON.parse(tags)
 
   console.log(`- Processing [${tagsToImport.length}] tags`)

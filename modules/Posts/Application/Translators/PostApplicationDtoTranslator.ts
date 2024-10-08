@@ -1,5 +1,4 @@
-import { MetaApplicationDtoTranslator } from './MetaApplicationDtoTranslator'
-import { TagApplicationDtoTranslator } from '~/modules/PostTag/Application/TagApplicationDtoTranslator'
+import { CategoryApplicationDtoTranslator } from '~/modules/Categories/Application/CategoryApplicationDtoTranslator'
 import { Post } from '~/modules/Posts/Domain/Post'
 import { PostApplicationDto } from '~/modules/Posts/Application/Dtos/PostApplicationDto'
 import { ActorApplicationDtoTranslator } from '~/modules/Actors/Application/ActorApplicationDtoTranslator'
@@ -24,16 +23,18 @@ export class PostApplicationDtoTranslator {
       actors: post.actors.map((actor) => {
         return ActorApplicationDtoTranslator.fromDomain(actor)
       }),
+      resolution: post.resolution,
       description: post.description,
-      meta: post.meta.map((meta) => {
-        return MetaApplicationDtoTranslator.fromDomain(meta)
-      }),
+      duration: post.duration,
+      trailerUrl: post.trailerUrl,
+      thumbnailUrl: post.thumbnailUrl,
+      externalUrl: post.externalUrl,
+      viewsCount: post.viewsCount,
       publishedAt: post.publishedAt?.toISO() ?? '',
-      tags: post.tags.map((tag) => {
-        return TagApplicationDtoTranslator.fromDomain(tag)
+      tags: post.categories.map((tag) => {
+        return CategoryApplicationDtoTranslator.fromDomain(tag)
       }),
       title: post.title,
-      type: post.type,
       producer: post.producer !== null
         ? ProducerApplicationDtoTranslator.fromDomain(post.producer)
         : null,

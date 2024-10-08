@@ -14,7 +14,7 @@ export const TagList: FC<Props> = ({ tags }) => {
         return (
           <Link
             className={ styles.tagList__tagContainer }
-            href={ `/tags/${tag.slug}` }
+            href={ `/categories/${tag.slug}` }
             key={ tag.slug }
           >
             { tag.name }

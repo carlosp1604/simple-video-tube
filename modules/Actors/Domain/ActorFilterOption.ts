@@ -1,5 +1,4 @@
-export type ActorFilterStringTypeOption =
-  'actorName'
+export type ActorFilterStringTypeOption = 'actorName'
 
 export const GetActorsFilterStringTypeOptions:
   Extract<ActorFilterStringTypeOption, 'actorName'>[] = ['actorName']

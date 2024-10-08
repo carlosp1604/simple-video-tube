@@ -14,7 +14,7 @@ export enum ReactionableType {
 export class Reaction {
   public readonly reactionableId: string
   public readonly reactionableType: ReactionableType
-  public readonly userId: string
+  public readonly userIp: string
   private _reactionType: ReactionType
   public readonly createdAt: DateTime
   public updatedAt: DateTime
@@ -23,7 +23,7 @@ export class Reaction {
   public constructor (
     reactionableId: string,
     reactionableType: string,
-    userId: string,
+    userIp: string,
     reactionType: string,
     createdAt: DateTime,
     updatedAt: DateTime,
@@ -31,7 +31,7 @@ export class Reaction {
   ) {
     this.reactionableType = Reaction.validateReactionableType(reactionableType)
     this.reactionableId = reactionableId
-    this.userId = userId
+    this.userIp = userIp
     this._reactionType = Reaction.validateReactionType(reactionType)
     this.createdAt = createdAt
     this.updatedAt = updatedAt

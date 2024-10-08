@@ -9,6 +9,4 @@ export interface GetPostBySlugApplicationResponseDto {
   readonly post: PostApplicationDto
   readonly reactions: PostReactionsInterface
   readonly comments: number
-  readonly views: number
-  readonly externalLink: string | null
 }

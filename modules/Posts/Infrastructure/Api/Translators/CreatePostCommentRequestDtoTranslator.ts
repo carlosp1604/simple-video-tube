@@ -1,11 +1,19 @@
-import { CreatePostCommentApplicationRequestDto } from '~/modules/Posts/Application/CreatePostComment/CreatePostCommentApplicationRequestDto'
-import { CreatePostCommentApiRequestDto } from '~/modules/Posts/Infrastructure/Api/Requests/CreatePostCommentApiRequestDto'
+import {
+  CreatePostCommentApplicationRequestDto
+} from '~/modules/Posts/Application/CreatePostComment/CreatePostCommentApplicationRequestDto'
+import {
+  CreatePostCommentApiRequestDto
+} from '~/modules/Posts/Infrastructure/Api/Requests/CreatePostCommentApiRequestDto'
 
 export class CreatePostCommentRequestDtoTranslator {
-  public static fromApiDto (request: CreatePostCommentApiRequestDto): CreatePostCommentApplicationRequestDto {
+  public static fromApiDto (
+    request: CreatePostCommentApiRequestDto,
+    userIp: string
+  ): CreatePostCommentApplicationRequestDto {
     return {
       postId: request.postId,
-      userId: request.userId,
+      username: request.username,
+      userIp,
       comment: request.comment,
     }
   }

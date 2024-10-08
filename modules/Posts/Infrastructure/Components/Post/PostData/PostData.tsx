@@ -45,7 +45,6 @@ export const PostData: FC<Props> = ({
             imageClassName={ styles.postData__producerActorLogo }
             avatarName={ producer.name }
             imageAlt={ producer.name }
-            color={ producer.brandHexColor }
           />
           { producer.name }
         </Link>

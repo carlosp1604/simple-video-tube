@@ -9,29 +9,17 @@ import {
   PostWithRelationsApplicationDto
 } from '~/modules/Posts/Application/Dtos/PostWithRelationsApplicationDto'
 import { DateService } from '~/helpers/Infrastructure/DateService'
-import { MetaApplicationDto } from '~/modules/Posts/Application/Dtos/MetaApplicationDto'
 
 export class PostCardComponentDtoTranslator {
   public static fromApplication (
     applicationDto: PostWithRelationsApplicationDto,
-    postViews: number,
     locale: string
   ): PostCardComponentDto {
-    const animation: PostAnimationDto | null = PostAnimationDtoTranslator.fromApplication(applicationDto.meta)
+    const animation: PostAnimationDto | null = PostAnimationDtoTranslator.fromApplication(applicationDto.trailerUrl)
 
     const dateService = new DateService()
     const date = dateService.formatDate(applicationDto.publishedAt, locale)
-
-    const thumb = PostCardComponentDtoTranslator.getMeta(applicationDto.meta, 'thumb')
-    const resolution = PostCardComponentDtoTranslator.getMeta(applicationDto.meta, 'resolution')
-    const duration = PostCardComponentDtoTranslator.getMeta(applicationDto.meta, 'duration')
-    const externalLink = PostCardComponentDtoTranslator.getMeta(applicationDto.meta, 'external-link')
-
-    let formattedDuration = ''
-
-    if (duration) {
-      formattedDuration = dateService.formatSecondsToHHMMSSFormat(parseInt(duration.value))
-    }
+    const duration = dateService.formatSecondsToHHMMSSFormat(parseInt(String(applicationDto.duration)))
 
     let producer: ProducerPostCardComponentDto | null = null
 
@@ -40,9 +28,7 @@ export class PostCardComponentDtoTranslator {
       producer = {
         id: applicationDto.producer.id,
         slug: applicationDto.producer.slug,
-        imageUrl: applicationDto.producer.imageUrl,
         name: applicationDto.producer.name,
-        brandHexColor: applicationDto.producer.brandHexColor,
       }
     }
 
@@ -52,7 +38,6 @@ export class PostCardComponentDtoTranslator {
       actor = {
         id: applicationDto.actor.id,
         slug: applicationDto.actor.slug,
-        imageUrl: applicationDto.actor.imageUrl,
         name: applicationDto.actor.name,
       }
     }
@@ -73,20 +58,14 @@ export class PostCardComponentDtoTranslator {
       animation,
       date,
       producer,
-      thumb: thumb ? thumb.value : '',
-      resolution: resolution ? resolution.value : '',
+      thumb: applicationDto.thumbnailUrl,
+      resolution: applicationDto.resolution,
       title: titleTranslation,
-      views: postViews,
-      duration: formattedDuration,
+      views: applicationDto.postViews,
+      duration,
       slug: applicationDto.slug,
       actor,
-      externalLink: externalLink ? externalLink.value : null,
+      externalLink: applicationDto.externalUrl,
     }
-  }
-
-  private static getMeta (postMeta: MetaApplicationDto[], type: string): MetaApplicationDto | undefined {
-    return postMeta.find((meta) => {
-      return meta.type === type
-    })
   }
 }

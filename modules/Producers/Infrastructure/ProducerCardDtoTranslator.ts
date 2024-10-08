@@ -12,7 +12,6 @@ export class ProducerCardDtoTranslator {
       imageUrl: applicationDto.imageUrl,
       name: applicationDto.name,
       slug: applicationDto.slug,
-      brandHexColor: applicationDto.brandHexColor,
       postsNumber,
       producerViews,
     }

@@ -6,7 +6,7 @@ export class SEOHelper {
     t: Translate,
     producer: string | null,
     actor: string | null,
-    resolution: string
+    resolution: number
   ) : string {
     if (producer) {
       if (resolution) {

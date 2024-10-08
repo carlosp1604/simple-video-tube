@@ -8,7 +8,7 @@ import {
 
 export class HtmlPageMetaVideoService extends HtmlPageMetaResourceService {
   public readonly videoUrl: string
-  public readonly duration: string
+  public readonly duration: number
   public readonly width = '640'
   public readonly height = '360'
 
@@ -18,7 +18,7 @@ export class HtmlPageMetaVideoService extends HtmlPageMetaResourceService {
     image: string,
     canonical: string | null,
     videoUrl: string,
-    duration: string
+    duration: number
   ) {
     super(title, description, HtmlPageMetaContextResourceType.VIDEO_MOVIE, canonical, image)
     this.videoUrl = videoUrl

@@ -1,6 +1,6 @@
 import { NextPage } from 'next'
-import { TagCardComponentDto } from '~/modules/PostTag/Infrastructure/Dtos/TagCardComponentDto'
-import { Tags } from '~/modules/PostTag/Infrastructure/Components/Tags/Tags'
+import { TagCardComponentDto } from '~/modules/Categories/Infrastructure/Dtos/TagCardComponentDto'
+import { Tags } from '~/modules/Categories/Infrastructure/Components/Tags/Tags'
 import { useRouter } from 'next/router'
 import {
   HtmlPageMetaContextProps
@@ -13,20 +13,20 @@ import useTranslation from 'next-translate/useTranslation'
 import { HtmlPageMeta } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMeta'
 import { MobileBanner } from '~/modules/Shared/Infrastructure/Components/Banner/MobileBanner'
 
-export interface Props {
-  tagCards: TagCardComponentDto[]
+export interface CategoriesPageProps {
+  categoriesCards: TagCardComponentDto[]
   htmlPageMetaContextProps: HtmlPageMetaContextProps
   baseUrl: string
 }
 
-export const TagsPage: NextPage<Props> = ({ tagCards, htmlPageMetaContextProps, baseUrl }) => {
+export const TagsPage: NextPage<CategoriesPageProps> = ({ categoriesCards, htmlPageMetaContextProps, baseUrl }) => {
   const locale = useRouter().locale ?? 'en'
   const { t } = useTranslation('tags')
 
-  let canonicalUrl = `${baseUrl}/tags`
+  let canonicalUrl = `${baseUrl}/categories`
 
   if (locale !== 'en') {
-    canonicalUrl = `${baseUrl}/${locale}/tags`
+    canonicalUrl = `${baseUrl}/${locale}/categories`
   }
 
   const htmlPageMetaUrlProps = (
@@ -49,7 +49,7 @@ export const TagsPage: NextPage<Props> = ({ tagCards, htmlPageMetaContextProps, 
 
       <MobileBanner />
 
-      <Tags tagCards={ tagCards } />
+      <Tags tagCards={ categoriesCards } />
     </>
   )
 }

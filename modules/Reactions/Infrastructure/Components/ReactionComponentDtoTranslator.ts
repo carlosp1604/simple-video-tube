@@ -5,7 +5,7 @@ export class ReactionComponentDtoTranslator {
   public static fromApplicationDto (reaction: ModelReactionApplicationDto): ReactionComponentDto {
     return {
       reactionableId: reaction.reactionableId,
-      userId: reaction.userId,
+      userIp: reaction.userIp,
       reactionType: reaction.reactionType,
     }
   }

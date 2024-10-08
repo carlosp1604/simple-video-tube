@@ -13,12 +13,9 @@ import { CreatePostReaction } from '~/modules/Posts/Application/CreatePostReacti
 import {
   CreatePostReactionApplicationException
 } from '~/modules/Posts/Application/CreatePostReaction/CreatePostReactionApplicationException'
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '~/pages/api/auth/[...nextauth]'
 import {
-  POST_REACTION_ALREADY_EXISTS,
-  POST_REACTION_AUTH_REQUIRED, POST_REACTION_BAD_REQUEST, POST_REACTION_METHOD,
-  POST_REACTION_NOT_FOUND, POST_REACTION_POST_NOT_FOUND, POST_REACTION_SERVER_ERROR, POST_REACTION_USER_NOT_FOUND,
+  POST_REACTION_ALREADY_EXISTS, POST_REACTION_BAD_REQUEST, POST_REACTION_METHOD,
+  POST_REACTION_NOT_FOUND, POST_REACTION_POST_NOT_FOUND, POST_REACTION_SERVER_ERROR,
   POST_REACTION_VALIDATION
 } from '~/modules/Posts/Infrastructure/Api/PostApiExceptionCodes'
 import { CreatePostReactionApiRequest } from '~/modules/Posts/Infrastructure/Api/Requests/CreatePostReactionApiRequest'
@@ -35,6 +32,7 @@ import { DeletePostReaction } from '~/modules/Posts/Application/DeletePostReacti
 import {
   DeletePostReactionApplicationException
 } from '~/modules/Posts/Application/DeletePostReaction/DeletePostReactionApplicationException'
+import requestIp from 'request-ip'
 
 export default async function handler (
   request: NextApiRequest,
@@ -53,11 +51,7 @@ export default async function handler (
 }
 
 async function handlePost (request: NextApiRequest, response: NextApiResponse) {
-  const session = await getServerSession(request, response, authOptions)
-
-  if (session === null) {
-    return handleAuthorizationRequired(response)
-  }
+  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
 
   const { postId } = request.query
 
@@ -67,7 +61,6 @@ async function handlePost (request: NextApiRequest, response: NextApiResponse) {
 
   const createPostReactionApiRequest: CreatePostReactionApiRequest = {
     postId: String(postId),
-    userId: session.user.id,
     reactionType: request.body.reactionType,
   }
 
@@ -77,7 +70,7 @@ async function handlePost (request: NextApiRequest, response: NextApiResponse) {
     return handleValidationError(response, validationError)
   }
 
-  const applicationRequest = CreatePostReactionRequestTranslator.fromApiDto(createPostReactionApiRequest)
+  const applicationRequest = CreatePostReactionRequestTranslator.fromApiDto(createPostReactionApiRequest, userIp)
 
   const useCase = container.resolve<CreatePostReaction>('createPostReactionUseCase')
 
@@ -96,9 +89,6 @@ async function handlePost (request: NextApiRequest, response: NextApiResponse) {
       case CreatePostReactionApplicationException.postNotFoundId:
         return handleNotFound(response, exception.message, POST_REACTION_POST_NOT_FOUND)
 
-      case CreatePostReactionApplicationException.userNotFoundId:
-        return handleNotFound(response, exception.message, POST_REACTION_USER_NOT_FOUND)
-
       case CreatePostReactionApplicationException.userAlreadyReactedId:
         return handleConflict(response, exception.message)
 
@@ -112,11 +102,7 @@ async function handlePost (request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function handleDelete (request: NextApiRequest, response: NextApiResponse) {
-  const session = await getServerSession(request, response, authOptions)
-
-  if (session === null) {
-    return handleAuthorizationRequired(response)
-  }
+  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
 
   const { postId } = request.query
 
@@ -126,7 +112,6 @@ async function handleDelete (request: NextApiRequest, response: NextApiResponse)
 
   const deletePostReactionApiRequest: DeletePostReactionApiRequestDto = {
     postId: String(postId),
-    userId: session.user.id,
   }
 
   const validationError = DeletePostReactionApiRequestValidator.validate(deletePostReactionApiRequest)
@@ -135,7 +120,7 @@ async function handleDelete (request: NextApiRequest, response: NextApiResponse)
     return handleValidationError(response, validationError)
   }
 
-  const applicationRequest = DeletePostReactionRequestTranslator.fromApiDto(deletePostReactionApiRequest)
+  const applicationRequest = DeletePostReactionRequestTranslator.fromApiDto(deletePostReactionApiRequest, userIp)
 
   const useCase = container.resolve<DeletePostReaction>('deletePostReactionUseCase')
 
@@ -153,9 +138,6 @@ async function handleDelete (request: NextApiRequest, response: NextApiResponse)
     switch (exception.id) {
       case DeletePostReactionApplicationException.postNotFoundId:
         return handleNotFound(response, exception.message, POST_REACTION_POST_NOT_FOUND)
-
-      case DeletePostReactionApplicationException.userNotFoundId:
-        return handleNotFound(response, exception.message, POST_REACTION_USER_NOT_FOUND)
 
       case DeletePostReactionApplicationException.userHasNotReactedId:
         return handleNotFound(response, exception.message, POST_REACTION_NOT_FOUND)
@@ -219,15 +201,6 @@ function handleServerError (response: NextApiResponse) {
     .json({
       code: POST_REACTION_SERVER_ERROR,
       message: 'Something went wrong while processing the request',
-    })
-}
-
-function handleAuthorizationRequired (response: NextApiResponse) {
-  return response
-    .status(401)
-    .json({
-      code: POST_REACTION_AUTH_REQUIRED,
-      message: 'User not authenticated',
     })
 }
 

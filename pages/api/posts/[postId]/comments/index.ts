@@ -9,7 +9,6 @@ import { GetPostPostComments } from '~/modules/Posts/Application/GetPostPostComm
 import {
   CreatePostCommentApplicationException
 } from '~/modules/Posts/Application/CreatePostComment/CreatePostCommentApplicationException'
-import { authOptions } from '~/pages/api/auth/[...nextauth]'
 import {
   CreatePostCommentApiRequestDto
 } from '~/modules/Posts/Infrastructure/Api/Requests/CreatePostCommentApiRequestDto'
@@ -26,14 +25,12 @@ import { CreatePostComment } from '~/modules/Posts/Application/CreatePostComment
 import {
   PostCommentApiRequestValidatorError
 } from '~/modules/Posts/Infrastructure/Api/Validators/PostCommentApiRequestValidatorError'
-import { getServerSession } from 'next-auth/next'
 import { container } from '~/awilix.container'
 import {
   GetPostPostCommentsApplicationException
 } from '~/modules/Posts/Application/GetPostPostComments/GetPostPostCommentsApplicationException'
 import { GetPostsApplicationException } from '~/modules/Posts/Application/GetPosts/GetPostsApplicationException'
 import {
-  POST_COMMENT_AUTH_REQUIRED,
   POST_COMMENT_BAD_REQUEST,
   POST_COMMENT_INVALID_PAGE,
   POST_COMMENT_INVALID_PER_PAGE,
@@ -45,6 +42,7 @@ import {
 import {
   GetPostPostCommentsRequestDtoTranslator
 } from '~/modules/Posts/Infrastructure/Api/Translators/GetPostPostCommentsRequestDtoTranslator'
+import requestIp from 'request-ip'
 
 export default async function handler (
   request: NextApiRequest,
@@ -78,19 +76,15 @@ async function handleGET (request: NextApiRequest, response: NextApiResponse) {
   const validationError = GetPostPostCommentsApiRequestValidator.validate(apiRequest)
 
   if (validationError) {
-    return handleValidationError(request, response, validationError)
+    return handleValidationError(response, validationError)
   }
 
-  const session = await getServerSession(request, response, authOptions)
-  let userId: string | null = null
-
-  if (session !== null) {
-    userId = session.user.id
-  }
+  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
 
   const useCase = container.resolve<GetPostPostComments>('getPostPostCommentsUseCase')
 
-  const applicationRequest = GetPostPostCommentsRequestDtoTranslator.fromApiDto(apiRequest, userId)
+  const applicationRequest =
+    GetPostPostCommentsRequestDtoTranslator.fromApiDto(apiRequest, userIp)
 
   try {
     const comments = await useCase.get(applicationRequest)
@@ -118,14 +112,11 @@ async function handleGET (request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function handlePOST (request: NextApiRequest, response: NextApiResponse) {
-  const session = await getServerSession(request, response, authOptions)
-
-  if (session === null) {
-    return handleAuthentication(request, response)
-  }
-
   const { postId } = request.query
   const comment = request.body.comment
+  const username = request.body.username
+
+  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
 
   if (!postId) {
     return handleBadRequest(response)
@@ -135,8 +126,8 @@ async function handlePOST (request: NextApiRequest, response: NextApiResponse) {
 
   try {
     apiRequest = CreatePostCommentRequestSanitizer.sanitize({
-      comment: comment ?? '',
-      userId: session.user.id,
+      comment,
+      username,
       postId: String(postId),
     })
   } catch (exception: unknown) {
@@ -148,10 +139,10 @@ async function handlePOST (request: NextApiRequest, response: NextApiResponse) {
   const validationError = CreatePostCommentApiRequestValidator.validate(apiRequest)
 
   if (validationError) {
-    return handleValidationError(request, response, validationError)
+    return handleValidationError(response, validationError)
   }
 
-  const applicationRequest = CreatePostCommentRequestDtoTranslator.fromApiDto(apiRequest)
+  const applicationRequest = CreatePostCommentRequestDtoTranslator.fromApiDto(apiRequest, userIp)
 
   const useCase = container.resolve<CreatePostComment>('createPostCommentUseCase')
 
@@ -201,17 +192,7 @@ function handleMethod (request: NextApiRequest, response: NextApiResponse) {
     })
 }
 
-function handleAuthentication (request: NextApiRequest, response: NextApiResponse) {
-  return response
-    .status(401)
-    .json({
-      code: POST_COMMENT_AUTH_REQUIRED,
-      message: 'User must be authenticated to access to resource',
-    })
-}
-
 function handleValidationError (
-  request: NextApiRequest,
   response: NextApiResponse,
   validationError: PostCommentApiRequestValidatorError
 ) {

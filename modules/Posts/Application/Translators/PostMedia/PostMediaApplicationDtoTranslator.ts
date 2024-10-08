@@ -16,6 +16,8 @@ export class PostMediaApplicationDtoTranslator {
       mediaUrls: postMedia.mediaUrls.map((mediaUrl) => {
         return MediaUrlApplicationDtoTranslator.fromDomain(mediaUrl)
       }),
+      deletedAt: postMedia.deletedAt ? postMedia.deletedAt.toISO() : null,
+      removalReason: postMedia.removalReason,
     }
   }
 }

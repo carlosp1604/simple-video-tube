@@ -8,7 +8,6 @@ export class ActorPageComponentDtoTranslator {
       slug: applicationDto.slug,
       imageUrl: applicationDto.imageUrl,
       name: applicationDto.name,
-      description: applicationDto.description,
     }
   }
 }

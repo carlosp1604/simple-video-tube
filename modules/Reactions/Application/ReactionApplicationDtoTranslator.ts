@@ -7,7 +7,7 @@ export class ReactionApplicationDtoTranslator {
       reactionType: reaction.reactionType,
       reactionableId: reaction.reactionableId,
       createdAt: reaction.createdAt.toISO(),
-      userId: reaction.userId,
+      userIp: reaction.userIp,
       updatedAt: reaction.updatedAt.toISO(),
     }
   }

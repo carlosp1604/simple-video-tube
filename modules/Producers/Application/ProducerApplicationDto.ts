@@ -5,7 +5,6 @@ export interface ProducerApplicationDto {
   readonly description: string | null
   readonly imageUrl: string | null
   readonly parentProducerId: string | null
-  readonly brandHexColor: string
   readonly createdAt: string
   readonly parentProducer: ProducerApplicationDto | null
 }

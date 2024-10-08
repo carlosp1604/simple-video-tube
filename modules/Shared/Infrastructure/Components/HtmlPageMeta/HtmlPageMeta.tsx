@@ -20,8 +20,8 @@ export const HtmlPageMeta: FC<HtmlPageMetaProps> = (props) => {
     videoMeta = [
       <meta property="og:video:url" content={ UrlsHelper.deleteTrailingSlash(videoProps.videoUrl) } key="og:video" />,
       <meta property="og:video:type" content='text/html' key="og:video:type" />,
-      <meta property="og:video:duration" content={ videoProps.duration } key="og:video:duration" />,
-      <meta property="video:duration" content={ videoProps.duration } key="video:duration" />,
+      <meta property="og:video:duration" content={ String(videoProps.duration) } key="og:video:duration" />,
+      <meta property="video:duration" content={ String(videoProps.duration) } key="video:duration" />,
       /** Twitter card properties **/
       <meta name="twitter:card" content="player" key="twitter:card" />,
       <meta name="twitter:title" content={ videoProps.title } key="twitter:title" />,

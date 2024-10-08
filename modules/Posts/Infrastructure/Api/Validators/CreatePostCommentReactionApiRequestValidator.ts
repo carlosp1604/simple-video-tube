@@ -9,7 +9,6 @@ import {
 export class CreatePostCommentReactionApiRequestValidator {
   private static createPostCommentReactionApiRequestSchema = z.object({
     postCommentId: z.string().uuid(),
-    userId: z.string().uuid(),
     parentCommentId: z.string().uuid().nullable(),
   })
 

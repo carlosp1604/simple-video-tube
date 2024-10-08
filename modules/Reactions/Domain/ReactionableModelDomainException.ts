@@ -15,56 +15,56 @@ export class ReactionableModelDomainException extends DomainException {
   }
 
   public static cannotAddReaction (
-    userId: Reaction['userId'],
+    userIp: Reaction['userIp'],
     reactionableId: Reaction['reactionableId'],
     reactionableType: Reaction['reactionableType']
   ): ReactionableModelDomainException {
     return new ReactionableModelDomainException(
-      `Cannot add reaction from user with ID ${userId} to ${reactionableType} with ID ${reactionableId}`,
+      `Cannot add reaction from user with IP ${userIp} to ${reactionableType} with ID ${reactionableId}`,
       this.cannotAddReactionId
     )
   }
 
   public static cannotUpdateReaction (
-    userId: Reaction['userId'],
+    userIp: Reaction['userIp'],
     reactionableId: Reaction['reactionableId'],
     reactionableType: Reaction['reactionableType']
   ): ReactionableModelDomainException {
     return new ReactionableModelDomainException(
-      `Cannot update reaction from user with ID ${userId} in the ${reactionableType} with ID ${reactionableId}`,
+      `Cannot update reaction from user with IP ${userIp} in the ${reactionableType} with ID ${reactionableId}`,
       this.cannotUpdateReactionId
     )
   }
 
   public static userAlreadyReacted (
-    userId: Reaction['userId'],
+    userIp: Reaction['userIp'],
     reactionableId: Reaction['reactionableId'],
     reactionableType: Reaction['reactionableType']
   ): ReactionableModelDomainException {
     return new ReactionableModelDomainException(
-      `User with ID ${userId} already reacted to ${reactionableType} with ID ${reactionableId}`,
+      `User with IP ${userIp} already reacted to ${reactionableType} with ID ${reactionableId}`,
       this.userAlreadyReactedId
     )
   }
 
   public static userHasNotReacted (
-    userId: Reaction['userId'],
+    userIp: Reaction['userIp'],
     reactionableId: Reaction['reactionableId'],
     reactionableType: Reaction['reactionableType']
   ): ReactionableModelDomainException {
     return new ReactionableModelDomainException(
-      `User with ID ${userId} has not reacted to ${reactionableType} with ID ${reactionableId}`,
+      `User with IP ${userIp} has not reacted to ${reactionableType} with ID ${reactionableId}`,
       this.userHasNotReactedId
     )
   }
 
   public static cannotDeleteReaction (
-    userId: Reaction['userId'],
+    userIp: Reaction['userIp'],
     reactionableId: Reaction['reactionableId'],
     reactionableType: Reaction['reactionableType']
   ): ReactionableModelDomainException {
     return new ReactionableModelDomainException(
-      `Cannot delete reaction from user with ID ${userId} in ${reactionableType} with ID ${reactionableId}`,
+      `Cannot delete reaction from user with IP ${userIp} in ${reactionableType} with ID ${reactionableId}`,
       this.cannotDeleteReactionId
     )
   }

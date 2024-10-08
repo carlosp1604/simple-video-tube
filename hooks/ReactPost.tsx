@@ -2,11 +2,8 @@ import { useCallback } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import toast from 'react-hot-toast'
 import { APIException } from '~/modules/Shared/Infrastructure/FrontEnd/ApiException'
-import { signOut, useSession } from 'next-auth/react'
-import { useLoginContext } from '~/hooks/LoginContext'
 import { ReactionComponentDto } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDto'
 import { ReactionType } from '~/modules/Reactions/Infrastructure/ReactionType'
-import { POST_REACTION_USER_NOT_FOUND } from '~/modules/Posts/Infrastructure/Api/PostApiExceptionCodes'
 import {
   ReactionComponentDtoTranslator
 } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDtoTranslator'
@@ -21,17 +18,8 @@ export interface ReactPostInterface {
 export function useReactPost (namespace: string): ReactPostInterface {
   const { t } = useTranslation(namespace)
   const locale = useRouter().locale ?? 'en'
-  const { status } = useSession()
-  const { setLoginModalOpen } = useLoginContext()
 
   const reactPost = useCallback(async (postId: string, type: ReactionType): Promise<ReactionComponentDto | null> => {
-    if (status !== 'authenticated') {
-      toast.error(t('user_must_be_authenticated_error_message'))
-      setLoginModalOpen(true)
-
-      return null
-    }
-
     try {
       const reaction = await new PostsApiService().createPostReaction(postId, type)
       const reactionComponentDto = ReactionComponentDtoTranslator.fromApplicationDto(reaction)
@@ -48,28 +36,13 @@ export function useReactPost (namespace: string): ReactPostInterface {
         return null
       }
 
-      if (exception.code === POST_REACTION_USER_NOT_FOUND) {
-        await signOut({ redirect: false })
-      }
-
-      if (exception.apiCode === 401) {
-        setLoginModalOpen(true)
-      }
-
       toast.error(t(`api_exceptions:${exception.translationKey}`))
 
       return null
     }
-  }, [status, locale])
+  }, [locale])
 
   const removeReaction = useCallback(async (postId: string): Promise<boolean> => {
-    if (status !== 'authenticated') {
-      toast.error(t('user_must_be_authenticated_error_message'))
-      setLoginModalOpen(true)
-
-      return false
-    }
-
     try {
       await new PostsApiService().deletePostReaction(postId)
 
@@ -85,19 +58,11 @@ export function useReactPost (namespace: string): ReactPostInterface {
         return false
       }
 
-      if (exception.code === POST_REACTION_USER_NOT_FOUND) {
-        await signOut({ redirect: false })
-      }
-
-      if (exception.apiCode === 401) {
-        setLoginModalOpen(true)
-      }
-
       toast.error(t(`api_exceptions:${exception.translationKey}`))
 
       return false
     }
-  }, [status, locale])
+  }, [locale])
 
   return { reactPost, removeReaction }
 }

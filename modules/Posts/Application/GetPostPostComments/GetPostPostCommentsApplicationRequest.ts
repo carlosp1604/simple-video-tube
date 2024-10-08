@@ -1,7 +1,5 @@
-import { Post } from '~/modules/Posts/Domain/Post'
-
 export interface GetPostPostCommentsApplicationRequest {
-  readonly postId: Post['id']
+  readonly postId: string
   readonly page: number
   readonly perPage: number
   readonly userId: string | null

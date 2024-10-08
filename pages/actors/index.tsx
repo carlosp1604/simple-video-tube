@@ -112,7 +112,7 @@ export const getServerSideProps: GetServerSideProps<ActorsPageProps> = async (co
 
     props.initialActorsNumber = actors.actorsNumber
     props.initialActors = actors.actors.map((actor) => {
-      return ActorCardDtoTranslator.fromApplicationDto(actor.actor, actor.postsNumber, actor.actorViews)
+      return ActorCardDtoTranslator.fromApplicationDto(actor.actor, actor.postsNumber)
     })
 
     return {

@@ -20,7 +20,7 @@ export interface ProducerRepositoryInterface {
   /**
    * TODO: Pagination for this use-case
    * Get first 20 most popular Producers
-   * @param includedProducersSlugs producers Slug to include
+   * @param includedProducerSlugs producers Slug to include
    * @return Array of Producer
    */
   getPopular(includedProducerSlugs: Array<Producer['slug']>): Promise<Producer[]>

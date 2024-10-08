@@ -8,8 +8,7 @@ import { PostComment } from '~/modules/Posts/Domain/PostComments/PostComment'
 import { RepositoryOptions } from '~/modules/Posts/Domain/PostRepositoryInterface'
 
 export const PostCommentRepositoryOptions:
-  Extract<RepositoryOptions, 'comments.user' | 'comments.childComments' | 'comments.reactions'>[] = [
-    'comments.user',
+  Extract<RepositoryOptions, 'comments.childComments' | 'comments.reactions'>[] = [
     'comments.childComments',
     'comments.reactions',
   ]
@@ -24,14 +23,14 @@ export interface PostCommentRepositoryInterface {
    * @param postId Post ID
    * @param offset Comment offset
    * @param limit Comment limit
-   * @param userId User ID
+   * @param userIp User IP
    * @return Array of PostCommentWithCountAndUserInteraction
    */
   findWithOffsetAndLimit(
     postId: Post['id'],
     offset: number,
     limit: number,
-    userId: PostComment['userId'] | null
+    userIp: PostComment['userIp'] | null
   ): Promise<PostCommentWithCountAndUserInteraction[]>
 
   /**
@@ -39,14 +38,14 @@ export interface PostCommentRepositoryInterface {
    * @param parentCommentId Parent comment ID
    * @param offset Comment offset
    * @param limit Comment limit
-   * @param userId User ID
+   * @param userIp User IP
    * @return Array of PostChildCommentWithReactionCount
    */
   findChildWithOffsetAndLimit(
     parentCommentId: PostChildComment['id'],
     offset: number,
     limit: number,
-    userId: PostComment['userId'] | null
+    userIp: PostComment['userIp'] | null
   ): Promise<PostChildCommentWithReactionCountAndUserInteraction[]>
 
   /**
@@ -60,7 +59,6 @@ export interface PostCommentRepositoryInterface {
 
   /**
    * Count Child Comments from a Post
-   * @param postId Post ID
    * @param parentCommentId Parent comment ID
    * @return Child Post's comments number
    */

@@ -5,7 +5,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { PaginationSortingType } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationSortingType'
 import { EmptyState } from '~/components/EmptyState/EmptyState'
 import {
-  PaginatedPostCardGallery, PaginatedPostCardGalleryConfiguration
+  PaginatedPostCardGallery
 } from '~/modules/Shared/Infrastructure/Components/PaginatedPostCardGallery/PaginatedPostCardGallery'
 import { PostsPaginationSortingType } from '~/modules/Posts/Infrastructure/Frontend/PostsPaginationSortingType'
 import { ActorsApiService } from '~/modules/Actors/Infrastructure/Frontend/ActorsApiService'
@@ -47,8 +47,6 @@ export const Actor: FC<Props> = ({
     PaginationSortingType.MOST_VIEWED,
   ]
 
-  const postCardOptions: PaginatedPostCardGalleryConfiguration[] = [{ type: 'savePost' }, { type: 'react' }]
-
   const emptyState = (
     <EmptyState
       title={ t('actor_posts_empty_state_title') }
@@ -70,7 +68,6 @@ export const Actor: FC<Props> = ({
         order={ PaginationSortingType.LATEST }
         filters={ [{ type: FilterOptions.ACTOR_SLUG, value: actorSlug }] }
         filtersToParse={ [FilterOptions.ACTOR_SLUG] }
-        paginatedPostCardGalleryPostCardOptions={ postCardOptions }
         sortingOptions={ sortingOptions }
         defaultSortingOption={ PaginationSortingType.LATEST }
         onPostsFetched={ (postsNumber, _posts) => setPostsNumber(postsNumber) }

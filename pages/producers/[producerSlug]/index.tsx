@@ -86,7 +86,6 @@ export const getServerSideProps: GetServerSideProps<ProducerPageProps> = async (
       name: '',
       imageUrl: '',
       id: '',
-      brandHexColor: '',
     },
     initialOrder: paginationQueryParams.sortingOptionType ?? PaginationSortingType.LATEST,
     initialPage: paginationQueryParams.page ?? 1,
@@ -134,7 +133,7 @@ export const getServerSideProps: GetServerSideProps<ProducerPageProps> = async (
     })
 
     props.initialPosts = producerPosts.posts.map((post) => {
-      return PostCardComponentDtoTranslator.fromApplication(post.post, post.postViews, locale)
+      return PostCardComponentDtoTranslator.fromApplication(post, locale)
     })
     props.initialPostsNumber = producerPosts.postsNumber
   } catch (exception: unknown) {

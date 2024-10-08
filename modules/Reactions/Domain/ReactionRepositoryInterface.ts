@@ -10,7 +10,7 @@ export interface ReactionRepositoryInterface {
   /**
    * Remove a Reaction from the persistence layer
    * @param postCommentId PostComment ID
-   * @param userId User ID
+   * @param userIp User IP
    */
-  remove(postCommentId: Reaction['reactionableId'], userId: Reaction['userId']): Promise<void>
+  remove(postCommentId: Reaction['reactionableId'], userIp: Reaction['userIp']): Promise<void>
 }

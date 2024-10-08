@@ -76,7 +76,6 @@ export const Search: FC<Props> = ({
         order={ initialSortingOption }
         filters={ [{ type: FilterOptions.SEARCH, value: initialSearchTerm }] }
         filtersToParse={ [FilterOptions.SEARCH] }
-        paginatedPostCardGalleryPostCardOptions={ [{ type: 'savePost' }, { type: 'react' }] }
         linkMode={ linkMode }
         sortingOptions={ sortingOptions }
         defaultSortingOption={ PaginationSortingType.LATEST }

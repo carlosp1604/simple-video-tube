@@ -1,5 +1,4 @@
-import { PostMeta } from './PostMeta'
-import { PostTag } from '~/modules/PostTag/Domain/PostTag'
+import { Category } from '~/modules/Categories/Domain/Category'
 import { DateTime } from 'luxon'
 import { PostComment } from './PostComments/PostComment'
 import { Reaction, ReactionableType } from '~/modules/Reactions/Domain/Reaction'
@@ -10,30 +9,27 @@ import { Producer } from '~/modules/Producers/Domain/Producer'
 import { Actor } from '~/modules/Actors/Domain/Actor'
 import { Collection } from '~/modules/Shared/Domain/Relationship/Collection'
 import { Relationship } from '~/modules/Shared/Domain/Relationship/Relationship'
-import { User } from '~/modules/Auth/Domain/User'
 import { PostCommentDomainException } from '~/modules/Posts/Domain/PostComments/PostCommentDomainException'
 import { Translation } from '~/modules/Translations/Domain/Translation'
 import { ReactionableModel } from '~/modules/Reactions/Domain/ReactionableModel'
 import { TranslatableModel } from '~/modules/Translations/Domain/TranslatableModel'
 import { applyMixins } from '~/helpers/Domain/Mixins'
 import { PostMedia } from '~/modules/Posts/Domain/PostMedia/PostMedia'
-import { ViewableModel } from '~/modules/Views/Domain/ViewableModel'
-import { View } from '~/modules/Views/Domain/View'
+import { Report } from '~/modules/Reports/Domain/Report'
 
 export const supportedQualities = ['240p', '360p', '480p', '720p', '1080p', '1440p', '4k']
-
-export enum PostType {
-  VIDEO = 'video',
-  IMAGES = 'images',
-  MIXED = 'mixed'
-}
 
 export class Post {
   public readonly id: string
   public readonly title: string
-  public readonly type: PostType
   public readonly description: string
   public readonly slug: string
+  public readonly duration: number
+  public readonly trailerUrl: string | null
+  public readonly thumbnailUrl: string
+  public readonly externalUrl: string | null
+  public readonly viewsCount: number
+  public readonly resolution: number
   public readonly producerId: string | null
   public readonly actorId: string | null
   public readonly createdAt: DateTime
@@ -42,80 +38,73 @@ export class Post {
   public publishedAt: DateTime | null
 
   /** Relationships **/
-  private _meta: Collection<PostMeta, PostMeta['type']>
-  private _tags: Collection<PostTag, PostTag['id']>
+  private _categories: Collection<Category, Category['id']>
   private _actors: Collection<Actor, Actor['id']>
   private _comments: Collection<PostComment, PostComment['id']>
   private _producer: Relationship<Producer | null>
   private _actor: Relationship<Actor | null>
   private _postMedia: Collection<PostMedia, PostMedia['id']>
+  private _reports: Collection<Report, string>
 
   public constructor (
     id: string,
     title: string,
-    type: string,
     description: string,
     slug: string,
+    duration: number,
+    trailerUrl: string | null,
+    thumbnailUrl: string,
+    externalUrl: string | null,
+    viewsCount: number,
+    resolution: number,
     producerId: string | null,
     actorId: string | null,
     createdAt: DateTime,
     updatedAt: DateTime,
     deletedAt: DateTime | null,
     publishedAt: DateTime | null,
-    meta: Collection<PostMeta, PostMeta['type']> = Collection.notLoaded(),
-    tags: Collection<PostTag, PostTag['id']> = Collection.notLoaded(),
+    categories: Collection<Category, Category['id']> = Collection.notLoaded(),
     actors: Collection<Actor, Actor['id']> = Collection.notLoaded(),
     comments: Collection<PostComment, PostComment['id']> = Collection.notLoaded(),
-    reactions: Collection<Reaction, Reaction['userId']> = Collection.notLoaded(),
-    views: Collection<View, View['id']> = Collection.notLoaded(),
+    reactions: Collection<Reaction, Reaction['userIp']> = Collection.notLoaded(),
     producer: Relationship<Producer | null> = Relationship.notLoaded(),
     translations: Collection<Translation, Translation['language'] & Translation['field']> = Collection.notLoaded(),
     actor: Relationship<Actor | null> = Relationship.notLoaded(),
-    postMedia: Collection<PostMedia, PostMedia['id']> = Collection.notLoaded()
+    postMedia: Collection<PostMedia, PostMedia['id']> = Collection.notLoaded(),
+    reports: Collection<Report, Report['id']> = Collection.notLoaded()
   ) {
     this.id = id
     this.title = title
-    this.type = Post.validatePostType(type)
     this.description = description
     this.slug = slug
+    this.duration = duration
+    this.trailerUrl = trailerUrl
+    this.thumbnailUrl = thumbnailUrl
+    this.externalUrl = externalUrl
+    this.viewsCount = viewsCount
+    this.resolution = resolution
     this.producerId = producerId
     this.actorId = actorId
     this.createdAt = createdAt
     this.updatedAt = updatedAt
     this.deletedAt = deletedAt
     this.publishedAt = publishedAt
-    this._meta = meta
-    this._tags = tags
+    this._categories = categories
     this._actors = actors
     this._comments = comments
     this._producer = producer
     this._actor = actor
     this._postMedia = postMedia
+    this._reports = reports
     this.modelReactions = reactions
     this.modelTranslations = translations
-    this.modelViews = views
-  }
-
-  public addMeta (postMeta: PostMeta): void {
-    this._meta.addItem(postMeta, postMeta.type)
-  }
-
-  public addTranslation (translation: Translation): void {
-    this.modelTranslations.addItem(translation, translation.language + translation.field)
-  }
-
-  public addTag (postTag: PostTag): void {
-    this._tags.addItem(postTag, postTag.id)
-  }
-
-  public addActor (postActor: Actor): void {
-    this._actors.addItem(postActor, postActor.id)
   }
 
   public addChildComment (
     parentCommentId: PostComment['id'],
     comment: PostComment['comment'],
-    user: User
+    userIp: string,
+    username: string
   ): PostChildComment {
     const parentComment = this._comments.getItem(parentCommentId)
 
@@ -123,19 +112,19 @@ export class Post {
       throw PostDomainException.parentCommentNotFound(parentCommentId)
     }
 
-    return parentComment.addChildComment(comment, user)
+    return parentComment.addChildComment(comment, userIp, username)
   }
 
-  public createPostReaction (userId: User['id'], reactionType: string): Reaction {
-    return this.addReaction(this.id, ReactionableType.POST, userId, reactionType)
+  public createPostReaction (userIp: Reaction['userIp'], reactionType: string): Reaction {
+    return this.addReaction(this.id, ReactionableType.POST, userIp, reactionType)
   }
 
-  public updatePostReaction (userId: User['id'], reactionType: string): Reaction {
-    return this.addReaction(this.id, ReactionableType.POST, userId, reactionType)
+  public updatePostReaction (userIp: Reaction['userIp'], reactionType: string): Reaction {
+    return this.addReaction(this.id, ReactionableType.POST, userIp, reactionType)
   }
 
-  public deletePostReaction (userId: User['id']): void {
-    return this.deleteReaction(this.id, ReactionableType.POST, userId)
+  public deletePostReaction (userIp: Reaction['userIp']): void {
+    return this.deleteReaction(this.id, ReactionableType.POST, userIp)
   }
 
   public deletePostMedia (postMedia: PostMedia): void {
@@ -146,26 +135,48 @@ export class Post {
     this._postMedia.addItem(postMedia, postMedia.id)
   }
 
+  public addReport (
+    userIp: string,
+    userName: string,
+    userEmail: string,
+    type: string,
+    content: string
+  ): Report | null {
+    const existingReport = this._reports.values
+      .find((report) => report.userIp === userIp && report.type === type)
+
+    if (!existingReport) {
+      const report = this.buildReport(userIp, userName, userEmail, type, content)
+
+      this._reports.addItem(report, report.id)
+
+      return report
+    }
+
+    return null
+  }
+
   public addComment (
     comment: PostComment['comment'],
-    user: User
+    userIp: string,
+    username: string
   ): PostComment {
-    const commentToAdd = this.buildComment(comment, user)
+    const commentToAdd = this.buildComment(comment, userIp, username)
 
     this._comments.addItem(commentToAdd, commentToAdd.id)
 
     return commentToAdd
   }
 
-  public deleteComment (postCommentId: PostComment['id'], userId: PostComment['id']): void {
+  public deleteComment (postCommentId: PostComment['id'], userIp: PostComment['userIp']): void {
     const commentToRemove = this._comments.getItem(postCommentId)
 
     if (commentToRemove === null) {
       throw PostDomainException.postCommentNotFound(postCommentId)
     }
 
-    if (commentToRemove.userId !== userId) {
-      throw PostDomainException.userCannotDeleteComment(postCommentId, userId)
+    if (commentToRemove.userIp !== userIp) {
+      throw PostDomainException.userCannotDeleteComment(postCommentId, userIp)
     }
 
     const commentRemoved = this._comments.removeItem(postCommentId)
@@ -178,7 +189,7 @@ export class Post {
   public deleteChildComment (
     parentCommentId: PostComment['id'],
     postCommentId: PostChildComment['id'],
-    userId: PostChildComment['userId']
+    userIp: PostChildComment['userIp']
   ): void {
     const parentComment = this._comments.getItem(parentCommentId)
 
@@ -187,7 +198,7 @@ export class Post {
     }
 
     try {
-      parentComment.removeChildComment(postCommentId, userId)
+      parentComment.removeChildComment(postCommentId, userIp)
     } catch (exception: unknown) {
       if (!(exception instanceof PostCommentDomainException)) {
         throw exception
@@ -198,7 +209,7 @@ export class Post {
       }
 
       if (exception.id === PostCommentDomainException.userCannotDeleteChildCommentId) {
-        throw PostDomainException.userCannotDeleteComment(userId, postCommentId)
+        throw PostDomainException.userCannotDeleteComment(userIp, postCommentId)
       }
 
       if (exception.id === PostCommentDomainException.cannotDeleteChildCommentId) {
@@ -235,12 +246,8 @@ export class Post {
     this._comments.addItem(postComment, postComment.id)
   }
 
-  get meta (): PostMeta[] {
-    return this._meta.values
-  }
-
-  get tags (): PostTag[] {
-    return this._tags.values
+  get categories (): Category[] {
+    return this._categories.values
   }
 
   get actors (): Actor[] {
@@ -277,7 +284,8 @@ export class Post {
 
   private buildComment (
     comment: PostComment['comment'],
-    user: User
+    userIp: string,
+    username: string
   ): PostComment {
     const nowDate = DateTime.now()
 
@@ -285,25 +293,37 @@ export class Post {
       randomUUID(),
       comment,
       this.id,
-      user.id,
+      userIp,
+      username,
       nowDate,
       nowDate,
-      null,
-      Relationship.initializeRelation(user)
+      null
     )
   }
 
-  private static validatePostType (value: string): PostType {
-    const values: string [] = Object.values(PostType)
+  private buildReport (
+    userIp: string,
+    userName: string,
+    userEmail: string,
+    type: string,
+    content: string
+  ): Report {
+    const nowDate = DateTime.now()
 
-    if (!values.includes(value)) {
-      throw PostDomainException.invalidPostType(value)
-    }
-
-    return value as PostType
+    return new Report(
+      randomUUID(),
+      this.id,
+      type,
+      userIp,
+      userName,
+      userEmail,
+      content,
+      nowDate,
+      nowDate
+    )
   }
 }
 
-export interface Post extends ReactionableModel, TranslatableModel, ViewableModel {}
+export interface Post extends ReactionableModel, TranslatableModel {}
 
-applyMixins(Post, [ReactionableModel, TranslatableModel, ViewableModel])
+applyMixins(Post, [ReactionableModel, TranslatableModel])

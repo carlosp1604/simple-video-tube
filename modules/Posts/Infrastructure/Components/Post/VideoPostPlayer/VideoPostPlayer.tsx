@@ -7,7 +7,6 @@ import { MediaUrlComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostMe
 import { PostMediaComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostMedia/PostMediaComponentDto'
 import { VideoLoadingState } from '~/components/VideoLoadingState/VideoLoadingState'
 import { Tooltip } from '~/components/Tooltip/Tooltip'
-import { useSession } from 'next-auth/react'
 import { MediaUrlsHelper } from '~/modules/Posts/Infrastructure/Frontend/MediaUrlsHelper'
 import { useFirstRender } from '~/hooks/FirstRender'
 import { HtmlVideoPlayer } from '~/components/VideoPlayer/HtmlVideoPlayer'
@@ -37,30 +36,19 @@ export const VideoPostPlayer: FC<Props> = ({ embedPostMedia, videoPostMedia, tit
   const [tooltipId, setTooltipId] = useState<string>('')
   const [adOpen, setAdOpen] = useState<boolean>(true)
 
-  const { status, data } = useSession()
   const firstRender = useFirstRender()
 
-  const selectableUrls = useMemo(
-    () => {
-      let userId: string | null = null
+  const selectableUrls = useMemo(() => {
+    return MediaUrlsHelper.getSelectableUrls(embedPostMedia, videoPostMedia)
+  }, [embedPostMedia, videoPostMedia])
 
-      if (status === 'authenticated' && data) {
-        userId = data.user.id
-      }
+  const selectedMediaUrl = useMemo(() => {
+    if (selectableUrls.length > 0) {
+      return selectableUrls[0]
+    }
 
-      return MediaUrlsHelper.getSelectableUrls(embedPostMedia, videoPostMedia, userId)
-    },
-    [embedPostMedia, videoPostMedia, status])
-
-  const selectedMediaUrl = useMemo(
-    () => {
-      if (selectableUrls.length > 0) {
-        return selectableUrls[0]
-      }
-
-      return null
-    },
-    [selectableUrls, status])
+    return null
+  }, [selectableUrls])
 
   const [selectedUrl, setSelectedUrl] =
     useState<MediaUrlComponentDto | null>(selectedMediaUrl)
@@ -77,10 +65,6 @@ export const VideoPostPlayer: FC<Props> = ({ embedPostMedia, videoPostMedia, tit
     setMounted(true)
     setTooltipId(uuidv4())
   }, [])
-
-  useEffect(() => {
-    setSelectedUrl(selectedMediaUrl)
-  }, [status])
 
   if (selectableUrls.length === 0) {
     return (
@@ -152,7 +136,8 @@ export const VideoPostPlayer: FC<Props> = ({ embedPostMedia, videoPostMedia, tit
     embedPostMedia.urls.find((postMedia) =>
       selectedUrl.url === postMedia.url)
   ) {
-    const sandbox = MediaUrlsHelper.shouldBeSanboxed(selectedUrl.provider.id, status === 'authenticated')
+    // FIXME: Determine whether iframe should be sandboxed
+    const sandbox = MediaUrlsHelper.shouldBeSanboxed(selectedUrl.provider.id, true)
 
     playerElement = (
       <iframe

@@ -5,9 +5,9 @@ import { BiLike, BiSolidLike } from 'react-icons/bi'
 import { useRouter } from 'next/router'
 import { NumberFormatter } from '~/modules/Shared/Infrastructure/FrontEnd/NumberFormatter'
 import * as uuid from 'uuid'
-import { Tooltip } from '~/components/Tooltip/Tooltip'
 import { AiOutlineLoading } from 'react-icons/ai'
 import toast from 'react-hot-toast'
+import { Tooltip2 } from '~/components/Tooltip2/Tooltip'
 
 interface Props {
   liked: boolean
@@ -56,16 +56,12 @@ export const LikeButton: FC<Props> = ({ liked, onLike, onDeleteLike, reactionsNu
       iconElement = (
         <BiSolidLike className={ styles.likeButton__likeIcon }
          title={ t('like_reaction_active_title_button') }
-         data-tooltip-id={ tooltipId }
-         data-tooltip-content={ t('like_reaction_active_title_button') }
         />
       )
     } else {
       iconElement = (
         <BiLike className={ styles.likeButton__likeIcon }
           title={ t('like_reaction_title_button') }
-          data-tooltip-id={ tooltipId }
-          data-tooltip-content={ t('like_reaction_title_button') }
         />
       )
     }
@@ -77,22 +73,24 @@ export const LikeButton: FC<Props> = ({ liked, onLike, onDeleteLike, reactionsNu
     <div className={ `
       ${styles.likeButton__container}
       ${disabled ? styles.likeButton__container_disabled : ''}
-    ` }>
+      ` }
+    >
+      { mounted && !disabled && !loading &&
+        <Tooltip2
+          id={ tooltipId }
+          place={ 'top' }
+          content={ liked ? t('like_reaction_active_title_button') : t('like_reaction_title_button') }
+        /> }
       <button className={ `
         ${styles.likeButton__likeButton}
         ${liked ? styles.likeButton__likeButton_active : ''}
       ` }
+        tooltip-id={ tooltipId }
         disabled={ disabled }
         onClick={ onClickButton }
       >
         { iconElement }
       </button>
-
-      { mounted && !disabled && !loading &&
-        <Tooltip
-          tooltipId={ tooltipId }
-          place={ 'top' }
-        /> }
       { NumberFormatter.compatFormat(reactionsNumber, locale) }
     </div>
   )

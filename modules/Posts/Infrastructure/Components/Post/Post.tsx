@@ -6,17 +6,15 @@ import {
   ReactionComponentDtoTranslator
 } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDtoTranslator'
 import { PostsApiService } from '~/modules/Posts/Infrastructure/Frontend/PostsApiService'
-import { useSession } from 'next-auth/react'
 import { ReactionType } from '~/modules/Reactions/Infrastructure/ReactionType'
-import { PostTypeResolver } from '~/modules/Posts/Infrastructure/Components/Post/PostTypes/PostTypeResolver'
-import { PostBasicData } from '~/modules/Posts/Infrastructure/Components/Post/PostData/PostBasicData'
 import { useReactPost } from '~/hooks/ReactPost'
 import { PostData } from '~/modules/Posts/Infrastructure/Components/Post/PostData/PostData'
 import { Banner } from '~/modules/Shared/Infrastructure/Components/Banner/Banner'
 import { DesktopBanner } from '~/modules/Shared/Infrastructure/Components/ExoclickBanner/DesktopBanner'
 import { OutstreamBanner } from '~/modules/Shared/Infrastructure/Components/ExoclickBanner/OutstreamBanner'
 import dynamic from 'next/dynamic'
-import { useSavePost } from '~/hooks/SavePosts'
+import { VideoPostType } from '~/modules/Posts/Infrastructure/Components/Post/PostTypes/VideoPostType/VideoPostType'
+import { PostBasicData } from '~/modules/Posts/Infrastructure/Components/Post/PostData/PostBasicData'
 
 const PostComments = dynamic(() =>
   import('~/modules/Posts/Infrastructure/Components/PostComment/PostComments').then((module) => module.PostComments),
@@ -50,47 +48,36 @@ export const Post: FC<Props> = ({
   const postsApiService = new PostsApiService()
   const commentsRef = useRef<HTMLDivElement>(null)
 
-  const { savePost, removeSavedPost } = useSavePost('post')
   const { reactPost, removeReaction } = useReactPost('post')
 
-  const { status } = useSession()
-
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      setUserReaction(null)
-      setSavedPost(false)
-      setOptionsDisabled(false)
-    }
+    postsApiService.getPostUserInteraction(post.id)
+      .then(async (response) => {
+        if (response.ok) {
+          const jsonResponse = await response.json()
 
-    if (status === 'authenticated') {
-      postsApiService.getPostUserInteraction(post.id)
-        .then(async (response) => {
-          if (response.ok) {
-            const jsonResponse = await response.json()
+          setSavedPost(jsonResponse.savedPost)
 
-            setSavedPost(jsonResponse.savedPost)
+          if (jsonResponse.userReaction === null) {
+            setUserReaction(null)
 
-            if (jsonResponse.userReaction === null) {
-              setUserReaction(null)
+            return
+          }
 
-              return
-            }
-
-            const userReactionDto =
+          const userReactionDto =
               ReactionComponentDtoTranslator.fromApplicationDto(jsonResponse.userReaction)
 
-            setUserReaction(userReactionDto)
-          } else {
-            const jsonResponse = await response.json()
+          setUserReaction(userReactionDto)
+        } else {
+          const jsonResponse = await response.json()
 
-            console.error(jsonResponse)
-          }
-        })
-        .catch((exception) => {
-          console.error(exception)
-        })
-        .finally(() => { setOptionsDisabled(false) })
-    }
+          console.error(jsonResponse)
+        }
+      })
+      .catch((exception) => {
+        console.error(exception)
+      })
+      .finally(() => { setOptionsDisabled(false) })
 
     if (commentsOpen) {
       setCommentsOpen(false)
@@ -98,7 +85,7 @@ export const Post: FC<Props> = ({
         setCommentsOpen(true)
       })
     }
-  }, [status])
+  }, [])
 
   useEffect(() => {
     try {
@@ -176,39 +163,28 @@ export const Post: FC<Props> = ({
     }
   }
 
-  const onClickSavePostButton = async () => {
-    if (!savedPost) {
-      const postIsSaved = await savePost(post.id)
-
-      setSavedPost(postIsSaved)
-    } else {
-      const postIsDeleted = await removeSavedPost(post.id)
-
-      setSavedPost(!postIsDeleted)
-    }
-  }
-
   return (
     <div className={ styles.post__container }>
       <section className={ styles.post__postWithAds }>
         <div className={ styles.post__leftContainer }>
-          { PostTypeResolver.resolve(
-            post,
-            userReaction,
-            savedPost,
-            onClickReactButton,
-            onClickCommentsButton,
-            onClickSavePostButton,
-            likesNumber,
-            optionsDisabled,
-            <PostBasicData
-              post={ post }
-              postViewsNumber={ viewsNumber }
-              postLikes={ likesNumber }
-              postDislikes={ dislikesNumber }
-              postCommentsNumber={ commentsNumber }
-            />
-          ) }
+          <VideoPostType
+            post={ post }
+            postBasicDataElement={
+              <PostBasicData
+                post={ post }
+                postViewsNumber={ viewsNumber }
+                postLikes={ likesNumber }
+                postDislikes={ dislikesNumber }
+                postCommentsNumber={ commentsNumber }
+              />
+            }
+            userReaction={ userReaction }
+            savedPost={ savedPost }
+            onClickReactButton={ async (type) => await onClickReactButton(type) }
+            onClickCommentsButton={ onClickCommentsButton }
+            likesNumber={ likesNumber }
+            optionsDisabled={ optionsDisabled }
+          />
 
           <PostData
             producer={ post.producer }

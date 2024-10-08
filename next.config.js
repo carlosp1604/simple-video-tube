@@ -23,8 +23,8 @@ const nextConfig = {
       destination: '/actors-sitemap',
     },
     {
-      source: '/tags-sitemap.xml',
-      destination: '/tags-sitemap',
+      source: '/categories-sitemap.xml',
+      destination: '/categories-sitemap',
     },
     {
       source: '/actors-sitemap-:page.xml',

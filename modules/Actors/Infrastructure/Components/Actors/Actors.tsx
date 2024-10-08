@@ -142,7 +142,7 @@ export const Actors: FC<Props> = ({
     if (newActors) {
       setActorsNumber(newActors.actorsNumber)
       setActors(newActors.actors.map((actor) => {
-        return ActorCardDtoTranslator.fromApplicationDto(actor.actor, actor.postsNumber, actor.actorViews)
+        return ActorCardDtoTranslator.fromApplicationDto(actor.actor, actor.postsNumber)
       }))
     }
   }

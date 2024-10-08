@@ -9,7 +9,6 @@ import {
 export class DeletePostReactionApiRequestValidator {
   private static deletePostReactionApiRequestSchema = z.object({
     postId: z.string().uuid(),
-    userId: z.string().uuid(),
   })
 
   public static validate (request: DeletePostReactionApiRequestDto): PostsApiRequestValidatorError | void {

@@ -1,13 +1,12 @@
 import { ApplicationException } from '~/modules/Exceptions/Application/ApplicationException'
 import { PostComment } from '~/modules/Posts/Domain/PostComments/PostComment'
 import { Post } from '~/modules/Posts/Domain/Post'
-import { User } from '~/modules/Auth/Domain/User'
+import { PostChildComment } from '~/modules/Posts/Domain/PostComments/PostChildComment'
 
 export class DeletePostCommentApplicationException extends ApplicationException {
   public static cannotDeleteCommentId = 'delete_post_comment_cannot_delete_comment'
   public static cannotDeleteCommentFromPersistenceId = 'delete_post_comment_cannot_delete_comment_from_persistence'
   public static postNotFoundId = 'delete_post_comment_post_not_found'
-  public static userNotFoundId = 'delete_post_comment_user_not_found'
   public static parentCommentNotFoundId = 'delete_post_comment_parent_comment_not_found'
   public static postCommentNotFoundId = 'delete_post_comment_post_comment_not_found'
   public static userCannotDeleteCommentId = 'delete_post_comment_user_cannot_delete_post_comment'
@@ -37,13 +36,6 @@ export class DeletePostCommentApplicationException extends ApplicationException 
     )
   }
 
-  public static userNotFound (userId: User['id']): DeletePostCommentApplicationException {
-    return new DeletePostCommentApplicationException(
-      `User with ID ${userId} was not found`,
-      this.userNotFoundId
-    )
-  }
-
   public static parentCommentNotFound (postCommentId: PostComment['id']): DeletePostCommentApplicationException {
     return new DeletePostCommentApplicationException(
       `Parent comment with ID ${postCommentId} was not found`,
@@ -59,11 +51,11 @@ export class DeletePostCommentApplicationException extends ApplicationException 
   }
 
   public static userCannotDeleteComment (
-    userId: User['id'],
+    userIp: PostComment['userIp'] | PostChildComment['userIp'],
     postCommentId: PostComment['id']
   ): DeletePostCommentApplicationException {
     return new DeletePostCommentApplicationException(
-      `Comment with ID ${postCommentId} does not belong to user with ID ${userId}`,
+      `Comment with ID ${postCommentId} does not belong to user with IP ${userIp}`,
       this.userCannotDeleteCommentId
     )
   }

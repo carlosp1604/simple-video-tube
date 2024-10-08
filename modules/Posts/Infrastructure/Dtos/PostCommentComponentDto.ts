@@ -1,4 +1,3 @@
-import { UserPostCommentComponentDto } from './UserPostCommentComponentDto'
 import { ReactionComponentDto } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDto'
 
 export interface PostCommentComponentDto {
@@ -6,7 +5,7 @@ export interface PostCommentComponentDto {
   comment: string
   postId: string
   createdAt: string
-  user: UserPostCommentComponentDto
+  username: string
   repliesNumber: number
   reactionsNumber: number
   userReaction: ReactionComponentDto | null

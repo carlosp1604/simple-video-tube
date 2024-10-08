@@ -1,5 +1,5 @@
 export interface CreatePostCommentReactionApplicationRequest {
-  userId: string
+  userIp: string
   postCommentId: string
   parentCommentId: string | null
 }

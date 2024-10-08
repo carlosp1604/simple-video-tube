@@ -2,7 +2,9 @@ import { z, ZodError } from 'zod'
 import {
   GetPostUserInteractionApiRequestDto
 } from '~/modules/Posts/Infrastructure/Api/Requests/GetPostUserInteractionApiRequestDto'
-import { PostsApiRequestValidatorError } from '~/modules/Posts/Infrastructure/Api/Validators/PostsApiRequestValidatorError'
+import {
+  PostsApiRequestValidatorError
+} from '~/modules/Posts/Infrastructure/Api/Validators/PostsApiRequestValidatorError'
 
 export class GetPostUserInteractionApiRequestValidator {
   private static getPostUserInteractionApiRequestSchema = z.object({

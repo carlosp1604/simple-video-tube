@@ -1,18 +1,10 @@
-import { FC, ReactNode, useState } from 'react'
+import { FC, useState } from 'react'
 import styles from './PostChildCommentWithOptions.module.scss'
 import { ReactionComponentDto } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDto'
 import toast from 'react-hot-toast'
 import { CommentsApiService } from '~/modules/Posts/Infrastructure/Frontend/CommentsApiService'
 import { APIException } from '~/modules/Shared/Infrastructure/FrontEnd/ApiException'
-import {
-  POST_COMMENT_REACTION_USER_NOT_FOUND,
-  POST_COMMENT_USER_NOT_FOUND
-} from '~/modules/Posts/Infrastructure/Api/PostApiExceptionCodes'
-import { signOut, useSession } from 'next-auth/react'
 import useTranslation from 'next-translate/useTranslation'
-import { BsThreeDotsVertical } from 'react-icons/bs'
-import { MenuDropdown } from '~/components/MenuDropdown/MenuDropdown'
-import { FiTrash } from 'react-icons/fi'
 import {
   ReactionComponentDtoTranslator
 } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDtoTranslator'
@@ -41,7 +33,6 @@ export const PostChildCommentWithOptions: FC<Props> = ({
   const [loading, setLoading] = useState<boolean>(false)
 
   const { t } = useTranslation('post_comments')
-  const { status, data } = useSession()
 
   const onClickDelete = async () => {
     if (optionsDisabled || loading) {
@@ -62,10 +53,6 @@ export const PostChildCommentWithOptions: FC<Props> = ({
         console.error(exception)
 
         return
-      }
-
-      if (exception.code === POST_COMMENT_USER_NOT_FOUND) {
-        await signOut({ redirect: false })
       }
 
       toast.error(t(`api_exceptions:${exception.translationKey}`))
@@ -117,10 +104,6 @@ export const PostChildCommentWithOptions: FC<Props> = ({
         return
       }
 
-      if (exception.code === POST_COMMENT_REACTION_USER_NOT_FOUND) {
-        await signOut({ redirect: false })
-      }
-
       toast.error(t(`api_exceptions:${exception.translationKey}`))
     } finally {
       setLoading(false)
@@ -128,12 +111,6 @@ export const PostChildCommentWithOptions: FC<Props> = ({
   }
 
   const onDeleteReaction = async () => {
-    if (status !== 'authenticated') {
-      toast.error(t('user_must_be_authenticated_error_message'))
-
-      return
-    }
-
     if (postChildComment.userReaction === null) {
       toast.error(t('post_comment_reaction_user_has_not_reacted'))
 
@@ -164,42 +141,10 @@ export const PostChildCommentWithOptions: FC<Props> = ({
         return
       }
 
-      if (exception.code === POST_COMMENT_REACTION_USER_NOT_FOUND) {
-        await signOut({ redirect: false })
-      }
-
       toast.error(t(`api_exceptions:${exception.translationKey}`))
     } finally {
       setLoading(false)
     }
-  }
-
-  let postCommentOptionsElement: ReactNode | null = null
-
-  if (status === 'authenticated' && data && postChildComment.user.id === data.user.id) {
-    postCommentOptionsElement = (
-      <MenuDropdown
-        buttonIcon={
-          <button className={ `
-            ${styles.postChildCommentWithOptions__optionsButton}
-            ${optionsMenuOpen ? styles.postChildCommentWithOptions__optionsButton_open : ''}
-          ` }
-            disabled={ optionsDisabled || loading }
-            onClick={ () => setOptionsMenuOpen(!optionsMenuOpen) }
-          >
-            <BsThreeDotsVertical className={ styles.postChildCommentWithOptions__optionsIcon }/>
-          </button>
-        }
-        isOpen={ optionsMenuOpen }
-        setIsOpen={ setOptionsMenuOpen }
-        options={ [{
-          title: t('delete_comment_option_title'),
-          icon: <FiTrash/>,
-          onClick: async () => { await onClickDelete() },
-        }] }
-        title={ t('post_comment_menu_options_title') }
-      />
-    )
   }
 
   return (
@@ -209,7 +154,6 @@ export const PostChildCommentWithOptions: FC<Props> = ({
         ${loading ? styles.postChildCommentWithOptions__commentWithOptionsContainer_loading : ''}
       ` }>
         <PostChildCommentCard postChildComment={ postChildComment } />
-        { postCommentOptionsElement }
       </div>
       <div className={ styles.postChildCommentWithOptions__interactionSection }>
         <LikeButton

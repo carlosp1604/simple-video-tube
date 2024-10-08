@@ -1,6 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '~/pages/api/auth/[...nextauth]'
 import {
   DeletePostCommentApiRequestDto
 } from '~/modules/Posts/Infrastructure/Api/Requests/DeletePostCommentApiRequestDto'
@@ -19,16 +17,15 @@ import {
 } from '~/modules/Posts/Infrastructure/Api/Validators/PostCommentApiRequestValidatorError'
 import { container } from '~/awilix.container'
 import {
-  POST_CHILD_COMMENT_AUTH_REQUIRED,
   POST_CHILD_COMMENT_BAD_REQUEST,
   POST_CHILD_COMMENT_FORBIDDEN,
   POST_CHILD_COMMENT_METHOD,
   POST_CHILD_COMMENT_SERVER_ERROR,
   POST_CHILD_COMMENT_VALIDATION, POST_COMMENT_CANNOT_DELETE_COMMENT, POST_COMMENT_COMMENT_NOT_FOUND,
   POST_COMMENT_PARENT_COMMENT_NOT_FOUND,
-  POST_COMMENT_POST_NOT_FOUND,
-  POST_COMMENT_USER_NOT_FOUND
+  POST_COMMENT_POST_NOT_FOUND
 } from '~/modules/Posts/Infrastructure/Api/PostApiExceptionCodes'
+import requestIp from 'request-ip'
 
 export default async function handler (
   request: NextApiRequest,
@@ -44,11 +41,7 @@ export default async function handler (
 }
 
 async function handleDeleteMethod (request: NextApiRequest, response: NextApiResponse) {
-  const session = await getServerSession(request, response, authOptions)
-
-  if (session === null) {
-    return handleAuthentication(request, response)
-  }
+  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
 
   const { postId, commentId, childCommentId } = request.query
 
@@ -61,7 +54,6 @@ async function handleDeleteMethod (request: NextApiRequest, response: NextApiRes
   try {
     apiRequest = {
       parentCommentId: String(commentId),
-      userId: session.user.id,
       postCommentId: String(childCommentId),
       postId: String(postId),
     }
@@ -72,10 +64,10 @@ async function handleDeleteMethod (request: NextApiRequest, response: NextApiRes
   const validationError = DeletePostCommentApiRequestValidator.validate(apiRequest)
 
   if (validationError) {
-    return handleValidationError(request, response, validationError)
+    return handleValidationError(response, validationError)
   }
 
-  const applicationRequest = DeletePostRequestDtoTranslator.fromApiDto(apiRequest)
+  const applicationRequest = DeletePostRequestDtoTranslator.fromApiDto(apiRequest, userIp)
 
   const useCase = container.resolve<DeletePostComment>('deletePostCommentUseCase')
 
@@ -91,9 +83,6 @@ async function handleDeleteMethod (request: NextApiRequest, response: NextApiRes
     switch (exception.id) {
       case DeletePostCommentApplicationException.postNotFoundId:
         return handleNotFound(response, exception.message, POST_COMMENT_POST_NOT_FOUND)
-
-      case DeletePostCommentApplicationException.userNotFoundId:
-        return handleNotFound(response, exception.message, POST_COMMENT_USER_NOT_FOUND)
 
       case DeletePostCommentApplicationException.parentCommentNotFoundId:
         return handleNotFound(response, exception.message, POST_COMMENT_PARENT_COMMENT_NOT_FOUND)
@@ -128,17 +117,7 @@ function handleMethod (request: NextApiRequest, response: NextApiResponse) {
     })
 }
 
-function handleAuthentication (request: NextApiRequest, response: NextApiResponse) {
-  return response
-    .status(401)
-    .json({
-      code: POST_CHILD_COMMENT_AUTH_REQUIRED,
-      message: 'User must be authenticated to access to resource',
-    })
-}
-
 function handleValidationError (
-  request: NextApiRequest,
   response: NextApiResponse,
   validationError: PostCommentApiRequestValidatorError
 ) {

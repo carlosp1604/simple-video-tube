@@ -1,4 +1,3 @@
-import { UserPostCommentComponentDtoTranslator } from './UserPostCommentComponentTranslatorDto'
 import { PostChildCommentApplicationDto } from '~/modules/Posts/Application/Dtos/PostChildCommentApplicationDto'
 import { PostChildCommentComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostChildCommentComponentDto'
 import { DateService } from '~/helpers/Infrastructure/DateService'
@@ -19,7 +18,7 @@ export class PostChildCommentComponentDtoTranslator {
       comment: applicationDto.comment,
       createdAt: new DateService()
         .formatDateToDatetimeMedFromIso(applicationDto.createdAt, locale),
-      user: UserPostCommentComponentDtoTranslator.fromApplication(applicationDto.user),
+      username: applicationDto.username,
       parentCommentId: applicationDto.parentCommentId,
       reactionsNumber,
       userReaction: userReaction !== null ? ReactionComponentDtoTranslator.fromApplicationDto(userReaction) : null,

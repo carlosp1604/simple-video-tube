@@ -36,11 +36,7 @@
   }
 
   &__video-data-container {
-    @apply grid py-2;
-    grid-template-areas:
-      "producer-logo post-data";
-
-    grid-template-columns: auto 1fr;
+    @apply py-2;
   }
 
   &__post-data {

@@ -51,7 +51,6 @@ export const getServerSideProps: GetServerSideProps<ActorPageProps> = async (con
 
   const props: ActorPageProps = {
     actor: {
-      description: null,
       slug: '',
       name: '',
       imageUrl: '',
@@ -88,7 +87,7 @@ export const getServerSideProps: GetServerSideProps<ActorPageProps> = async (con
     })
 
     props.initialPosts = actorPosts.posts.map((post) => {
-      return PostCardComponentDtoTranslator.fromApplication(post.post, post.postViews, locale)
+      return PostCardComponentDtoTranslator.fromApplication(post, locale)
     })
     props.initialPostsNumber = actorPosts.postsNumber
   } catch (exception: unknown) {

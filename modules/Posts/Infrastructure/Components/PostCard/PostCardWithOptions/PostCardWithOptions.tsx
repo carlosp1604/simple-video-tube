@@ -22,7 +22,6 @@ export const PostCardWithOptions: FC<Props> = ({
   post,
   showOptionsButton,
   onClickOptions,
-  showProducerImage,
 }) => {
   const { t } = useTranslation('post_card')
   const [mounted, setMounted] = useState<boolean>(false)
@@ -36,7 +35,6 @@ export const PostCardWithOptions: FC<Props> = ({
   return (
     <div className={ styles.postCardWithOptions__container }>
       <PostCard
-        showProducerImage={ showProducerImage }
         post={ post }
       />
       <button className={ `

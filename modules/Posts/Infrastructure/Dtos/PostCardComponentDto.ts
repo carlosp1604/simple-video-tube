@@ -4,15 +4,12 @@ export interface ProducerPostCardComponentDto {
   readonly id: string
   readonly slug: string
   readonly name: string
-  readonly imageUrl: string | null
-  readonly brandHexColor: string
 }
 
 export interface ActorPostCardComponentDto {
   readonly id: string
   readonly name: string
   readonly slug: string
-  readonly imageUrl: string | null
 }
 
 export interface PostCardComponentDto {
@@ -20,7 +17,7 @@ export interface PostCardComponentDto {
   readonly slug: string
   readonly title: string
   readonly thumb: string
-  readonly resolution: string
+  readonly resolution: number
   readonly animation: PostAnimationDto | null
   readonly views: number
   readonly date: string

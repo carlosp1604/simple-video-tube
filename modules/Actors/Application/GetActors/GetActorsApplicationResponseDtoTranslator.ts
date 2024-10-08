@@ -8,7 +8,6 @@ export class GetActorsApplicationResponseDtoTranslator {
       return {
         actor: ActorApplicationDtoTranslator.fromDomain(actorWithPostsCount.actor),
         postsNumber: actorWithPostsCount.postsNumber,
-        actorViews: actorWithPostsCount.actorViews,
       }
     })
 

@@ -27,7 +27,7 @@ export class HtmlPageMetaResourceProps {
 
 export class HtmlPageMetaVideoProps extends HtmlPageMetaResourceProps {
   public readonly videoUrl: string
-  public readonly duration: string
+  public readonly duration: number
   public readonly width: string
   public readonly height: string
 
@@ -38,7 +38,7 @@ export class HtmlPageMetaVideoProps extends HtmlPageMetaResourceProps {
     canonical: string | null,
     image: string,
     videoUrl: string,
-    duration: string,
+    duration: number,
     width: string,
     height: string
   ) {

@@ -1,0 +1,11 @@
+.tooltip {
+  &__container {
+    @apply hidden rounded-lg bg-brand-primary-dark
+    whitespace-nowrap p-2 text-white;
+
+    &_visible {
+      @apply block fixed left-[var(--x-position)] top-[var(--y-position)]
+      z-tooltip;
+    }
+  }
+}

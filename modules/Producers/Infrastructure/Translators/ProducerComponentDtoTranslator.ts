@@ -7,7 +7,6 @@ export class ProducerComponentDtoTranslator {
       id: applicationDto.id,
       slug: applicationDto.slug,
       name: applicationDto.name,
-      brandHexColor: applicationDto.brandHexColor,
     }
   }
 }

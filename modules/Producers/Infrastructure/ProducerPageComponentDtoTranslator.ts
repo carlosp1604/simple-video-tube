@@ -9,7 +9,6 @@ export class ProducerPageComponentDtoTranslator {
       imageUrl: applicationDto.imageUrl,
       name: applicationDto.name,
       description: applicationDto.description,
-      brandHexColor: applicationDto.brandHexColor,
     }
   }
 }

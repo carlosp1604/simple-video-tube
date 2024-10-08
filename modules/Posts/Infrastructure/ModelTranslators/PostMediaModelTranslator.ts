@@ -10,6 +10,12 @@ import { MediaUrl } from '~/modules/Posts/Domain/PostMedia/MediaUrl'
 
 export class PostMediaModelTranslator {
   public static toDomain (prismaPostMediaModel: PrismaPostMediaModel): PostMedia {
+    let deletedAt: DateTime | null = null
+
+    if (prismaPostMediaModel.deletedAt !== null) {
+      deletedAt = DateTime.fromJSDate(prismaPostMediaModel.deletedAt)
+    }
+
     const postMediaWithMediaUrlWithProvider = prismaPostMediaModel as PostMediaWithMediaUrlWithMediaProvider
 
     const mediaUrlsCollection:
@@ -27,8 +33,10 @@ export class PostMediaModelTranslator {
       prismaPostMediaModel.title,
       prismaPostMediaModel.postId,
       prismaPostMediaModel.thumbnailUrl,
+      prismaPostMediaModel.removalReason,
       DateTime.fromJSDate(prismaPostMediaModel.createdAt),
       DateTime.fromJSDate(prismaPostMediaModel.updatedAt),
+      deletedAt,
       mediaUrlsCollection
     )
   }
@@ -42,6 +50,8 @@ export class PostMediaModelTranslator {
       id: postMedia.id,
       thumbnailUrl: postMedia.thumbnailUrl,
       title: postMedia.title,
+      deletedAt: postMedia.deletedAt?.toJSDate() ?? null,
+      removalReason: postMedia.removalReason,
     }
   }
 }

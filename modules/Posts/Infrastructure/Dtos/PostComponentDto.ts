@@ -19,7 +19,6 @@ export interface PostComponentDtoProducerDto {
   readonly imageUrl: string | null
   readonly name: string
   readonly slug: string
-  readonly brandHexColor: string
 }
 
 export interface PostComponentDto {
@@ -27,9 +26,8 @@ export interface PostComponentDto {
   readonly slug: string
   readonly title: string
   readonly thumb: string
-  readonly resolution: string
-  readonly duration: string
-  readonly type: string
+  readonly resolution: number
+  readonly duration: number
   readonly video: VideoComponentDto
   readonly formattedPublishedAt: string
   readonly publishedAt: string

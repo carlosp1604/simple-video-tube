@@ -154,10 +154,7 @@ export const PostPage: NextPage<PostPageProps> = ({
         <span className={ styles.postPage__relatedVideosTitle }>
           { t('video_related_videos_title') }
         </span>
-        <PostCardGallery
-          posts={ relatedPosts }
-          postCardOptions={ [{ type: 'savePost' }, { type: 'react' }] }
-        />
+        <PostCardGallery posts={ relatedPosts } />
       </div>
     )
   }

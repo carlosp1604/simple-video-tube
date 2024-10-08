@@ -3,7 +3,6 @@ import { ProducerComponentDto } from '~/modules/Producers/Infrastructure/Dtos/Pr
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
 import styles from './Home.module.scss'
-import { ProducerList } from '~/modules/Producers/Infrastructure/Components/ProducerList/ProducerList'
 import { EmptyState } from '~/components/EmptyState/EmptyState'
 import { PostsPaginationSortingType } from '~/modules/Posts/Infrastructure/Frontend/PostsPaginationSortingType'
 import { FC, ReactElement, useState } from 'react'
@@ -11,7 +10,7 @@ import { ElementLinkMode } from '~/modules/Shared/Infrastructure/FrontEnd/Elemen
 import { PostFilterOptions } from '~/modules/Posts/Infrastructure/Frontend/PostFilterOptions'
 import { PaginationSortingType } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationSortingType'
 import {
-  PaginatedPostCardGallery, PaginatedPostCardGalleryConfiguration
+  PaginatedPostCardGallery
 } from '~/modules/Shared/Infrastructure/Components/PaginatedPostCardGallery/PaginatedPostCardGallery'
 import { NumberFormatter } from '~/modules/Shared/Infrastructure/FrontEnd/NumberFormatter'
 import { FetchFilter } from '~/modules/Shared/Infrastructure/FrontEnd/FetchFilter'
@@ -53,8 +52,6 @@ export const Home: FC<Props> = ({
     shallowNavigation: true,
     scrollOnClick: true,
   }
-
-  const postCardOptions: PaginatedPostCardGalleryConfiguration[] = [{ type: 'savePost' }, { type: 'react' }]
 
   const emptyState: ReactElement = (
     <EmptyState
@@ -98,11 +95,6 @@ export const Home: FC<Props> = ({
   // FIXME: Find the way to pass the default producer's name translated from serverside
   return (
     <div className={ styles.home__container }>
-      <ProducerList
-        producers={ producers }
-        activeProducer={ selectedProducer }
-      />
-
       <PaginatedPostCardGallery
         headerTag={ 'h1' }
         key={ locale }
@@ -116,7 +108,6 @@ export const Home: FC<Props> = ({
           ? []
           : [{ type: FilterOptions.PRODUCER_SLUG, value: activeProducer.slug }] }
         filtersToParse={ [FilterOptions.PRODUCER_SLUG] }
-        paginatedPostCardGalleryPostCardOptions={ postCardOptions }
         linkMode={ linkMode }
         sortingOptions={ sortingOptions }
         defaultSortingOption={ PaginationSortingType.LATEST }

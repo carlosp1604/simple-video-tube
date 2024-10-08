@@ -15,7 +15,6 @@ export interface Props {
   savedPost: boolean
   onClickReactButton: (type: ReactionType) => Promise<void>
   onClickCommentsButton: () => void
-  onClickSaveButton: () => Promise<void>
   likesNumber: number
   optionsDisabled: boolean
 }
@@ -27,7 +26,6 @@ export const VideoPostType: FC<Props> = ({
   savedPost,
   onClickReactButton,
   onClickCommentsButton,
-  onClickSaveButton,
   likesNumber,
   optionsDisabled,
 }) => {
@@ -36,6 +34,8 @@ export const VideoPostType: FC<Props> = ({
 
   return (
     <>
+      { postBasicDataElement }
+
       <div className={ styles.videoPostType__videoContainer } >
         <VideoPostPlayer
           title={ t('post_player_title', { postName: post.title }) }
@@ -44,14 +44,11 @@ export const VideoPostType: FC<Props> = ({
         />
       </div>
 
-      { postBasicDataElement }
-
       <PostOptions
         userReaction={ userReaction }
         savedPost={ savedPost }
         onClickReactButton={ async (type) => await onClickReactButton(type) }
         onClickCommentsButton={ onClickCommentsButton }
-        onClickSaveButton={ async () => await onClickSaveButton() }
         likesNumber={ likesNumber }
         optionsDisabled={ optionsDisabled }
         downloadUrls={ downloadUrls }

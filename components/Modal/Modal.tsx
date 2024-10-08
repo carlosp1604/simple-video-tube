@@ -40,9 +40,10 @@ export const Modal: FC<Props> = ({
       } }
       in={ isOpen }
       timeout={ parseInt('100') }
-      ref={ backdropRef }
+      nodeRef={ backdropRef }
     >
       <div
+        ref={ backdropRef }
         className={ styles.modal__modalBackdrop }
         onClick={ onClose }
       >

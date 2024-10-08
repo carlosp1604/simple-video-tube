@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import styles from './ProducerCard.module.scss'
 import { AvatarImage } from '~/components/AvatarImage/AvatarImage'
-import { CSSProperties, FC } from 'react'
+import { FC } from 'react'
 import { ProducerCardDto } from '~/modules/Producers/Infrastructure/ProducerCardDto'
 import useTranslation from 'next-translate/useTranslation'
 import { NumberFormatter } from '~/modules/Shared/Infrastructure/FrontEnd/NumberFormatter'
@@ -27,7 +27,6 @@ export const ProducerCard: FC<Props> = ({ producer }) => {
             avatarName={ producer.name }
             imageAlt={ t('producer_card_image_alt_title', { producerName: producer.name }) }
             rounded={ false }
-            color={ producer.brandHexColor }
           />
         </Link>
       </div>
@@ -38,12 +37,7 @@ export const ProducerCard: FC<Props> = ({ producer }) => {
         >
           { producer.name }
         </Link>
-        <div
-          className={ styles.producerCard__countSection }
-          style={ {
-            '--producer-color': producer.brandHexColor,
-          } as CSSProperties }
-        >
+        <div className={ styles.producerCard__countSection }>
           { t('producer_card_posts_count_title', { postsNumber: producer.postsNumber }) }
           <span className={ styles.producerCard__viewsTitle }>
             { t('producer_card_views_count_title',

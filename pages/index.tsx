@@ -126,7 +126,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     }
 
     props.initialPosts = posts.posts.map((post) => {
-      return PostCardComponentDtoTranslator.fromApplication(post.post, post.postViews, locale)
+      return PostCardComponentDtoTranslator.fromApplication(post, locale)
     })
     props.initialPostsNumber = posts.postsNumber
     props.producers = producerComponents

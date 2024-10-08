@@ -1,16 +1,12 @@
-import { Dispatch, FC, ReactElement, SetStateAction } from 'react'
+import { Dispatch, FC, SetStateAction } from 'react'
 import styles from './MenuSideBar.module.scss'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
-import { BsBookmarks, BsClock, BsHouse, BsStar, BsTags } from 'react-icons/bs'
+import { BsHouse, BsStar, BsTags } from 'react-icons/bs'
 import { MenuOptionComponentInterface } from '~/components/MenuOptions/MenuOptions'
-import toast from 'react-hot-toast'
-import { useLoginContext } from '~/hooks/LoginContext'
-import { useSession } from 'next-auth/react'
 import { TfiWorld } from 'react-icons/tfi'
 import { MenuSideBarOption } from './MenuSideBarOption/MenuSideBarOption'
 import { MdLiveTv } from 'react-icons/md'
-import { IoMdTrendingUp } from 'react-icons/io'
 
 export interface Props {
   setOpenLanguageMenu: Dispatch<SetStateAction<boolean>>
@@ -18,51 +14,8 @@ export interface Props {
 }
 
 export const MenuSideBar: FC<Props> = ({ setOpenLanguageMenu, menuOpen }) => {
-  const { pathname, asPath } = useRouter()
+  const { pathname } = useRouter()
   const { t } = useTranslation('menu')
-
-  const { status, data } = useSession()
-  const { setLoginModalOpen } = useLoginContext()
-
-  const buildAuthenticationAction = (
-    url: string,
-    picture: ReactElement,
-    isActive: boolean,
-    title: string
-  ) => {
-    const option: MenuOptionComponentInterface = {
-      action: undefined,
-      onClick: undefined,
-      picture,
-      isActive,
-      title,
-    }
-
-    if (status !== 'authenticated' || !data) {
-      option.onClick = () => {
-        toast.error(t('user_must_be_authenticated_error_message'))
-
-        setLoginModalOpen(true)
-      }
-
-      return option
-    }
-
-    if (url === asPath) {
-      option.onClick = () => {
-        toast.error(t('user_already_on_path'))
-      }
-
-      return option
-    }
-
-    option.action = {
-      url,
-      blank: false,
-    }
-
-    return option
-  }
 
   const menuOptions: MenuOptionComponentInterface[] = [
     {
@@ -73,16 +26,6 @@ export const MenuSideBar: FC<Props> = ({ setOpenLanguageMenu, menuOpen }) => {
         blank: false,
       },
       picture: <BsHouse />,
-      onClick: undefined,
-    },
-    {
-      title: t('menu_trending_button_title'),
-      isActive: pathname === '/posts/top',
-      action: {
-        url: '/posts/top',
-        blank: false,
-      },
-      picture: <IoMdTrendingUp />,
       onClick: undefined,
     },
     /**
@@ -119,26 +62,14 @@ export const MenuSideBar: FC<Props> = ({ setOpenLanguageMenu, menuOpen }) => {
     },
     {
       title: t('menu_tags_button_title'),
-      isActive: pathname === '/tags',
+      isActive: pathname === '/categories',
       action: {
-        url: '/tags',
+        url: '/categories',
         blank: false,
       },
       picture: <BsTags />,
       onClick: undefined,
     },
-    buildAuthenticationAction(
-      `/users/${data ? data.user.username : ''}/saved-posts`,
-      <BsBookmarks />,
-      asPath === `/users/${data ? data.user.username : ''}/saved-posts`,
-      t('menu_saved_button_title')
-    ),
-    buildAuthenticationAction(
-      `/users/${data ? data.user.username : ''}/history`,
-      <BsClock />,
-      asPath === `/users/${data ? data.user.username : ''}/history`,
-      t('menu_user_history_button_title')
-    ),
   ]
 
   menuOptions.push({

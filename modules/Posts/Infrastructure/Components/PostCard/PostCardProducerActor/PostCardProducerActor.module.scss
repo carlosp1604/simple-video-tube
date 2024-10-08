@@ -34,11 +34,15 @@
   }
 
   &__producer-title {
-    @apply flex flex-row gap-x-2 text-xs mb-0.5 text-base-400
+    @apply flex flex-row gap-x-1 text-xs my-0.5 text-base-400
     font-normal mx-auto ml-0;
 
     &__disabled {
       @apply pointer-events-none;
     }
+  }
+
+  &__producer-icon {
+    @apply text-base text-sky-500 pb-0.5;
   }
 }

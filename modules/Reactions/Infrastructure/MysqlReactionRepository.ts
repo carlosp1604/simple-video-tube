@@ -13,9 +13,9 @@ export class MysqlReactionRepository implements ReactionRepositoryInterface {
 
     await prisma.reaction.upsert({
       where: {
-        reactionableType_reactionableId_userId: {
+        reactionableType_reactionableId_userIp: {
           reactionableId: reaction.reactionableId,
-          userId: reaction.userId,
+          userIp: reaction.userIp,
           reactionableType: reaction.reactionableType,
         },
       },
@@ -32,15 +32,15 @@ export class MysqlReactionRepository implements ReactionRepositoryInterface {
   /**
    * Remove a Reaction from the persistence layer
    * @param postCommentId PostComment ID
-   * @param userId User ID
+   * @param userIp User IP
    */
-  public async remove (postCommentId: Reaction['reactionableId'], userId: Reaction['userId']): Promise<void> {
+  public async remove (postCommentId: Reaction['reactionableId'], userIp: Reaction['userIp']): Promise<void> {
     await prisma.reaction.delete({
       where: {
-        reactionableType_reactionableId_userId: {
+        reactionableType_reactionableId_userIp: {
           reactionableId: postCommentId,
           reactionableType: ReactionableType.POST_COMMENT,
-          userId,
+          userIp,
         },
       },
     })

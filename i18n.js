@@ -47,7 +47,7 @@ const i18nConfig = {
       'producers',
       'api_exceptions',
     ],
-    'rgx:/tags/*': [
+    'rgx:/categories/*': [
       'sorting_menu_dropdown',
       'post_card',
       'pagination_bar',

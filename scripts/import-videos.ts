@@ -5,7 +5,7 @@ import { DateTime } from 'luxon'
 import { PostMeta } from '~/modules/Posts/Domain/PostMeta'
 import { Collection } from '~/modules/Shared/Domain/Relationship/Collection'
 import { Actor } from '~/modules/Actors/Domain/Actor'
-import { PostTag } from '~/modules/PostTag/Domain/PostTag'
+import { Category } from '~/modules/Categories/Domain/Category'
 import { Producer } from '~/modules/Producers/Domain/Producer'
 import { Relationship } from '~/modules/Shared/Domain/Relationship/Relationship'
 import { Translation } from '~/modules/Translations/Domain/Translation'
@@ -14,12 +14,12 @@ import { MediaUrl, MediaUrlType } from '~/modules/Posts/Domain/PostMedia/MediaUr
 import { MysqlProducerRepository } from '~/modules/Producers/Infrastructure/MysqlProducerRepository'
 import { MysqlPostRepository } from '~/modules/Posts/Infrastructure/MysqlPostRepository'
 import { MysqlActorRepository } from '~/modules/Actors/Infrastructure/MysqlActorRepository'
-import { MysqlPostTagRepository } from '~/modules/PostTag/Infrastructure/MysqlPostTagRepository'
+import { MysqlCategoryRepository } from '~/modules/Categories/Infrastructure/MysqlCategoryRepository'
 
 const producerRepository = new MysqlProducerRepository()
 const postRepository = new MysqlPostRepository()
 const actorRepository = new MysqlActorRepository()
-const tagRepository = new MysqlPostTagRepository()
+const tagRepository = new MysqlCategoryRepository()
 
 const findOrCreateActor = async (actor: any): Promise<Actor | null> => {
   console.log(`  - Finding actor with slug: ${actor.slug}`)
@@ -61,7 +61,7 @@ const findOrCreateActor = async (actor: any): Promise<Actor | null> => {
   }
 }
 
-const findOrCreateTag = async (tag: any): Promise<PostTag | null> => {
+const findOrCreateTag = async (tag: any): Promise<Category | null> => {
   console.log(`  - Finding tag with slug: ${tag.slug}`)
 
   const tagExists = await tagRepository.findBySlug(tag.slug)
@@ -93,7 +93,7 @@ const findOrCreateTag = async (tag: any): Promise<PostTag | null> => {
     }
   }
 
-  const newTag = new PostTag(
+  const newTag = new Category(
     randomUUID(),
     tag.slug,
     tag.name,
@@ -271,16 +271,16 @@ async function run (
 
     /**
      * Step 2.2:
-     * Build tags and create its collection
+     * Build categories and create its collection
      * We will find tag per tag to be sure it already exists on database
      *
      **/
     console.log(`  - Building tags collection for post with slug ${video.slug}`)
 
-    const tagsCollection: Collection<PostTag, PostTag['id']> = Collection.initializeCollection()
+    const tagsCollection: Collection<Category, Category['id']> = Collection.initializeCollection()
 
     if (video.videoTags.length === 0) {
-      console.log('\t- Post has not tags')
+      console.log('\t- Post has not categories')
     } else {
       for (const tag of video.videoTags) {
         const postTag = await findOrCreateTag(tag)

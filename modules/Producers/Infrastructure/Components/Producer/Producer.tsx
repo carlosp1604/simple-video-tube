@@ -78,7 +78,6 @@ export const Producer: FC<Props> = ({
         initialPostsNumber={ initialPostsNumber }
         filters={ [{ type: FilterOptions.PRODUCER_SLUG, value: producer.slug }] }
         filtersToParse={ [FilterOptions.PRODUCER_SLUG] }
-        paginatedPostCardGalleryPostCardOptions={ [{ type: 'savePost' }, { type: 'react' }] }
         linkMode={ linkMode }
         sortingOptions={ sortingOptions }
         defaultSortingOption={ PaginationSortingType.LATEST }

@@ -9,7 +9,6 @@ import {
 export class DeletePostCommentReactionApiRequestValidator {
   private static deletePostCommentReactionApiRequestSchema = z.object({
     postCommentId: z.string().uuid(),
-    userId: z.string().uuid(),
     parentCommentId: z.string().uuid().nullable(),
   })
 

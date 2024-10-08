@@ -10,7 +10,6 @@ import { PostMediaComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostM
 import {
   PostMediaComponentDtoTranslator
 } from '~/modules/Posts/Infrastructure/Translators/PostMedia/PostMediaComponentDtoTranslator'
-import { MetaApplicationDto } from '~/modules/Posts/Application/Dtos/MetaApplicationDto'
 
 export class PostComponentDtoTranslator {
   public static fromApplicationDto (applicationDto: PostApplicationDto, locale: string): PostComponentDto {
@@ -51,7 +50,6 @@ export class PostComponentDtoTranslator {
         slug: applicationDto.producer.slug,
         id: applicationDto.producer.id,
         imageUrl: applicationDto.producer.imageUrl,
-        brandHexColor: applicationDto.producer.brandHexColor,
       }
     }
 
@@ -90,12 +88,6 @@ export class PostComponentDtoTranslator {
       }
     }
 
-    const thumb = PostComponentDtoTranslator.getMeta(applicationDto.meta, 'thumb')
-
-    const duration = PostComponentDtoTranslator.getMeta(applicationDto.meta, 'duration')
-
-    const resolution = PostComponentDtoTranslator.getMeta(applicationDto.meta, 'resolution')
-
     const postMediaVideoType: PostMediaComponentDto[] = applicationDto.postMedia
       .filter((postMedia) => postMedia.type === 'Video')
       .map((postMedia) => {
@@ -125,20 +117,13 @@ export class PostComponentDtoTranslator {
       formattedPublishedAt,
       publishedAt: applicationDto.publishedAt,
       title: titleTranslation,
-      type: applicationDto.type,
-      thumb: thumb ? thumb.value : '',
-      resolution: resolution ? resolution.value : '',
-      duration: duration ? duration.value : '0',
+      thumb: applicationDto.thumbnailUrl,
+      resolution: applicationDto.resolution,
+      duration: applicationDto.duration,
       actor,
       postMediaVideoType,
       postMediaImageType,
       postMediaEmbedType,
     }
-  }
-
-  private static getMeta (postMeta: MetaApplicationDto[], type: string): MetaApplicationDto | undefined {
-    return postMeta.find((meta) => {
-      return meta.type === type
-    })
   }
 }

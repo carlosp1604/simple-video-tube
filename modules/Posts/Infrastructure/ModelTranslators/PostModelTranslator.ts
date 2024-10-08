@@ -1,6 +1,5 @@
 import { RepositoryOptions } from '~/modules/Posts/Domain/PostRepositoryInterface'
-import { PostMetaModelTranslator } from './PostMetaModelTranslator'
-import { PostTagModelTranslator } from '~/modules/PostTag/Infrastructure/PostTagModelTranslator'
+import { CategoryModelTranslator } from '~/modules/Categories/Infrastructure/CategoryModelTranslator'
 import { DateTime } from 'luxon'
 import { PostCommentModelTranslator } from './PostCommentModelTranslator'
 import { Post as PostPrismaModel } from '@prisma/client'
@@ -8,17 +7,15 @@ import {
   PostWithActor,
   PostWithActors,
   PostWithComments,
-  PostWithMeta,
   PostWithProducerWithParent,
   PostWithReactions,
-  PostWithTags, PostWithTranslations, PostWithPostMediaWithMediaUrlWithProvider
+  PostWithCategories, PostWithTranslations, PostWithPostMediaWithMediaUrlWithProvider, PostWithReports
 } from '~/modules/Posts/Infrastructure/PrismaModels/PostModel'
 import { Post } from '~/modules/Posts/Domain/Post'
 import { ProducerModelTranslator } from '~/modules/Producers/Infrastructure/ProducerModelTranslator'
 import { Relationship } from '~/modules/Shared/Domain/Relationship/Relationship'
-import { PostMeta } from '~/modules/Posts/Domain/PostMeta'
 import { Collection } from '~/modules/Shared/Domain/Relationship/Collection'
-import { PostTag } from '~/modules/PostTag/Domain/PostTag'
+import { Category } from '~/modules/Categories/Domain/Category'
 import { Actor } from '~/modules/Actors/Domain/Actor'
 import { PostComment } from '~/modules/Posts/Domain/PostComments/PostComment'
 import { Producer } from '~/modules/Producers/Domain/Producer'
@@ -32,6 +29,8 @@ import { ReactionModelTranslator } from '~/modules/Reactions/Infrastructure/Reac
 import { PostMediaModelTranslator } from '~/modules/Posts/Infrastructure/ModelTranslators/PostMediaModelTranslator'
 import { PostMedia } from '~/modules/Posts/Domain/PostMedia/PostMedia'
 import { ActorModelTranslator } from '~/modules/Actors/Infrastructure/ActorModelTranslator'
+import { ReportModelTranslator } from '~/modules/Reports/Infrastructure/ReportModelTranslator'
+import { Report } from '~/modules/Reports/Domain/Report'
 
 export class PostModelTranslator {
   public static toDomain (
@@ -49,34 +48,23 @@ export class PostModelTranslator {
       deletedAt = DateTime.fromJSDate(prismaPostModel.deletedAt)
     }
 
-    let metaCollection: Collection<PostMeta, PostMeta['type']> = Collection.notLoaded()
-    let tagsCollection: Collection<PostTag, PostTag['id']> = Collection.notLoaded()
+    let tagsCollection: Collection<Category, Category['id']> = Collection.notLoaded()
     let actorsCollection: Collection<Actor, Actor['id']> = Collection.notLoaded()
     let commentsCollection: Collection<PostComment, PostComment['id']> = Collection.notLoaded()
-    let reactionsCollection: Collection<Reaction, Reaction['userId']> = Collection.notLoaded()
+    let reactionsCollection: Collection<Reaction, Reaction['userIp']> = Collection.notLoaded()
     let producerRelationship: Relationship<Producer | null> = Relationship.notLoaded()
     let actorRelationship: Relationship<Actor | null> = Relationship.notLoaded()
+    let reportsCollection: Collection<Report, Report['id']> = Collection.notLoaded()
     let translationsCollection: Collection<Translation, Translation['language'] & Translation['field']> =
       Collection.notLoaded()
     let postMediaCollection: Collection<PostMedia, PostMedia['id']> = Collection.notLoaded()
 
-    if (options.includes('meta')) {
-      metaCollection = Collection.initializeCollection()
-      const postWithMeta = prismaPostModel as PostWithMeta
-
-      for (let i = 0; i < postWithMeta.meta.length; i++) {
-        const postMetaDomain = PostMetaModelTranslator.toDomain(postWithMeta.meta[i])
-
-        metaCollection.addItem(postMetaDomain, postMetaDomain.type)
-      }
-    }
-
-    if (options.includes('tags')) {
+    if (options.includes('categories')) {
       tagsCollection = Collection.initializeCollection()
-      const postWithTags = prismaPostModel as PostWithTags
+      const postWithCategories = prismaPostModel as PostWithCategories
 
-      for (let i = 0; i < postWithTags.tags.length; i++) {
-        const postTagDomain = PostTagModelTranslator.toDomain(postWithTags.tags[i].tag)
+      for (let i = 0; i < postWithCategories.categories.length; i++) {
+        const postTagDomain = CategoryModelTranslator.toDomain(postWithCategories.categories[i].category)
 
         tagsCollection.addItem(postTagDomain, postTagDomain.id)
       }
@@ -116,7 +104,7 @@ export class PostModelTranslator {
       for (let i = 0; i < postWithReactions.reactions.length; i++) {
         const reactionDomain = ReactionModelTranslator.toDomain(postWithReactions.reactions[i])
 
-        reactionsCollection.addItem(reactionDomain, reactionDomain.userId)
+        reactionsCollection.addItem(reactionDomain, reactionDomain.userIp)
       }
     }
 
@@ -170,24 +158,38 @@ export class PostModelTranslator {
       })
     }
 
+    if (options.includes('reports')) {
+      reportsCollection = Collection.initializeCollection()
+      const postWithReports = prismaPostModel as PostWithReports
+
+      for (let i = 0; i < postWithReports.reports.length; i++) {
+        const reportDomain = ReportModelTranslator.toDomain(postWithReports.reports[i])
+
+        reportsCollection.addItem(reportDomain, reportDomain.id)
+      }
+    }
+
     return new Post(
       prismaPostModel.id,
       prismaPostModel.title,
-      prismaPostModel.type,
       prismaPostModel.description,
       prismaPostModel.slug,
+      prismaPostModel.duration,
+      prismaPostModel.trailerUrl,
+      prismaPostModel.thumbnailUrl,
+      prismaPostModel.externalUrl,
+      Number.parseInt(prismaPostModel.viewsCount.toString()),
+      prismaPostModel.resolution,
       prismaPostModel.producerId,
       prismaPostModel.actorId,
       DateTime.fromJSDate(prismaPostModel.createdAt),
       DateTime.fromJSDate(prismaPostModel.updatedAt),
       deletedAt,
       publishedAt,
-      metaCollection,
       tagsCollection,
       actorsCollection,
       commentsCollection,
       reactionsCollection,
-      Collection.notLoaded(),
       producerRelationship,
       translationsCollection,
       actorRelationship,
@@ -195,20 +197,24 @@ export class PostModelTranslator {
     )
   }
 
-  public static toDatabase (post: Post, viewsCount: number): PostPrismaModel {
+  public static toDatabase (post: Post): PostPrismaModel {
     return {
       id: post.id,
       description: post.description,
       slug: post.slug,
+      duration: post.duration,
+      trailerUrl: post.trailerUrl,
+      thumbnailUrl: post.thumbnailUrl,
+      externalUrl: post.externalUrl,
+      resolution: post.resolution,
       title: post.title,
-      type: post.type,
       producerId: post.producerId,
       actorId: post.actorId,
       publishedAt: post.publishedAt?.toJSDate() ?? null,
       createdAt: post.createdAt.toJSDate(),
       deletedAt: post.deletedAt?.toJSDate() ?? null,
       updatedAt: post.updatedAt.toJSDate(),
-      viewsCount: BigInt(viewsCount),
+      viewsCount: BigInt(post.viewsCount),
     }
   }
 }

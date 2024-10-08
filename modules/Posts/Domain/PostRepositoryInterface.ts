@@ -8,7 +8,6 @@ import {
 import {
   PostFilterOptionInterface
 } from '~/modules/Shared/Domain/Posts/PostFilterOption'
-import { User } from '~/modules/Auth/Domain/User'
 import {
   PostsWithViewsInterfaceWithTotalCount,
   PostWithViewsCommentsReactionsInterface,
@@ -16,21 +15,18 @@ import {
 } from '~/modules/Posts/Domain/PostWithCountInterface'
 import { PostUserInteraction } from '~/modules/Posts/Domain/PostUserInteraction'
 import { SortingCriteria } from '~/modules/Shared/Domain/SortingCriteria'
-import { View } from '~/modules/Views/Domain/View'
 
 export type RepositoryOptions =
-  'meta' |
-  'tags' |
   'actor' |
   'actors' |
+  'reports' |
   'producer' |
   'comments' |
   'postMedia' |
   'reactions' |
+  'categories' |
   'viewsCount' |
   'translations' |
-  'comments.user' |
-  'reactions.user' |
   'comments.reactions' |
   'comments.childComments' |
   'producer.parentProducer' |
@@ -68,7 +64,7 @@ export interface PostRepositoryInterface {
   findById(postId: Post['id'], options?: RepositoryOptions[]): Promise<Post | PostWithViewsInterface | null>
 
   /**
-   * Find a Post (with producer,tags,meta,actors relationships loaded and reactions/comments count) given its Slug
+   * Find a Post (with producer,categories,actors relationships loaded and reactions/comments count) given its Slug
    * @param slug Post Slug
    * @return PostWithCount if found or null
    */
@@ -87,11 +83,11 @@ export interface PostRepositoryInterface {
   updateReaction(reaction: Reaction): Promise<void>
 
   /**
-   * Delete a new Post Reaction
+   * Delete a Post Reaction
    * @param userId User ID
    * @param postId Post ID
    */
-  deleteReaction(userId: Reaction['userId'], postId: Reaction['reactionableId']): Promise<void>
+  deleteReaction(userId: Reaction['userIp'], postId: Reaction['reactionableId']): Promise<void>
 
   /**
    * Add a new Post Comment
@@ -101,16 +97,9 @@ export interface PostRepositoryInterface {
 
   /**
    * Add a new Post Child Comment
-   * @param comment Post Child Comment
+   * @param childComment Post Child Comment
    */
   createChildComment(childComment: PostChildComment): Promise<void>
-
-  /**
-   * Update a Post Comment
-   * @param commentId Post Comment ID
-   * @param comment Post Comment comment
-   */
-  updateComment(commentId: PostComment['id'], comment: PostComment['comment']): Promise<void>
 
   /**
    * Delete a Post Comment
@@ -136,44 +125,6 @@ export interface PostRepositoryInterface {
   ): Promise<PostsWithViewsInterfaceWithTotalCount>
 
   /**
-   * Find SavedPosts based on filter and order criteria
-   * @param userId User ID
-   * @param offset Post offset
-   * @param limit
-   * @param sortingOption Post sorting option
-   * @param sortingCriteria Post sorting criteria
-   * @param filters Post filters
-   * @return PostsWithViewsInterfaceWithTotalCount if found or null
-   */
-  findSavedPostsWithOffsetAndLimit (
-    userId: string,
-    offset: number,
-    limit: number,
-    sortingOption: PostSortingOption,
-    sortingCriteria: SortingCriteria,
-    filters: PostFilterOptionInterface[]
-  ): Promise<PostsWithViewsInterfaceWithTotalCount>
-
-  /**
-   * Find ViewedPosts based on filter and order criteria
-   * @param userId User ID
-   * @param offset Post offset
-   * @param limit
-   * @param sortingOption Post sorting option
-   * @param sortingCriteria Post sorting criteria
-   * @param filters Post filters
-   * @return PostsWithViewsInterfaceWithTotalCount if found or null
-   */
-  findViewedPostsWithOffsetAndLimit (
-    userId: string,
-    offset: number,
-    limit: number,
-    sortingOption: PostSortingOption,
-    sortingCriteria: SortingCriteria,
-    filters: PostFilterOptionInterface[]
-  ): Promise<PostsWithViewsInterfaceWithTotalCount>
-
-  /**
    * Count Posts based on filters
    * @param filters Post filters
    * @return Number of posts that accomplish with the filters
@@ -190,25 +141,16 @@ export interface PostRepositoryInterface {
   getRelatedPosts(postId: Post['id']): Promise<PostWithViewsInterface[]>
 
   /**
-   * Get top (most viewed) posts between 2 given dates
-   * @param startDate Start Date
-   * @param endDate End Date
-   * @return Post array with the posts
-   */
-  getTopPostsBetweenDates(startDate: Date, endDate: Date): Promise<PostWithViewsInterface[]>
-
-  /**
    * Create a new post view for a post given its ID
    * @param postId Post ID
-   * @param view Post View
    */
-  createPostView (postId: Post['id'], view: View | null): Promise<void>
+  createPostView (postId: Post['id']): Promise<void>
 
   /**
    * Find all user interaction with a post given its IDs
    * @param postId Post ID
-   * @param userId User ID
+   * @param userIp User IP
    * @return PostUserInteraction
    */
-  findUserInteraction (postId: Post['id'], userId: User['id']): Promise<PostUserInteraction>
+  findUserInteraction (postId: Post['id'], userIp: string): Promise<PostUserInteraction>
 }

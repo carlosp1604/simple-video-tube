@@ -1,32 +1,54 @@
-import { FC } from 'react'
-import tailwindConfig from '~/tailwind.config.js'
-import { Toaster } from 'react-hot-toast'
+import { FC, useEffect, useState } from 'react'
+import styles from './AppToast.module.scss'
+import { BsCheckCircle, BsX } from 'react-icons/bs'
+import { Toast } from '~/components/AppToast/Toast'
 
-// const Toaster = dynamic(() =>
-// import('react-hot-toast').then((module) => module.Toaster), { ssr: false }
-// )
+export type AppToastProps = Omit<Toast, 'id'>
 
-export const AppToast: FC = () => {
+export const AppToast: FC<AppToastProps> = ({ type, duration, content, dismissible, onRemove }) => {
+  const [hovered, setHovered] = useState(false)
+  const [timeoutId, setTimeoutId] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (dismissible) {
+      return
+    }
+
+    if (!timeoutId && !hovered) {
+      const timeoutId = window.setTimeout(onRemove, duration)
+
+      setTimeoutId(timeoutId)
+    }
+
+    if (timeoutId && hovered) {
+      clearTimeout(timeoutId)
+      setTimeoutId(null)
+    }
+
+    if (timeoutId) {
+      return () => clearTimeout(timeoutId)
+    }
+  }, [dismissible, timeoutId, hovered, duration, onRemove])
+
   return (
-    <Toaster
-      position={ 'top-center' }
-      containerStyle={ {
-        marginTop: '40px',
-      } }
-      toastOptions={ {
-        className: 'rounded-lg bg-toast-bg text-white px-2 py-1 shadow-lg shadow-body',
-        iconTheme: {
-          secondary: tailwindConfig.theme.extend.colors.white,
-          primary: tailwindConfig.theme.extend.colors.toast.icon,
-        },
-        error: {
-          className: 'rounded-lg bg-toast-error-bg text-white px-2 py-1 shadow-lg shadow-body',
-          iconTheme: {
-            secondary: tailwindConfig.theme.extend.colors.white,
-            primary: tailwindConfig.theme.extend.colors.toast.error.icon,
-          },
-        },
-      } }
-    />
+    <div
+      className={ styles.appToast__container }
+      onMouseOver={ () => setHovered(true) }
+      onMouseLeave={ () => setHovered(false) }
+    >
+      <BsCheckCircle className={ styles.appToast__icon }/>
+      <div className={ styles.appToast__content }>
+        { content }
+      </div>
+      { dismissible
+        ? <button
+            className={ styles.appToast__closeButton }
+            onClick={ () => onRemove() }
+          >
+            <BsX/>
+          </button>
+        : null
+      }
+    </div>
   )
 }

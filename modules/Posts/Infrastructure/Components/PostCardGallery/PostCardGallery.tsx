@@ -1,67 +1,25 @@
-import { FC, ReactElement, useState } from 'react'
+import { FC, ReactElement } from 'react'
 import { PostCardComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostCardComponentDto'
 import styles from './PostCardGallery.module.scss'
-import useTranslation from 'next-translate/useTranslation'
-import { useSession } from 'next-auth/react'
-import { PostCardOptionConfiguration, usePostCardOptions } from '~/hooks/PostCardOptions'
-import {
-  PostCardWithOptions
-} from '~/modules/Posts/Infrastructure/Components/PostCard/PostCardWithOptions/PostCardWithOptions'
 import { defaultPerPage } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
 import { PostCardSkeleton } from '~/modules/Posts/Infrastructure/Components/PostCard/PostCardSkeleton/PostCardSkeleton'
 import { Banner } from '~/modules/Shared/Infrastructure/Components/Banner/Banner'
 import { DesktopBanner } from '~/modules/Shared/Infrastructure/Components/ExoclickBanner/DesktopBanner'
-import dynamic from 'next/dynamic'
-
-const PostCardGalleryOptions = dynamic(() => import(
-  '~/modules/Posts/Infrastructure/Components/PaginatedPostCardGallery/PostCardGalleryHeader/PostCardGalleryOptions'
-).then((module) => module.PostCardGalleryOptions), { ssr: false }
-)
+import { PostCard } from '~/modules/Posts/Infrastructure/Components/PostCard/PostCard'
 
 interface Props {
   posts: PostCardComponentDto[]
-  postCardOptions: PostCardOptionConfiguration[]
   loading: boolean
   emptyState: ReactElement | null
   showAds: boolean
 }
 
-export const PostCardGallery: FC<Partial<Props> & Pick<Props, 'posts' | 'postCardOptions'>> = ({
+export const PostCardGallery: FC<Partial<Props> & Pick<Props, 'posts'>> = ({
   posts,
-  postCardOptions,
   loading = false,
   emptyState = null,
   showAds = false,
 }) => {
-  const [postCardOptionsMenuOpen, setPostCardOptionsMenuOpen] = useState<boolean>(false)
-  const [selectedPostCard, setSelectedPostCard] = useState<PostCardComponentDto | null>(null)
-  const buildOptions = usePostCardOptions()
-
-  const { t } = useTranslation('post_card_gallery')
-  const { status } = useSession()
-
-  const postCardGalleryOptions = buildOptions(
-    postCardOptions,
-    () => setPostCardOptionsMenuOpen(!postCardOptionsMenuOpen)
-  )
-
-  let onClickOptions : ((post: PostCardComponentDto) => void) | undefined
-
-  if (postCardGalleryOptions.length > 0) {
-    onClickOptions = async (post: PostCardComponentDto) => {
-      if (status !== 'authenticated') {
-        const toast = (await import('react-hot-toast')).default
-
-        toast.error(t('user_must_be_authenticated_error_message'))
-
-        return
-      }
-
-      setSelectedPostCard(post)
-      setPostCardOptionsMenuOpen(true)
-    }
-  }
-
   let postsSkeletonNumber
 
   if (posts.length <= defaultPerPage) {
@@ -83,14 +41,11 @@ export const PostCardGallery: FC<Partial<Props> & Pick<Props, 'posts' | 'postCar
 
   const skeletonPosts = createSkeletonList(postsSkeletonNumber)
 
-  const postCardWithOptions = posts.map((post) => {
+  const postCards = posts.map((post) => {
     return (
-      <PostCardWithOptions
+      <PostCard
         post={ post }
-        onClickOptions={ () => { if (onClickOptions) { onClickOptions(post) } } }
-        showOptionsButton={ !!onClickOptions }
         key={ post.id }
-        showProducerImage={ true }
       />
     )
   })
@@ -101,13 +56,7 @@ export const PostCardGallery: FC<Partial<Props> & Pick<Props, 'posts' | 'postCar
       ${loading && posts.length !== 0 ? styles.postCardGallery__container__loading : ''}
     ` }
     >
-      <PostCardGalleryOptions
-        options={ postCardGalleryOptions }
-        isOpen={ postCardOptionsMenuOpen }
-        onClose={ () => setPostCardOptionsMenuOpen(false) }
-        selectedPostCard={ selectedPostCard as PostCardComponentDto }
-      />
-      { postCardWithOptions }
+      { postCards }
       { loading ? skeletonPosts : null }
     </div>
   )
@@ -121,21 +70,21 @@ export const PostCardGallery: FC<Partial<Props> & Pick<Props, 'posts' | 'postCar
     let secondSkeletonList: ReactElement[] = []
     let thirdSkeletonList: ReactElement[] = []
 
-    if (postCardWithOptions.length < 12) {
-      firstPostList = postCardWithOptions
-      firstSkeletonList = createSkeletonList(12 - postCardWithOptions.length)
+    if (postCards.length < 12) {
+      firstPostList = postCards
+      firstSkeletonList = createSkeletonList(12 - postCards.length)
     } else {
-      firstPostList = postCardWithOptions.slice(0, 12)
+      firstPostList = postCards.slice(0, 12)
 
-      if (postCardWithOptions.length < 24) {
-        secondPostList = postCardWithOptions.slice(12)
-        secondSkeletonList = createSkeletonList(24 - postCardWithOptions.length)
+      if (postCards.length < 24) {
+        secondPostList = postCards.slice(12)
+        secondSkeletonList = createSkeletonList(24 - postCards.length)
       } else {
-        secondPostList = postCardWithOptions.slice(12, 24)
-        thirdPostList = postCardWithOptions.slice(24)
+        secondPostList = postCards.slice(12, 24)
+        thirdPostList = postCards.slice(24)
 
-        if (postCardWithOptions.length < defaultPerPage) {
-          thirdSkeletonList = createSkeletonList(defaultPerPage - postCardWithOptions.length)
+        if (postCards.length < defaultPerPage) {
+          thirdSkeletonList = createSkeletonList(defaultPerPage - postCards.length)
         }
       }
     }
@@ -148,12 +97,6 @@ export const PostCardGallery: FC<Partial<Props> & Pick<Props, 'posts' | 'postCar
 
     content = (
       <>
-        <PostCardGalleryOptions
-          options={ postCardGalleryOptions }
-          isOpen={ postCardOptionsMenuOpen }
-          onClose={ () => setPostCardOptionsMenuOpen(false) }
-          selectedPostCard={ selectedPostCard as PostCardComponentDto }
-        />
         <div className={ `
           ${styles.postCardGallery__container}
           ${loading && posts.length !== 0 ? styles.postCardGallery__container__loading : ''}

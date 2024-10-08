@@ -1,6 +1,5 @@
 import { PostComment } from './PostComment'
 import { DomainException } from '~/modules/Exceptions/Domain/DomainException'
-import { User } from '~/modules/Auth/Domain/User'
 import { PostChildComment } from '~/modules/Posts/Domain/PostComments/PostChildComment'
 
 export class PostCommentDomainException extends DomainException {
@@ -54,11 +53,11 @@ export class PostCommentDomainException extends DomainException {
   }
 
   public static userCannotDeleteChildComment (
-    userId: User['id'],
+    userIp: PostChildComment['userIp'],
     childComment: PostChildComment['id']
   ): PostCommentDomainException {
     return new PostCommentDomainException(
-      `Child comment with ID ${childComment} does not belong to user with ID ${userId}`,
+      `Child comment with ID ${childComment} does not belong to user with IP ${userIp}`,
       this.userCannotDeleteChildCommentId
     )
   }

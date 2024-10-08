@@ -3,12 +3,9 @@ import {
   PostsApiRequestValidatorError
 } from '~/modules/Posts/Infrastructure/Api/Validators/PostsApiRequestValidatorError'
 import {
-  POST_USER_INTERACTION_AUTH_REQUIRED,
   POST_USER_INTERACTION_BAD_REQUEST, POST_USER_INTERACTION_METHOD, POST_USER_INTERACTION_SERVER_ERROR,
   POST_USER_INTERACTION_VALIDATION
 } from '~/modules/Posts/Infrastructure/Api/PostApiExceptionCodes'
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '~/pages/api/auth/[...nextauth]'
 import { container } from '~/awilix.container'
 import {
   GetPostUserInteractionApiRequestDto
@@ -20,19 +17,16 @@ import { GetPostUserInteraction } from '~/modules/Posts/Application/GetPostUserI
 import {
   GetPostUserInteractionDtoTranslator
 } from '~/modules/Posts/Infrastructure/Translators/GetPostUserInteractionDtoTranslator'
+import requestIp from 'request-ip'
 
 export default async function handler (
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
+
   if (request.method !== 'GET') {
     return handleMethod(request, response)
-  }
-
-  const session = await getServerSession(request, response, authOptions)
-
-  if (session === null) {
-    return handleAuthentication(request, response)
   }
 
   const { postId } = request.query
@@ -43,7 +37,6 @@ export default async function handler (
 
   const apiRequest: GetPostUserInteractionApiRequestDto = {
     postId: String(postId),
-    userId: session.user.id,
   }
 
   const validationError = GetPostUserInteractionApiRequestValidator.validate(apiRequest)
@@ -52,7 +45,7 @@ export default async function handler (
     return handleValidationError(response, validationError)
   }
 
-  const applicationRequest = GetPostUserInteractionDtoTranslator.fromApiDto(apiRequest)
+  const applicationRequest = GetPostUserInteractionDtoTranslator.fromApiDto(apiRequest, userIp)
 
   const useCase = container.resolve<GetPostUserInteraction>('getPostUserInteractionUseCase')
 
@@ -74,22 +67,6 @@ function handleMethod (request: NextApiRequest, response: NextApiResponse) {
     .json({
       code: POST_USER_INTERACTION_METHOD,
       message: `Cannot ${request.method} ${request.url?.toString()}`,
-    })
-}
-
-function handleAuthentication (request: NextApiRequest, response: NextApiResponse) {
-  const baseUrl = container.resolve<string>('baseUrl')
-
-  response.setHeader(
-    'WWW-Authenticate',
-    `Basic realm="${baseUrl}"`
-  )
-
-  return response
-    .status(401)
-    .json({
-      code: POST_USER_INTERACTION_AUTH_REQUIRED,
-      message: 'User must be authenticated to access to resource',
     })
 }
 

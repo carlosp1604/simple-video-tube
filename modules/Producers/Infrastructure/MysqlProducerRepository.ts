@@ -18,7 +18,7 @@ export class MysqlProducerRepository implements ProducerRepositoryInterface {
    * @param producer Producer to persist
    */
   public async save (producer: Producer): Promise<void> {
-    const producerModel = ProducerModelTranslator.toDatabase(producer, 0)
+    const producerModel = ProducerModelTranslator.toDatabase(producer)
 
     await prisma.producer.create({
       data: {
@@ -31,7 +31,6 @@ export class MysqlProducerRepository implements ProducerRepositoryInterface {
         description: producerModel.description,
         parentProducerId: producerModel.parentProducerId,
         imageUrl: producerModel.imageUrl,
-        brandHexColor: producerModel.brandHexColor,
       },
     })
   }
@@ -51,7 +50,7 @@ export class MysqlProducerRepository implements ProducerRepositoryInterface {
   /**
    * TODO: Pagination for this use-case
    * Get first 20 most popular Producers
-   * @param includedProducersSlugs producers Slug to include
+   * @param includedProducerSlugs producers Slug to include
    * @return Array of Producer
    */
   public async getPopular (includedProducerSlugs: Array<Producer['slug']>): Promise<Producer[]> {

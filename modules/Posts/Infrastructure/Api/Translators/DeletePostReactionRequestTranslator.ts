@@ -4,10 +4,13 @@ import {
 } from '~/modules/Posts/Application/DeletePostReaction/DeletePostReactionApplicationRequestDto'
 
 export class DeletePostReactionRequestTranslator {
-  public static fromApiDto (request: DeletePostReactionApiRequestDto): DeletePostReactionApplicationRequestDto {
+  public static fromApiDto (
+    request: DeletePostReactionApiRequestDto,
+    userIp: string
+  ): DeletePostReactionApplicationRequestDto {
     return {
       postId: request.postId,
-      userId: request.userId,
+      userIp,
     }
   }
 }

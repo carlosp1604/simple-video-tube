@@ -6,10 +6,14 @@ import {
 } from '~/modules/Posts/Infrastructure/Api/Requests/CreatePostChildCommentApiRequestDto'
 
 export class CreatePostChildCommentRequestDtoTranslator {
-  public static fromApiDto (request: CreatePostChildCommentApiRequestDto): CreatePostChildCommentApplicationRequestDto {
+  public static fromApiDto (
+    request: CreatePostChildCommentApiRequestDto,
+    userIp: string
+  ): CreatePostChildCommentApplicationRequestDto {
     return {
       postId: request.postId,
-      userId: request.userId,
+      userIp,
+      username: request.username,
       comment: request.comment,
       parentCommentId: request.parentCommentId,
     }

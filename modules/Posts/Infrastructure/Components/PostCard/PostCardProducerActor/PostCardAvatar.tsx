@@ -40,12 +40,11 @@ export const PostCardAvatar: FC<Props> = ({
         title={ producer.name }
       >
         <AvatarImage
-          imageUrl={ producer.imageUrl }
+          imageUrl={ null }
           imageClassName={ styles.postCardProducerActor__producerActorLogo }
           avatarName={ producer.name }
           imageAlt={ producer.name }
           avatarClassName={ styles.postCardProducerActor__producerActorAvatarContainer }
-          color={ producer.brandHexColor }
           priority={ false }
         />
       </Link>
@@ -71,7 +70,7 @@ export const PostCardAvatar: FC<Props> = ({
         title={ actor.name }
       >
         <AvatarImage
-          imageUrl={ actor.imageUrl }
+          imageUrl={ null }
           imageClassName={ styles.postCardProducerActor__producerActorLogo }
           avatarName={ actor.name }
           imageAlt={ actor.name }

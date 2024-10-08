@@ -1,10 +1,9 @@
 import { ApplicationException } from '~/modules/Exceptions/Application/ApplicationException'
 import { Post } from '~/modules/Posts/Domain/Post'
-import { User } from '~/modules/Auth/Domain/User'
+import { Reaction } from '~/modules/Reactions/Domain/Reaction'
 
 export class DeletePostReactionApplicationException extends ApplicationException {
   public static postNotFoundId = 'delete_reaction_comment_post_not_found'
-  public static userNotFoundId = 'delete_reaction_comment_user_not_found'
   public static userHasNotReactedId = 'delete_reaction_user_has_not_reacted'
 
   public static postNotFound (postId: Post['id']): DeletePostReactionApplicationException {
@@ -14,16 +13,12 @@ export class DeletePostReactionApplicationException extends ApplicationException
     )
   }
 
-  public static userNotFound (userId: User['id']): DeletePostReactionApplicationException {
+  public static userHasNotReacted (
+    userIp: Reaction['userIp'],
+    postId: Post['id']
+  ): DeletePostReactionApplicationException {
     return new DeletePostReactionApplicationException(
-      `User with ID ${userId} was not found`,
-      this.userNotFoundId
-    )
-  }
-
-  public static userHasNotReacted (userId: User['id'], postId: Post['id']): DeletePostReactionApplicationException {
-    return new DeletePostReactionApplicationException(
-      `User with ID ${userId} has not reacted to post with ID ${postId}`,
+      `User with IP ${userIp} has not reacted to post with ID ${postId}`,
       this.userHasNotReactedId
     )
   }

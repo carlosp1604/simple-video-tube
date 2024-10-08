@@ -1,5 +1,3 @@
-import { UserRepositoryInterface } from '~/modules/Auth/Domain/UserRepositoryInterface'
-import { User } from '~/modules/Auth/Domain/User'
 import { ModelReactionApplicationDto } from '~/modules/Reactions/Application/ModelReactionApplicationDto'
 import {
   PostReactionApplicationDtoTranslator
@@ -21,17 +19,14 @@ export class CreatePostCommentReaction {
   // eslint-disable-next-line no-useless-constructor
   constructor (
     private readonly postCommentRepository: PostCommentRepositoryInterface,
-    private readonly userRepository: UserRepositoryInterface,
     private readonly reactionRepository: ReactionRepositoryInterface
   ) {}
 
   public async create (
     request: CreatePostCommentReactionApplicationRequest
   ): Promise<ModelReactionApplicationDto> {
-    const [postComment, _user] = await Promise.all([
-      this.getPostComment(request.postCommentId, request.parentCommentId),
-      this.getUser(request.userId),
-    ])
+    const postComment =
+      await this.getPostComment(request.postCommentId, request.parentCommentId)
 
     const reaction = this.addReactionToPostComment(postComment, request)
 
@@ -53,23 +48,13 @@ export class CreatePostCommentReaction {
     return postComment
   }
 
-  private async getUser (userId: CreatePostCommentReactionApplicationRequest['userId']): Promise<User> {
-    const user = await this.userRepository.findById(userId)
-
-    if (user === null) {
-      throw CreatePostCommentReactionApplicationException.userNotFound(userId)
-    }
-
-    return user
-  }
-
   private addReactionToPostComment (
     postComment: PostComment | PostChildComment,
     request: CreatePostCommentReactionApplicationRequest
   ): Reaction {
     try {
       // FIXME: Reaction type should comes from request when we support multiple reaction types in the comments
-      return postComment.addReaction(request.userId, ReactionType.LIKE)
+      return postComment.addReaction(request.userIp, ReactionType.LIKE)
     } catch (exception: unknown) {
       if (!(exception instanceof ReactionableModelDomainException)) {
         throw exception
@@ -77,10 +62,10 @@ export class CreatePostCommentReaction {
 
       switch (exception.id) {
         case ReactionableModelDomainException.userAlreadyReactedId:
-          throw CreatePostCommentReactionApplicationException.userAlreadyReacted(request.userId, request.postCommentId)
+          throw CreatePostCommentReactionApplicationException.userAlreadyReacted(request.userIp, request.postCommentId)
 
         case ReactionableModelDomainException.cannotAddReactionId:
-          throw CreatePostCommentReactionApplicationException.cannotAddReaction(request.userId, request.postCommentId)
+          throw CreatePostCommentReactionApplicationException.cannotAddReaction(request.userIp, request.postCommentId)
 
         default:
           throw exception

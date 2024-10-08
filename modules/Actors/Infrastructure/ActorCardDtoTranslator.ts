@@ -4,8 +4,7 @@ import { ActorApplicationDto } from '~/modules/Actors/Application/ActorApplicati
 export class ActorCardDtoTranslator {
   public static fromApplicationDto (
     applicationDto: ActorApplicationDto,
-    postsNumber: number,
-    actorViews: number
+    postsNumber: number
   ): ActorCardDto {
     return {
       id: applicationDto.id,
@@ -13,7 +12,7 @@ export class ActorCardDtoTranslator {
       name: applicationDto.name,
       slug: applicationDto.slug,
       postsNumber,
-      actorViews,
+      actorViews: applicationDto.viewsCount,
     }
   }
 }

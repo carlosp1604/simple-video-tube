@@ -19,8 +19,6 @@ import {
 import { ReactionComponentDto } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDto'
 import { CommentsApiService } from '~/modules/Posts/Infrastructure/Frontend/CommentsApiService'
 import { APIException } from '~/modules/Shared/Infrastructure/FrontEnd/ApiException'
-import { POST_COMMENT_USER_NOT_FOUND } from '~/modules/Posts/Infrastructure/Api/PostApiExceptionCodes'
-import { signOut } from 'next-auth/react'
 import { defaultPerPage, PaginationHelper } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
 
 interface Props {
@@ -78,10 +76,6 @@ export const PostChildComments: FC<Props> = ({
         console.error(exception)
 
         return
-      }
-
-      if (exception.code === POST_COMMENT_USER_NOT_FOUND) {
-        await signOut({ redirect: false })
       }
 
       toast.error(t(`api_exceptions:${exception.translationKey}`))

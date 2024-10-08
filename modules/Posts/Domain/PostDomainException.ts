@@ -1,7 +1,7 @@
 import { PostComment } from './PostComments/PostComment'
 import { Post } from './Post'
 import { DomainException } from '~/modules/Exceptions/Domain/DomainException'
-import { User } from '~/modules/Auth/Domain/User'
+import { Reaction } from '~/modules/Reactions/Domain/Reaction'
 
 export class PostDomainException extends DomainException {
   public static parentCommentNotFoundId = 'post_domain_parent_comment_not_found'
@@ -16,7 +16,6 @@ export class PostDomainException extends DomainException {
   public static producerAlreadySetId = 'post_domain_producer_already_set'
   public static postCommentNotFoundId = 'post_domain_post_comment_not_found'
   public static userCannotDeleteCommentId = 'post_domain_user_cannot_delete_comment'
-  public static invalidPostTypeId = 'post_domain_invalid_post_type'
 
   constructor (message: string, id: string) {
     super(message, id)
@@ -45,9 +44,9 @@ export class PostDomainException extends DomainException {
     )
   }
 
-  public static cannotAddReaction (userId: User['id'], postId: Post['id']): PostDomainException {
+  public static cannotAddReaction (userIp: Reaction['userIp'], postId: Post['id']): PostDomainException {
     return new PostDomainException(
-      `Cannot add reaction from user with ID ${userId} to post with ID ${postId}`,
+      `Cannot add reaction from user with IP ${userIp} to post with ID ${postId}`,
       this.cannotAddReactionId
     )
   }
@@ -59,37 +58,37 @@ export class PostDomainException extends DomainException {
     )
   }
 
-  public static cannotUpdateReaction (userId: User['id'], postId: Post['id']): PostDomainException {
+  public static cannotUpdateReaction (userIp: Reaction['userIp'], postId: Post['id']): PostDomainException {
     return new PostDomainException(
-      `Cannot update reaction from user with ID ${userId} in post with ID ${postId}`,
-      this.cannotAddReactionId
+      `Cannot update reaction from user with IP ${userIp} in post with ID ${postId}`,
+      this.cannotUpdateReactionId
     )
   }
 
-  public static userAlreadyReacted (userId: User['id'], postId: Post['id']): PostDomainException {
+  public static userAlreadyReacted (userIp: Reaction['userIp'], postId: Post['id']): PostDomainException {
     return new PostDomainException(
-      `User with ID ${userId} already reacted to post with ID ${postId}`,
+      `User with IP ${userIp} already reacted to post with ID ${postId}`,
       this.userAlreadyReactedId
     )
   }
 
-  public static userHasNotReacted (userId: User['id'], postId: Post['id']): PostDomainException {
+  public static userHasNotReacted (userIp: Reaction['userIp'], postId: Post['id']): PostDomainException {
     return new PostDomainException(
-      `User with ID ${userId} has not reacted to post with ID ${postId}`,
+      `User with IP ${userIp} has not reacted to post with ID ${postId}`,
       this.userHasNotReactedId
     )
   }
 
-  public static cannotDeleteReaction (userId: User['id'], postId: Post['id']): PostDomainException {
+  public static cannotDeleteReaction (userIp: Reaction['userIp'], postId: Post['id']): PostDomainException {
     return new PostDomainException(
-      `Cannot delete reaction from user with ID ${userId} in post with ID ${postId}`,
+      `Cannot delete reaction from user with IP ${userIp} in post with ID ${postId}`,
       this.cannotDeleteReactionId
     )
   }
 
   public static producerAlreadySet (postId: Post['id']): PostDomainException {
     return new PostDomainException(
-      `Post with ID ${postId} has already a producer setted`,
+      `Post with ID ${postId} has already a producer set`,
       this.producerAlreadySetId
     )
   }
@@ -102,19 +101,12 @@ export class PostDomainException extends DomainException {
   }
 
   public static userCannotDeleteComment (
-    userId: User['id'],
+    userIp: PostComment['userIp'],
     postCommentId: PostComment['id']
   ): PostDomainException {
     return new PostDomainException(
-      `PostComment with ID ${postCommentId} does not belong to user with ID ${userId}`,
+      `PostComment with ID ${postCommentId} does not belong to user with IP ${userIp}`,
       this.userCannotDeleteCommentId
-    )
-  }
-
-  public static invalidPostType (value: string): PostDomainException {
-    return new PostDomainException(
-      `Invalid post type: ${value}`,
-      this.invalidPostTypeId
     )
   }
 }

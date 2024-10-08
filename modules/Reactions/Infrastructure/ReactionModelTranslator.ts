@@ -13,7 +13,7 @@ export class ReactionModelTranslator {
     return new Reaction(
       prismaReactionModel.reactionableId,
       prismaReactionModel.reactionableType,
-      prismaReactionModel.userId,
+      prismaReactionModel.userIp,
       prismaReactionModel.reactionType,
       DateTime.fromJSDate(prismaReactionModel.createdAt),
       DateTime.fromJSDate(prismaReactionModel.updatedAt),
@@ -24,7 +24,7 @@ export class ReactionModelTranslator {
   public static toDatabase (reaction: Reaction): PrismaReactionModel {
     return {
       reactionType: reaction.reactionType,
-      userId: reaction.userId,
+      userIp: reaction.userIp,
       createdAt: reaction.createdAt.toJSDate(),
       deletedAt: reaction.deletedAt?.toJSDate() ?? null,
       updatedAt: reaction.updatedAt.toJSDate(),

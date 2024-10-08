@@ -17,8 +17,6 @@ import {
   GetPostPostChildCommentsApplicationException
 } from '~/modules/Posts/Application/GetPostPostChildComments/GetPostPostChildCommentsApplicationException'
 import { container } from '~/awilix.container'
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '~/pages/api/auth/[...nextauth]'
 import {
   CreatePostChildCommentRequestSanitizer
 } from '~/modules/Posts/Infrastructure/Api/Sanitizers/CreatePostChildCommentRequestSanitizer'
@@ -36,18 +34,18 @@ import {
   CreatePostChildCommentApplicationException
 } from '~/modules/Posts/Application/CreatePostChildComment/CreatePostChildCommentApplicationException'
 import {
-  POST_CHILD_COMMENT_AUTH_REQUIRED,
   POST_CHILD_COMMENT_BAD_REQUEST,
   POST_CHILD_COMMENT_INVALID_PAGE,
   POST_CHILD_COMMENT_INVALID_PER_PAGE,
   POST_CHILD_COMMENT_METHOD,
   POST_CHILD_COMMENT_SERVER_ERROR,
   POST_CHILD_COMMENT_VALIDATION,
-  POST_COMMENT_PARENT_COMMENT_NOT_FOUND, POST_COMMENT_POST_NOT_FOUND, POST_COMMENT_USER_NOT_FOUND
+  POST_COMMENT_PARENT_COMMENT_NOT_FOUND, POST_COMMENT_POST_NOT_FOUND
 } from '~/modules/Posts/Infrastructure/Api/PostApiExceptionCodes'
 import {
   GetPostPostChildCommentsRequestDtoTranslator
 } from '~/modules/Posts/Infrastructure/Api/Translators/GetPostPostChildCommentsRequestDtoTranslator'
+import requestIp from 'request-ip'
 
 export default async function handler (
   request: NextApiRequest,
@@ -78,22 +76,17 @@ async function handleGet (request: NextApiRequest, response: NextApiResponse) {
     parentCommentId: String(commentId),
   }
 
+  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
+
   const validationError = GetPostPostChildCommentsApiRequestValidator.validate(apiRequest)
 
   if (validationError) {
-    return handleValidationError(request, response, validationError)
-  }
-
-  const session = await getServerSession(request, response, authOptions)
-  let userId: string | null = null
-
-  if (session !== null) {
-    userId = session.user.id
+    return handleValidationError(response, validationError)
   }
 
   const useCase = container.resolve<GetPostPostChildComments>('getPostPostChildCommentsUseCase')
 
-  const applicationRequest = GetPostPostChildCommentsRequestDtoTranslator.fromApiDto(apiRequest, userId)
+  const applicationRequest = GetPostPostChildCommentsRequestDtoTranslator.fromApiDto(apiRequest, userIp)
 
   try {
     const comments = await useCase.get(applicationRequest)
@@ -122,15 +115,12 @@ async function handleGet (request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function handlePost (request: NextApiRequest, response: NextApiResponse) {
-  const session = await getServerSession(request, response, authOptions)
-
-  if (session === null) {
-    return handleAuthentication(request, response)
-  }
+  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
 
   const { commentId, postId } = request.query
 
   const comment = request.body.comment
+  const username = request.body.username
 
   if (!commentId || !postId) {
     return handleBadRequest(response)
@@ -141,8 +131,8 @@ async function handlePost (request: NextApiRequest, response: NextApiResponse) {
   try {
     apiRequest = CreatePostChildCommentRequestSanitizer.sanitize({
       parentCommentId: String(commentId),
-      comment: comment ?? '',
-      userId: session.user.id,
+      comment,
+      username,
       postId: String(postId),
     })
   } catch (exception: unknown) {
@@ -154,10 +144,10 @@ async function handlePost (request: NextApiRequest, response: NextApiResponse) {
   const validationError = CreatePostChildCommentApiRequestValidator.validate(apiRequest)
 
   if (validationError) {
-    return handleValidationError(request, response, validationError)
+    return handleValidationError(response, validationError)
   }
 
-  const applicationRequest = CreatePostChildCommentRequestDtoTranslator.fromApiDto(apiRequest)
+  const applicationRequest = CreatePostChildCommentRequestDtoTranslator.fromApiDto(apiRequest, userIp)
 
   const useCase = container.resolve<CreatePostChildComment>('createPostChildCommentUseCase')
 
@@ -178,9 +168,6 @@ async function handlePost (request: NextApiRequest, response: NextApiResponse) {
 
       case CreatePostChildCommentApplicationException.parentCommentNotFoundId:
         return handleNotFound(response, exception.message, POST_COMMENT_PARENT_COMMENT_NOT_FOUND)
-
-      case CreatePostChildCommentApplicationException.userNotFoundId:
-        return handleNotFound(response, exception.message, POST_COMMENT_USER_NOT_FOUND)
 
       default: {
         console.error(exception)
@@ -211,7 +198,6 @@ function handleMethod (request: NextApiRequest, response: NextApiResponse) {
 }
 
 function handleValidationError (
-  request: NextApiRequest,
   response: NextApiResponse,
   validationError: PostCommentApiRequestValidatorError
 ) {
@@ -252,14 +238,5 @@ function handleNotFound (
     .json({
       code,
       message,
-    })
-}
-
-function handleAuthentication (request: NextApiRequest, response: NextApiResponse) {
-  return response
-    .status(401)
-    .json({
-      code: POST_CHILD_COMMENT_AUTH_REQUIRED,
-      message: 'User must be authenticated to access to resource',
     })
 }

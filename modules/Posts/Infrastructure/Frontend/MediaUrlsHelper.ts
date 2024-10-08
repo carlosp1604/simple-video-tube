@@ -46,8 +46,7 @@ export class MediaUrlsHelper {
 
   public static getSelectableUrls (
     embedPostMedia: PostMediaComponentDto | null,
-    videoPostMedia: PostMediaComponentDto | null,
-    userId: string | null
+    videoPostMedia: PostMediaComponentDto | null
   ):MediaUrlComponentDto[] {
     const mediaUrls: MediaUrlComponentDto[] = []
 
@@ -63,7 +62,7 @@ export class MediaUrlsHelper {
       }
     }
 
-    return MediaUrlsHelper.sortMediaUrl(MediaUrlsHelper.filterProviders(mediaUrls, userId))
+    return MediaUrlsHelper.sortMediaUrl(mediaUrls)
   }
 
   public static shouldBeSanboxed (providerId: string, authenticated: boolean): boolean {
@@ -84,16 +83,6 @@ export class MediaUrlsHelper {
     }
 
     return false
-  }
-
-  private static filterProviders (mediaUrls: MediaUrlComponentDto[], userId: string | null): MediaUrlComponentDto[] {
-    if (!userId || (userId && userId !== '00000000-0000-0000-0000-000000000000')) {
-      return mediaUrls.filter((mediaUrl) => {
-        return mediaUrl.provider.id !== '9a51b189-0cbe-4c68-822a-440b61301ec0' // Direct provider
-      })
-    }
-
-    return mediaUrls
   }
 
   // TODO: This should change when user can decide its own order

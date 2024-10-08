@@ -28,8 +28,8 @@ const findOrCreateProducer = async (producer: any): Promise<void> => {
     producer.description ?? null,
     producer.img,
     // TODO: Add support for producers hierarchy
+    0,
     null,
-    producer.brandHexColor,
     nowDate,
     nowDate,
     null

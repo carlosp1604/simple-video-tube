@@ -1,5 +1,5 @@
 export interface DeletePostCommentReactionApplicationRequestDto {
   readonly postCommentId: string
-  readonly userId: string
+  readonly userIp: string
   readonly parentCommentId: string | null
 }

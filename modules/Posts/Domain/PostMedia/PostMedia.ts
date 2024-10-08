@@ -15,8 +15,10 @@ export class PostMedia {
   public readonly title: string
   public readonly postId: string
   public readonly thumbnailUrl: string | null
+  public readonly removalReason: string | null
   public readonly createdAt: DateTime
-  public updatedAt: DateTime
+  public readonly updatedAt: DateTime
+  public readonly deletedAt: DateTime | null
 
   /** Relationships **/
   private readonly _mediaUrls: Collection<MediaUrl, MediaUrl['url'] & string>
@@ -27,8 +29,10 @@ export class PostMedia {
     title: string,
     postId: string,
     thumbnailUrl: string | null,
+    removalReason: string | null,
     createdAt: DateTime,
     updatedAt: DateTime,
+    deletedAt: DateTime | null,
     mediaUrls: Collection<MediaUrl, MediaUrl['url'] & string> = Collection.notLoaded()
   ) {
     this.id = id
@@ -36,8 +40,10 @@ export class PostMedia {
     this.title = title
     this.postId = postId
     this.thumbnailUrl = thumbnailUrl
+    this.removalReason = removalReason
     this.createdAt = createdAt
     this.updatedAt = updatedAt
+    this.deletedAt = deletedAt
     this._mediaUrls = mediaUrls
   }
 

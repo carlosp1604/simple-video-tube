@@ -1,0 +1,22 @@
+import { Knex } from 'knex'
+
+export async function up (knex: Knex): Promise<void> {
+  return knex.schema
+    .createTable('translations', (table) => {
+      table.string('translatable_id', 36).notNullable().index()
+      table.string('translatable_type', 36).notNullable().index()
+      table.string('field', 256).notNullable()
+      table.text('value').notNullable()
+      table.string('language', 4).notNullable()
+      table.timestamp('created_at').defaultTo(knex.fn.now()).notNullable()
+      table.timestamp('updated_at').defaultTo(knex.fn.now()).notNullable()
+
+      table.index('value', 'translations_value_index', { indexType: 'FULLTEXT' })
+
+      table.primary(['translatable_id', 'field', 'translatable_type', 'language'])
+    })
+}
+
+export async function down (knex: Knex): Promise<void> {
+  return knex.schema.dropTable('translations')
+}

@@ -1,6 +1,5 @@
 import { ApplicationException } from '~/modules/Exceptions/Application/ApplicationException'
-import { Post } from '~/modules/Posts/Domain/Post'
-import { User } from '~/modules/Auth/Domain/User'
+import { PostComment } from '~/modules/Posts/Domain/PostComments/PostComment'
 
 export class CreatePostCommentApplicationException extends ApplicationException {
   public static cannotAddCommentId = 'create_post_comment_cannot_add_comment'
@@ -14,26 +13,19 @@ export class CreatePostCommentApplicationException extends ApplicationException 
   }
 
   public static cannotAddComment (
-    postId: Post['id'],
-    userId: User['id']
+    postId: PostComment['postId'],
+    userIp: PostComment['userIp']
   ): CreatePostCommentApplicationException {
     return new CreatePostCommentApplicationException(
-      `Cannot add comment from user with ID ${userId} to post with ID ${postId}`,
+      `Cannot add comment from user with IP ${userIp} to post with ID ${postId}`,
       this.cannotAddCommentId
     )
   }
 
-  public static postNotFound (postId: Post['id']): CreatePostCommentApplicationException {
+  public static postNotFound (postId: PostComment['postId']): CreatePostCommentApplicationException {
     return new CreatePostCommentApplicationException(
       `Post with ID ${postId} was not found`,
       this.postNotFoundId
-    )
-  }
-
-  public static userNotFound (userId: User['id']): CreatePostCommentApplicationException {
-    return new CreatePostCommentApplicationException(
-      `User with ID ${userId} was not found`,
-      this.userNotFoundId
     )
   }
 }

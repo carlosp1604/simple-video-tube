@@ -84,7 +84,6 @@ export const ProducerPage: NextPage<ProducerPageProps> = ({
         name={ producer.name }
         imageAlt={ t('producer_image_alt_title', { producerName: producer.name }) }
         imageUrl={ producer.imageUrl }
-        customColor={ producer.brandHexColor }
         rounded={ true }
       />
 

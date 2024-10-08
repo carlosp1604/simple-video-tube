@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import ReactDOM from 'react-dom'
 import Link from 'next/link'
 import styles from './MenuSideBarOption.module.scss'
-import { Tooltip } from '~/components/Tooltip/Tooltip'
+import { Tooltip2 } from '~/components/Tooltip2/Tooltip'
 
 interface Props {
   menuOption: MenuOptionComponentInterface
@@ -15,14 +15,14 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
   const [mounted, setMounted] = useState<boolean>(false)
   const [tooltipId, setTooltipId] = useState<string>('')
 
+  const buildPortal = (component: ReactElement) => {
+    return ReactDOM.createPortal(component, document.getElementById('tooltip-container') as HTMLElement)
+  }
+
   useEffect(() => {
     setMounted(true)
     setTooltipId(uuidv4())
   }, [])
-
-  const buildPortal = (component: ReactElement) => {
-    return ReactDOM.createPortal(component, document.getElementById('tooltip-container') as HTMLElement)
-  }
 
   if (menuOption.action) {
     return (
@@ -34,13 +34,13 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
           ${menuOption.isActive ? styles.menuSidebarOption__menuItemContent__active : ''}
         ` }
         target={ menuOption.action.blank ? '_blank' : '_self' }
-        data-tooltip-id={ tooltipId }
-        data-tooltip-content={ menuOption.title }
+        tooltip-id={ tooltipId }
       >
         { !menuOpen && mounted
-          ? buildPortal(<Tooltip
-            tooltipId={ tooltipId }
+          ? buildPortal(<Tooltip2
+            id={ tooltipId }
             place={ 'right' }
+            content={ menuOption.title }
           />)
           : null
         }
@@ -66,13 +66,13 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
         ${menuOption.isActive ? styles.menuSidebarOption__menuItemContent__active : ''}
       ` }
         onClick={ menuOption.onClick }
-        data-tooltip-id={ tooltipId }
-        data-tooltip-content={ menuOption.title }
+        tooltip-id={ tooltipId }
       >
-        { !menuOpen && mounted
-          ? buildPortal(<Tooltip
-            tooltipId={ tooltipId }
+        { mounted
+          ? buildPortal(<Tooltip2
+            id={ tooltipId }
             place={ 'right' }
+            content={ 'asdasdasdasdas' }
           />)
           : null
         }

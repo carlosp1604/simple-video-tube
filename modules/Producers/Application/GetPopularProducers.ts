@@ -1,7 +1,7 @@
 import { ProducerApplicationDto } from './ProducerApplicationDto'
 import { ProducerApplicationDtoTranslator } from './ProducerApplicationDtoTranslator'
 import { ProducerRepositoryInterface } from '~/modules/Producers/Domain/ProducerRepositoryInterface'
-import {Producer} from "~/modules/Producers/Domain/Producer";
+import { Producer } from '~/modules/Producers/Domain/Producer'
 
 export class GetPopularProducers {
   // eslint-disable-next-line no-useless-constructor

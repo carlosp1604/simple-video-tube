@@ -13,10 +13,10 @@
     }
 
     &-enter-active {
-      @apply block translate-y-0 transition-all;
+      @apply block translate-y-0 transition-all duration-300;
 
       @screen tb {
-        @apply block opacity-80 scale-100 transition-all;
+        @apply block opacity-100 scale-100 transition-all duration-300;
       }
     }
 
@@ -24,7 +24,7 @@
       @apply block translate-y-0;
 
       @screen tb {
-        @apply block opacity-100 scale-100;
+        @apply block opacity-100 scale-100 transition-all;
       }
     }
 
@@ -37,10 +37,10 @@
     }
 
     &-exit-active {
-      @apply block translate-y-full transition-transform;
+      @apply block translate-y-full transition-all duration-300;
 
       @screen tb {
-        @apply block opacity-0 translate-y-0 scale-50 transition-all;
+        @apply block opacity-0 translate-y-0 scale-0 transition-all duration-300;
       }
     }
 

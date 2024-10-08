@@ -1,13 +1,12 @@
 import styles from './PostOptions.module.scss'
 import { FC, ReactElement, useState } from 'react'
-import { BsBookmarks, BsChatSquareText, BsDownload, BsMegaphone } from 'react-icons/bs'
+import { BsChatSquareText, BsDownload, BsMegaphone } from 'react-icons/bs'
 import { ReactionType } from '~/modules/Reactions/Infrastructure/ReactionType'
 import { RxDividerVertical } from 'react-icons/rx'
 import { ReactionComponentDto } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDto'
 import useTranslation from 'next-translate/useTranslation'
 import { LikeButton } from '~/components/ReactionButton/LikeButton'
 import { DislikeButton } from '~/components/ReactionButton/DislikeButton'
-import { AiOutlineLoading } from 'react-icons/ai'
 import { MediaUrlComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostMedia/MediaUrlComponentDto'
 import { MediaUrlsHelper } from '~/modules/Posts/Infrastructure/Frontend/MediaUrlsHelper'
 import ReactGA from 'react-ga4'
@@ -17,6 +16,7 @@ import {
 } from '~/modules/Shared/Infrastructure/FrontEnd/AnalyticsEvents/PostPage'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
+import { ReportModal } from '~/modules/Reports/Infrastructure/Components/ReportModal/ReportModal'
 
 const DownloadMenu = dynamic(() => import(
   '~/modules/Posts/Infrastructure/Components/Post/DownloadMenu/DownloadMenu'
@@ -28,7 +28,6 @@ export interface Props {
   savedPost: boolean
   onClickReactButton: (type: ReactionType) => Promise<void>
   onClickCommentsButton: () => void
-  onClickSaveButton: () => Promise<void>
   likesNumber: number
   optionsDisabled: boolean
   downloadUrls: MediaUrlComponentDto[]
@@ -40,21 +39,20 @@ export const PostOptions: FC<Props> = ({
   savedPost,
   onClickReactButton,
   onClickCommentsButton,
-  onClickSaveButton,
   likesNumber,
   optionsDisabled,
   downloadUrls,
   enableDownloads,
 }) => {
   const [loading, setLoading] = useState<boolean>(false)
-  const [loadingSaveButton, setLoadingSaveButton] = useState<boolean>(false)
   const [downloadMenuOpen, setDownloadMenuOpen] = useState<boolean>(false)
+  const [reportMenuOpen, setReportMenuOpen] = useState<boolean>(false)
   const { pathname } = useRouter()
 
   const { t } = useTranslation('post')
 
   const onClickLikeDislike = async (reactionType: ReactionType) => {
-    if (loading || loadingSaveButton) {
+    if (loading) {
       const toast = (await import('react-hot-toast')).default
 
       toast.error(t('action_cannot_be_performed_error_message'))
@@ -65,22 +63,6 @@ export const PostOptions: FC<Props> = ({
     setLoading(true)
     await onClickReactButton(reactionType)
     setLoading(false)
-  }
-
-  const onClickSave = async () => {
-    const toast = (await import('react-hot-toast')).default
-
-    if (loading || loadingSaveButton) {
-      toast.error(t('action_cannot_be_performed_error_message'))
-
-      return
-    }
-
-    setLoadingSaveButton(true)
-    setLoading(true)
-    await onClickSaveButton()
-    setLoading(false)
-    setLoadingSaveButton(false)
   }
 
   const onClickDownloadButton = async () => {
@@ -131,9 +113,14 @@ export const PostOptions: FC<Props> = ({
     )
   }
 
+  const reportMenu = (
+    <ReportModal isOpen={ reportMenuOpen } onClose={ () => setReportMenuOpen(false) } />
+  )
+
   return (
     <div className={ styles.postOptions__container }>
       { downloadMenu }
+      { reportMenu }
 
       <span className={ `
         ${styles.postOptions__likeDislikeSection}
@@ -161,30 +148,11 @@ export const PostOptions: FC<Props> = ({
         <BsChatSquareText className={ styles.postOptions__optionItemIcon }/>
         { t('post_comments_button_title') }
       </span>
-      <button className={ `
-        ${styles.postOptions__optionItem}
-        ${savedPost ? styles.postOptions__optionItem_active : ''}
-      ` }
-        onClick={ onClickSave }
-        disabled={ loading || optionsDisabled }
-      >
-        { loadingSaveButton
-          ? <AiOutlineLoading className={ styles.postOptions__loadingIcon } />
-          : <BsBookmarks className={ styles.postOptions__optionItemIcon } /> }
-        { savedPost ? t('post_save_active_button_title') : t('post_save_button_title') }
-      </button>
       { downloadButton }
-      <span
-        className={ styles.postOptions__optionItem }
-        onClick={ async () => {
-          const toast = (await import('react-hot-toast')).default
-
-          toast.success(t('post_option_feature_not_available_message'))
-        } }
-      >
+      <button onClick={ () => setReportMenuOpen(true) }>
         <BsMegaphone className={ styles.postOptions__optionItemIcon }/>
         { t('post_report_button_title') }
-      </span>
+      </button>
     </div>
   )
 }

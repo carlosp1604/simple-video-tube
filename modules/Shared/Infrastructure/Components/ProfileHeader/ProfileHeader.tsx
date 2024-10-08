@@ -1,4 +1,4 @@
-import { CSSProperties, FC } from 'react'
+import { FC } from 'react'
 import styles from './ProfileHeader.module.scss'
 import { AvatarImage } from '~/components/AvatarImage/AvatarImage'
 
@@ -6,19 +6,13 @@ export interface Props {
   name: string
   imageUrl: string | null
   imageAlt: string
-  customColor: string
   rounded: boolean
 }
 
-export const ProfileHeader: FC<Props> = ({ name, imageUrl, imageAlt, customColor, rounded }) => {
+export const ProfileHeader: FC<Props> = ({ name, imageUrl, imageAlt, rounded }) => {
   return (
       <header className={ styles.profileHeader__container }>
-        <div
-          className={ styles.profileHeader__background }
-          style={ {
-            '--custom-color': customColor,
-          } as CSSProperties }
-        />
+        <div className={ styles.profileHeader__background }/>
         { /**
           <Image
             src={ actor.backgroundImage }
@@ -43,7 +37,6 @@ export const ProfileHeader: FC<Props> = ({ name, imageUrl, imageAlt, customColor
               ` }
               avatarName={ name }
               imageAlt={ imageAlt }
-              color={ customColor !== null ? customColor : undefined }
               rounded={ rounded }
             />
 

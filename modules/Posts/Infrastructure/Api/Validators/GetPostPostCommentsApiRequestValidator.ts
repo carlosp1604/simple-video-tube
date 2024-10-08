@@ -1,6 +1,8 @@
 import { z, ZodError } from 'zod'
 import { PostCommentApiRequestValidatorError } from './PostCommentApiRequestValidatorError'
-import { GetPostPostCommentsApiRequestDto } from '~/modules/Posts/Infrastructure/Api/Requests/GetPostPostCommentsApiRequestDto'
+import {
+  GetPostPostCommentsApiRequestDto
+} from '~/modules/Posts/Infrastructure/Api/Requests/GetPostPostCommentsApiRequestDto'
 
 export class GetPostPostCommentsApiRequestValidator {
   private static getPostPostCommentsApiRequestSchema = z.object({

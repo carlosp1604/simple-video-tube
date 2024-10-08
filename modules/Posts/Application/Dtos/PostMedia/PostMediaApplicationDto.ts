@@ -7,4 +7,6 @@ export interface PostMediaApplicationDto {
   readonly thumbnailUrl: string | null
   readonly postId: string
   readonly mediaUrls: MediaUrlApplicationDto[]
+  readonly deletedAt: string | null
+  readonly removalReason: string | null
 }

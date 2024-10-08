@@ -12,19 +12,18 @@ import { getResolution } from '~/modules/Posts/Infrastructure/Frontend/PostCardH
 import {
   PostCardProducerActorNameLink
 } from '~/modules/Posts/Infrastructure/Components/PostCard/PostCardProducerActor/PostCardProducerActorNameLink'
-import { PostCardAvatar } from '~/modules/Posts/Infrastructure/Components/PostCard/PostCardProducerActor/PostCardAvatar'
-import HoverVideoPlayer from 'react-hover-video-player'
 import { VideoLoadingState } from '~/components/VideoLoadingState/VideoLoadingState'
+import dynamic from 'next/dynamic'
+
+const HoverVideoPlayer = dynamic(() => import('react-hover-video-player')
+  .then((module) => module.default), { ssr: false }
+)
 
 interface Props {
   post: PostCardComponentDto
-  showProducerImage: boolean
 }
 
-export const PostCard: FC<Props> = ({
-  post,
-  showProducerImage = true,
-}) => {
+export const PostCard: FC<Props> = ({ post }) => {
   const { t } = useTranslation('post_card')
 
   const locale = useRouter().locale ?? 'en'
@@ -68,16 +67,9 @@ export const PostCard: FC<Props> = ({
     )
   }
 
-  let producerImage: ReactElement | null = null
   const producerNameLink: ReactElement | null = (
     <PostCardProducerActorNameLink producer={ post.producer } actor={ post.actor } />
   )
-
-  if (showProducerImage) {
-    producerImage = (
-      <PostCardAvatar producer={ post.producer } actor={ post.actor } />
-    )
-  }
 
   let postCardLink = `/posts/videos/${post.slug}`
   let resolutionIcon: ReactElement | null = null
@@ -126,7 +118,6 @@ export const PostCard: FC<Props> = ({
         </Link>
       </div>
       <div className={ styles.postCard__videoDataContainer }>
-        { producerImage }
         <div className={ styles.postCard__postData }>
           { producerNameLink }
           <Link

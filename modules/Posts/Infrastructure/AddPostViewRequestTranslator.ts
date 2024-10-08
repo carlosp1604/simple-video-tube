@@ -5,7 +5,6 @@ export class AddPostViewRequestTranslator {
   public static fromApiDto (request: AddPostViewApiRequest): AddPostViewApplicationRequest {
     return {
       postId: request.postId,
-      userId: request.userId,
     }
   }
 }

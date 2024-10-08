@@ -5,6 +5,6 @@ export enum ReactionType {
 
 export interface ReactionComponentDto {
   reactionableId: string
-  userId: string
+  userIp: string
   reactionType: string
 }

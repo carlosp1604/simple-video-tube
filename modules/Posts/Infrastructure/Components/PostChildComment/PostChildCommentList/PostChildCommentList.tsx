@@ -7,8 +7,9 @@ import { ReactionComponentDto } from '~/modules/Reactions/Infrastructure/Compone
 import { PostCommentCardSkeleton } from '~/modules/Posts/Infrastructure/Components/PostComment/PostCommentCard/PostCommentCardSkeleton/PostCommentCardSkeleton'
 // eslint-disable-next-line max-len
 import { PostCommentWithOptions } from '~/modules/Posts/Infrastructure/Components/PostComment/PostCommentCard/PostCommentWithOptions/PostCommentWithOptions'
-// eslint-disable-next-line max-len
-import { PostChildCommentWithOptions } from '~/modules/Posts/Infrastructure/Components/PostChildComment/PostChildCommentWithOptions/PostChildCommentWithOptions'
+import {
+  PostChildCommentWithOptions
+} from '~/modules/Posts/Infrastructure/Components/PostChildComment/PostChildCommentWithOptions/PostChildCommentWithOptions'
 
 interface Props {
   postComment: PostCommentComponentDto

@@ -5,11 +5,6 @@ import {
 import { FetchFilter } from '~/modules/Shared/Infrastructure/FrontEnd/FetchFilter'
 import { GetPostsApplicationResponse } from '~/modules/Posts/Application/Dtos/GetPostsApplicationDto'
 import { ReactionType } from '~/modules/Reactions/Infrastructure/ReactionType'
-import {
-  USER_POST_NOT_FOUND,
-  USER_SAVED_POSTS_CANNOT_DELETE_POST_FROM_SAVED_POSTS, USER_SAVED_POSTS_POST_DOES_NOT_EXISTS_ON_SAVED_POSTS,
-  USER_USER_NOT_FOUND
-} from '~/modules/Auth/Infrastructure/Api/AuthApiExceptionCodes'
 import { APIException } from '~/modules/Shared/Infrastructure/FrontEnd/ApiException'
 import {
   POST_REACTION_NOT_FOUND,
@@ -17,9 +12,6 @@ import {
 } from '~/modules/Posts/Infrastructure/Api/PostApiExceptionCodes'
 import { ModelReactionApplicationDto } from '~/modules/Reactions/Application/ModelReactionApplicationDto'
 import { defaultPerPage } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
-import {
-  PostWithRelationsAndViewsApplicationDto
-} from '~/modules/Posts/Application/Dtos/PostWithRelationsAndViewsApplicationDto'
 import { PostFilterOptions } from '~/modules/Posts/Infrastructure/Frontend/PostFilterOptions'
 
 export class PostsApiService {
@@ -246,172 +238,5 @@ export class PostsApiService {
     const fetchRoute = `/api/posts/${postId}/user-interaction`
 
     return fetch(fetchRoute)
-  }
-
-  public async savePost (userId: string, postId: string): Promise<PostWithRelationsAndViewsApplicationDto> {
-    const fetchRoute = `/api/users/${userId}/saved-posts/${postId}`
-
-    const response = await fetch(fetchRoute, {
-      method: 'POST',
-    })
-
-    const jsonResponse = await response.json()
-
-    if (response.ok) {
-      return jsonResponse as PostWithRelationsAndViewsApplicationDto
-    }
-
-    switch (response.status) {
-      case 400:
-        throw new APIException(
-          'bad_request_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
-      case 401:
-        throw new APIException(
-          'user_must_be_authenticated_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
-      case 403:
-        throw new APIException(
-          'user_forbidden_resource_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
-      case 404:
-        switch (jsonResponse.code) {
-          case USER_USER_NOT_FOUND:
-            throw new APIException(
-              'user_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          case USER_POST_NOT_FOUND:
-            throw new APIException(
-              'post_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          default:
-            throw new APIException(
-              'server_error_error_message',
-              response.status,
-              jsonResponse.code
-            )
-        }
-
-      case 409:
-        throw new APIException(
-          'post_save_post_already_on_saved_post_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
-      default:
-        throw new APIException(
-          'server_error_error_message',
-          response.status,
-          jsonResponse.code
-        )
-    }
-  }
-
-  public async removeFromSavedPosts (userId: string, postId: string): Promise<void> {
-    const fetchRoute = `/api/users/${userId}/saved-posts/${postId}`
-
-    const response = await fetch(fetchRoute, {
-      method: 'DELETE',
-    })
-
-    if (response.ok) {
-      return
-    }
-
-    const jsonResponse = await response.json()
-
-    switch (response.status) {
-      case 400:
-        throw new APIException(
-          'bad_request_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
-      case 401:
-        throw new APIException(
-          'user_must_be_authenticated_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
-      case 403:
-        throw new APIException(
-          'user_forbidden_resource_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
-      case 404:
-        switch (jsonResponse.code) {
-          case USER_USER_NOT_FOUND:
-            throw new APIException(
-              'user_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          case USER_POST_NOT_FOUND:
-            throw new APIException(
-              'post_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          default:
-            throw new APIException(
-              'server_error_error_message',
-              response.status,
-              jsonResponse.code
-            )
-        }
-
-      case 409:
-        switch (jsonResponse.code) {
-          case USER_SAVED_POSTS_CANNOT_DELETE_POST_FROM_SAVED_POSTS:
-            throw new APIException(
-              'post_save_cannot_remove_saved_post_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          case USER_SAVED_POSTS_POST_DOES_NOT_EXISTS_ON_SAVED_POSTS:
-            throw new APIException(
-              'post_save_post_does_not_belong_to_user_saved_posts_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          default:
-            throw new APIException(
-              'server_error_error_message',
-              response.status,
-              jsonResponse.code
-            )
-        }
-
-      default:
-        throw new APIException(
-          'server_error_error_message',
-          response.status,
-          jsonResponse.code
-        )
-    }
   }
 }

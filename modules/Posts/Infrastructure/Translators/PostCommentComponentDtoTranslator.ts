@@ -18,13 +18,8 @@ export class PostCommentComponentDtoTranslator {
       id: applicationDto.id,
       postId: applicationDto.postId,
       comment: applicationDto.comment,
-      createdAt: new DateService()
-        .formatDateToDatetimeMedFromIso(applicationDto.createdAt, locale),
-      user: {
-        id: applicationDto.user.id,
-        name: applicationDto.user.name,
-        imageUrl: applicationDto.user.imageUrl,
-      },
+      createdAt: new DateService().formatDateToDatetimeMedFromIso(applicationDto.createdAt, locale),
+      username: applicationDto.username,
       repliesNumber,
       reactionsNumber,
       userReaction: userReaction !== null ? ReactionComponentDtoTranslator.fromApplicationDto(userReaction) : null,

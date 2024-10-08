@@ -6,6 +6,7 @@ import {
   ProducerPostCardComponentDto
 } from '~/modules/Posts/Infrastructure/Dtos/PostCardComponentDto'
 import { usePathname } from 'next/navigation'
+import { MdLiveTv, MdOutlineStarBorder } from 'react-icons/md'
 
 interface Props {
   producer: ProducerPostCardComponentDto | null
@@ -37,6 +38,7 @@ export const PostCardProducerActorNameLink: FC<Props> = ({
         ` }
         href={ `/producers/${producer.slug}` }
       >
+        <MdLiveTv className={ styles.postCardProducerActor__producerIcon }/>
         { producer.name }
       </Link>
     )
@@ -59,6 +61,7 @@ export const PostCardProducerActorNameLink: FC<Props> = ({
         ` }
         href={ `/actors/${actor.slug}` }
       >
+        <MdOutlineStarBorder className={ styles.postCardProducerActor__producerIcon }/>
         { actor.name }
       </Link>
     )

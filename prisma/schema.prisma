@@ -18,25 +18,27 @@ model Producer {
   parentProducer   Producer?  @relation("parentProducer", fields: [parentProducerId], references: [id])
   parentProducerId String?    @map("parent_producer_id")
   imageUrl         String?    @map("image_url")
-  brandHexColor    String     @map("brand_hex_color")
   viewsCount       BigInt     @default(0) @map("views_count")
   createdAt        DateTime   @map("created_at")
   updatedAt        DateTime   @map("updated_at")
   deletedAt        DateTime?  @map("deleted_at")
   childProducers   Producer[] @relation("parentProducer")
   posts            Post[]
-  views            View[]     @relation("ProducerView")
 
   @@map("producers")
 }
 
 model Post {
   id           String          @id
-  title        String
-  type         String
-  description  String
+  title        String          @db.Text
+  description  String          @db.Text
   slug         String          @unique
   viewsCount   BigInt          @default(0) @map("views_count")
+  duration     Int
+  resolution   Int
+  trailerUrl   String?         @map("trailer_url")
+  thumbnailUrl String          @map("thumbnail_url")
+  externalUrl  String?         @map("external_url")
   createdAt    DateTime        @map("created_at")
   updatedAt    DateTime        @map("updated_at")
   deletedAt    DateTime?       @map("deleted_at")
@@ -45,113 +47,44 @@ model Post {
   producerId   String?         @map("producer_id")
   actor        Actor?          @relation(fields: [actorId], references: [id])
   actorId      String?         @map("actor_id")
-  meta         PostMeta[]
-  tags         PostPostTag[]
+  categories   PostCategory[]
   actors       PostActor[]
   comments     PostComment[]
   reactions    Reaction[]      @relation("Reaction")
-  views        View[]          @relation("PostView")
   translations Translatation[] @relation("PostTranslation")
-  savedPosts   SavedPost[]
   postMedia    PostMedia[]
+  reports      Report[]
 
   @@map("posts")
 }
 
-model PostTag {
+model Category {
   id           String          @id
   slug         String
   name         String
   description  String?
+  viewsCount   BigInt          @default(0) @map("views_count")
   imageUrl     String?         @map("image_url")
   createdAt    DateTime        @map("created_at")
   updatedAt    DateTime        @map("updated_at")
   deletedAt    DateTime?       @map("deleted_at")
-  posts        PostPostTag[]
-  translations Translatation[] @relation("PostTagTranslation")
+  posts        PostCategory[]
+  translations Translatation[] @relation("CategoryTranslation")
 
-  @@map("post_tags")
+  @@map("categories")
 }
 
-model PostPostTag {
-  post      Post      @relation(fields: [postId], references: [id])
-  tag       PostTag   @relation(fields: [postTagId], references: [id])
-  postId    String    @map("post_id")
-  postTagId String    @map("post_tag_id")
-  createdAt DateTime  @map("created_at")
-  updatedAt DateTime  @map("updated_at")
-  deletedAt DateTime? @map("deleted_at")
+model PostCategory {
+  post        Post      @relation(fields: [postId], references: [id])
+  category    Category  @relation(fields: [categoryId], references: [id])
+  postId      String    @map("post_id")
+  categoryId  String    @map("category_id")
+  createdAt   DateTime  @map("created_at")
+  updatedAt   DateTime  @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
 
-  @@id([postId, postTagId])
-  @@map("post_post_tags")
-}
-
-model PostMeta {
-  type      String
-  value     String
-  post      Post      @relation(fields: [postId], references: [id])
-  postId    String    @map("post_id")
-  createdAt DateTime  @map("created_at")
-  updatedAt DateTime  @map("updated_at")
-  deletedAt DateTime? @map("deleted_at")
-
-  @@id([type, postId])
-  @@map("posts_meta")
-}
-
-model Account {
-  id                String
-  userId            String   @map("user_id")
-  type              String
-  provider          String
-  providerAccountId String   @map("provider_account_id")
-  refresh_token     String?  @db.Text
-  access_token      String?  @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?  @db.Text
-  session_state     String?
-  createdAt         DateTime @map("created_at")
-  updatedAt         DateTime @map("updated_at")
-  user              User     @relation(fields: [userId], references: [id])
-
-  @@unique([provider, providerAccountId])
-  @@map("accounts")
-}
-
-model User {
-  id                String             @id
-  name              String
-  username          String             @unique
-  email             String             @unique
-  imageUrl          String?            @map("image_url")
-  language          String
-  password          String?
-  createdAt         DateTime           @map("created_at")
-  updatedAt         DateTime           @map("updated_at")
-  deletedAt         DateTime?          @map("deleted_at")
-  emailVerified     DateTime?          @map("email_verified")
-  reactions         Reaction[]
-  comments          PostComment[]
-  views             View[]
-  verificationToken VerificationToken?
-  savedPosts        SavedPost[]
-  accounts          Account[]
-
-  @@map("users")
-}
-
-model VerificationToken {
-  id        String   @id
-  token     String
-  userEmail String   @unique @map("user_email")
-  user      User?    @relation(fields: [userEmail], references: [email], onDelete: Cascade, onUpdate: Cascade)
-  type      String
-  expiresAt DateTime @map("expires_at")
-  createdAt DateTime @map("created_at")
-
-  @@map("verification_tokens")
+  @@id([postId, categoryId])
+  @@map("post_categories")
 }
 
 enum ReactionableType {
@@ -162,8 +95,7 @@ enum ReactionableType {
 model Reaction {
   reactionableId   String           @map("reactionable_id")
   reactionType     String           @map("reaction_type")
-  userId           String           @map("user_id")
-  user             User             @relation(fields: [userId], references: [id])
+  userIp           String           @map("user_ip")
   reactionableType ReactionableType @map("reactionable_type")
 
   post        Post?        @relation("Reaction", fields: [reactionableId], references: [id], map: "post_reaction")
@@ -173,7 +105,7 @@ model Reaction {
   updatedAt DateTime  @map("updated_at")
   deletedAt DateTime? @map("deleted_at")
 
-  @@id([reactionableType, reactionableId, userId])
+  @@id([reactionableType, reactionableId, userIp])
   @@map("reactions")
 }
 
@@ -184,8 +116,8 @@ model PostComment {
   postId          String?       @map("post_id")
   parentComment   PostComment?  @relation("Replies", fields: [parentCommentId], references: [id])
   parentCommentId String?       @map("parent_comment_id")
-  user            User          @relation(fields: [userId], references: [id])
-  userId          String        @map("user_id")
+  userIp          String        @map("user_ip")
+  username        String        @map("username")
   createdAt       DateTime      @map("created_at")
   updatedAt       DateTime      @map("updated_at")
   deletedAt       DateTime?     @map("deleted_at")
@@ -196,18 +128,16 @@ model PostComment {
 }
 
 model Actor {
-  id          String      @id
-  slug        String
-  name        String
-  description String?
-  imageUrl    String?     @map("image_url")
-  viewsCount  BigInt      @default(0) @map("views_count")
-  createdAt   DateTime    @map("created_at")
-  updatedAt   DateTime    @map("updated_at")
-  deletedAt   DateTime?   @map("deleted_at")
-  postActors  PostActor[]
-  posts       Post[]
-  views       View[]      @relation("ActorView")
+  id         String      @id
+  slug       String
+  name       String
+  imageUrl   String?     @map("image_url")
+  viewsCount BigInt      @default(0) @map("views_count")
+  createdAt  DateTime    @map("created_at")
+  updatedAt  DateTime    @map("updated_at")
+  deletedAt  DateTime?   @map("deleted_at")
+  postActors PostActor[]
+  posts      Post[]
 
   @@map("actors")
 }
@@ -225,31 +155,9 @@ model PostActor {
   @@map("post_actors")
 }
 
-enum ViewableType {
-  Post
-  Actor
-  Producer
-}
-
-model View {
-  id         String   @id
-  viewableId String   @map("viewable_id")
-  userId     String?  @map("user_id")
-  user       User?    @relation(fields: [userId], references: [id])
-  createdAt  DateTime @map("created_at")
-
-  post     Post?     @relation("PostView", fields: [viewableId], references: [id], map: "post_view")
-  actor    Actor?    @relation("ActorView", fields: [viewableId], references: [id], map: "actor_view")
-  producer Producer? @relation("ProducerView", fields: [viewableId], references: [id], map: "producer_view")
-
-  viewableType ViewableType @map("viewable_type")
-
-  @@map("views")
-}
-
 enum TranslatableType {
   Post
-  PostTag
+  Category
   Actor
   Producer
 }
@@ -260,8 +168,8 @@ model Translatation {
   value            String
   translatableType TranslatableType @map("translatable_type")
 
-  post    Post?    @relation("PostTranslation", fields: [translatableId], references: [id], map: "post_translation")
-  postTag PostTag? @relation("PostTagTranslation", fields: [translatableId], references: [id], map: "post_tag_translation")
+  post    Post?     @relation("PostTranslation", fields: [translatableId], references: [id], map: "post_translation")
+  category Category? @relation("CategoryTranslation", fields: [translatableId], references: [id], map: "category_translation")
 
   language  String
   createdAt DateTime @map("created_at")
@@ -272,26 +180,36 @@ model Translatation {
 }
 
 model PostMedia {
-  id           String     @id
-  postId       String     @map("post_id")
-  post         Post       @relation(fields: [postId], references: [id], onDelete: Cascade)
-  type         String
-  title        String
-  thumbnailUrl String?    @map("thumbnail_url")
-  createdAt    DateTime   @map("created_at")
-  updatedAt    DateTime   @map("updated_at")
-  mediaUrls    MediaUrl[]
+  id            String     @id
+  postId        String     @map("post_id")
+  post          Post       @relation(fields: [postId], references: [id], onDelete: Cascade)
+  type          String
+  title         String
+  thumbnailUrl  String?    @map("thumbnail_url")
+  removalReason String?    @map("removal_reason")
+  createdAt     DateTime   @map("created_at")
+  updatedAt     DateTime   @map("updated_at")
+  deletedAt     DateTime?  @map("deleted_at")
+  mediaUrls     MediaUrl[]
 
   @@map("post_media")
 }
 
 model MediaProvider {
-  id        String     @id
-  name      String
-  logoUrl   String     @map("logo_url")
-  createdAt DateTime   @map("created_at")
-  updatedAt DateTime   @map("updated_at")
-  mediaUrls MediaUrl[]
+  id                    String    @id
+  name                  String
+  logoUrl               String    @map("logo_url")
+  advertisingLevel      Int       @map("advertising_level")
+  downloadSpeed         Int       @map("download_speed")
+  paymentRequired       Boolean   @map("payment_required")
+  freeDownloadsDay      Int       @map("free_downloads_day")        @default(0)
+  delayBetweenDownloads Int       @map("delay_between_downloads")   @default(0)
+  refUrl                String    @map("ref_url")
+  maxResolution         String    @map("max_resolution")
+  multiQuality          Boolean   @map("multi_quality")             @default(false)
+  createdAt             DateTime  @map("created_at")
+  updatedAt             DateTime  @map("updated_at")
+  mediaUrls             MediaUrl[]
 
   @@map("media_providers")
 }
@@ -311,14 +229,18 @@ model MediaUrl {
   @@map("media_urls")
 }
 
-model SavedPost {
-  post      Post     @relation(fields: [postId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-  postId    String   @map("post_id")
-  userId    String   @map("user_id")
-  createdAt DateTime @map("created_at")
-  updatedAt DateTime @map("updated_at")
+model Report {
+  id              String        @id
+  userIp          String        @map("user_ip")
+  userName        String        @map("user_name")
+  userEmail       String        @map("user_email")
+  content         String
+  postId          String        @map("post_id")
+  post            Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  type            String
+  createdAt       DateTime      @map("created_at")
+  updatedAt       DateTime      @map("updated_at")
 
-  @@id([postId, userId])
-  @@map("saved_posts")
+  @@index([userIp, postId, type])
+  @@map("reports")
 }

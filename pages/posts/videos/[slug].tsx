@@ -33,71 +33,73 @@ export const getServerSideProps: GetServerSideProps<PostPageProps> = async (cont
   const getRelatedPosts = container.resolve<GetRelatedPosts>('getRelatedPostsUseCase')
   const htmlPageMetaContextService = new HtmlPageMetaContextService(context)
 
+  let postWithCount
+
   try {
-    const postWithCount = await useCase.get({ slug })
-
-    if (postWithCount.externalLink) {
-      const pat = /^https?:\/\//i
-
-      if (pat.test(postWithCount.externalLink)) {
-        return {
-          redirect: {
-            destination: postWithCount.externalLink,
-            permanent: false,
-          },
-        }
-      }
-
-      return {
-        redirect: {
-          destination: `/${locale}/${postWithCount.externalLink}`,
-          permanent: false,
-        },
-      }
-    }
-
-    if (postWithCount.post.deletedAt) {
-      return {
-        notFound: true,
-      }
-    }
-
-    const relatedPosts = await getRelatedPosts.get(postWithCount.post.id)
-
-    let postEmbedUrl = ''
-    let baseUrl = ''
-
-    if (!env.BASE_URL) {
-      throw Error('Missing env var: BASE_URL. Required to build post page embed URL')
-    } else {
-      postEmbedUrl = `${env.BASE_URL}/${locale}/posts/videos/embed/${slug}`
-      baseUrl = env.BASE_URL
-    }
-
-    const applicationPost = PostComponentDtoTranslator.fromApplicationDto(postWithCount.post, locale)
-
-    return {
-      props: {
-        post: PostComponentDtoTranslator.fromApplicationDto(postWithCount.post, locale),
-        relatedPosts: relatedPosts.posts.map((relatedPost) => {
-          return PostCardComponentDtoTranslator.fromApplication(relatedPost.post, relatedPost.postViews, locale)
-        }),
-        parsedDuration: Duration.fromMillis(Number.parseInt(applicationPost.duration) * 1000).toString(),
-        postViewsNumber: postWithCount.views,
-        postLikes: postWithCount.reactions.like,
-        postDislikes: postWithCount.reactions.dislike,
-        postCommentsNumber: postWithCount.comments,
-        postEmbedUrl,
-        baseUrl,
-        htmlPageMetaContextProps: htmlPageMetaContextService.getProperties(),
-      },
-    }
+    postWithCount = await useCase.get({ slug })
   } catch (exception: unknown) {
     console.error(exception)
 
     return {
       notFound: true,
     }
+  }
+
+  if (postWithCount.post.externalUrl) {
+    const pat = /^https?:\/\//i
+
+    if (pat.test(postWithCount.post.externalUrl)) {
+      return {
+        redirect: {
+          destination: postWithCount.post.externalUrl,
+          permanent: false,
+        },
+      }
+    }
+
+    return {
+      redirect: {
+        destination: `/${locale}/${postWithCount.post.externalUrl}`,
+        permanent: false,
+      },
+    }
+  }
+
+  if (postWithCount.post.deletedAt) {
+    return {
+      notFound: true,
+    }
+  }
+
+  const relatedPosts = await getRelatedPosts.get(postWithCount.post.id)
+
+  let postEmbedUrl = ''
+  let baseUrl = ''
+
+  if (!env.BASE_URL) {
+    throw Error('Missing env var: BASE_URL. Required to build post page embed URL')
+  } else {
+    postEmbedUrl = `${env.BASE_URL}/${locale}/posts/videos/embed/${slug}`
+    baseUrl = env.BASE_URL
+  }
+
+  const applicationPost = PostComponentDtoTranslator.fromApplicationDto(postWithCount.post, locale)
+
+  return {
+    props: {
+      post: PostComponentDtoTranslator.fromApplicationDto(postWithCount.post, locale),
+      relatedPosts: relatedPosts.posts.map((relatedPost) => {
+        return PostCardComponentDtoTranslator.fromApplication(relatedPost, locale)
+      }),
+      parsedDuration: Duration.fromMillis(applicationPost.duration * 1000).toString(),
+      postViewsNumber: postWithCount.post.viewsCount,
+      postLikes: postWithCount.reactions.like,
+      postDislikes: postWithCount.reactions.dislike,
+      postCommentsNumber: postWithCount.comments,
+      postEmbedUrl,
+      baseUrl,
+      htmlPageMetaContextProps: htmlPageMetaContextService.getProperties(),
+    },
   }
 }
 

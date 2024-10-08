@@ -1,15 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '~/pages/api/auth/[...nextauth]'
 import {
   PostCommentApiRequestValidatorError
 } from '~/modules/Posts/Infrastructure/Api/Validators/PostCommentApiRequestValidatorError'
 import { container } from '~/awilix.container'
 import {
-  POST_COMMENT_REACTION_AUTH_REQUIRED,
   POST_COMMENT_REACTION_BAD_REQUEST,
   POST_COMMENT_REACTION_METHOD, POST_COMMENT_REACTION_NOT_FOUND, POST_COMMENT_REACTION_POST_COMMENT_NOT_FOUND,
-  POST_COMMENT_REACTION_SERVER_ERROR, POST_COMMENT_REACTION_USER_ALREADY_REACTED, POST_COMMENT_REACTION_USER_NOT_FOUND,
+  POST_COMMENT_REACTION_SERVER_ERROR, POST_COMMENT_REACTION_USER_ALREADY_REACTED,
   POST_COMMENT_REACTION_VALIDATION
 } from '~/modules/Posts/Infrastructure/Api/PostApiExceptionCodes'
 import {
@@ -42,6 +39,7 @@ import {
 import {
   DeletePostCommentReactionApplicationException
 } from '~/modules/Posts/Application/DeletePostCommentReaction/DeletePostCommentReactionApplicationException'
+import requestIp from 'request-ip'
 
 export default async function handler (
   request: NextApiRequest,
@@ -60,11 +58,7 @@ export default async function handler (
 }
 
 async function handlePostMethod (request: NextApiRequest, response: NextApiResponse) {
-  const session = await getServerSession(request, response, authOptions)
-
-  if (session === null) {
-    return handleAuthentication(response)
-  }
+  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
 
   const { commentId, childCommentId } = request.query
 
@@ -74,7 +68,6 @@ async function handlePostMethod (request: NextApiRequest, response: NextApiRespo
 
   const apiRequest: CreatePostCommentReactionApiRequestDto = {
     parentCommentId: String(commentId),
-    userId: session.user.id,
     postCommentId: String(childCommentId),
   }
 
@@ -84,7 +77,7 @@ async function handlePostMethod (request: NextApiRequest, response: NextApiRespo
     return handleValidationError(response, validationError)
   }
 
-  const applicationRequest = CreatePostCommentReactionRequestTranslator.fromApiDto(apiRequest)
+  const applicationRequest = CreatePostCommentReactionRequestTranslator.fromApiDto(apiRequest, userIp)
 
   const useCase = container.resolve<CreatePostCommentReaction>('createPostCommentReactionUseCase')
 
@@ -106,9 +99,6 @@ async function handlePostMethod (request: NextApiRequest, response: NextApiRespo
       case CreatePostCommentReactionApplicationException.userAlreadyReactedId:
         return handleConflict(response, exception.message, POST_COMMENT_REACTION_USER_ALREADY_REACTED)
 
-      case CreatePostCommentReactionApplicationException.userNotFoundId:
-        return handleNotFound(response, exception.message, POST_COMMENT_REACTION_USER_NOT_FOUND)
-
       default: {
         console.error(exception)
 
@@ -119,11 +109,7 @@ async function handlePostMethod (request: NextApiRequest, response: NextApiRespo
 }
 
 async function handleDeleteMethod (request: NextApiRequest, response: NextApiResponse) {
-  const session = await getServerSession(request, response, authOptions)
-
-  if (session === null) {
-    return handleAuthentication(response)
-  }
+  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
 
   const { commentId, childCommentId } = request.query
 
@@ -135,7 +121,6 @@ async function handleDeleteMethod (request: NextApiRequest, response: NextApiRes
     // Post comment does not have a parent comment
     parentCommentId: String(commentId),
     postCommentId: String(childCommentId),
-    userId: session.user.id,
   }
 
   const validationError = DeletePostCommentReactionApiRequestValidator.validate(apiRequest)
@@ -144,7 +129,7 @@ async function handleDeleteMethod (request: NextApiRequest, response: NextApiRes
     return handleValidationError(response, validationError)
   }
 
-  const applicationRequest = DeletePostCommentReactionRequestTranslator.fromApiDto(apiRequest)
+  const applicationRequest = DeletePostCommentReactionRequestTranslator.fromApiDto(apiRequest, userIp)
 
   const useCase = container.resolve<DeletePostCommentReaction>('deletePostCommentReactionUseCase')
 
@@ -166,9 +151,6 @@ async function handleDeleteMethod (request: NextApiRequest, response: NextApiRes
       case DeletePostCommentReactionApplicationException.userHasNotReactedId:
         return handleNotFound(response, exception.message, POST_COMMENT_REACTION_NOT_FOUND)
 
-      case DeletePostCommentReactionApplicationException.userNotFoundId:
-        return handleNotFound(response, exception.message, POST_COMMENT_REACTION_USER_NOT_FOUND)
-
       default: {
         console.error(exception)
 
@@ -185,15 +167,6 @@ function handleMethod (request: NextApiRequest, response: NextApiResponse) {
     .json({
       code: POST_COMMENT_REACTION_METHOD,
       message: `Cannot ${request.method} ${request.url?.toString()}`,
-    })
-}
-
-function handleAuthentication (response: NextApiResponse) {
-  return response
-    .status(401)
-    .json({
-      code: POST_COMMENT_REACTION_AUTH_REQUIRED,
-      message: 'User must be authenticated to access to resource',
     })
 }
 

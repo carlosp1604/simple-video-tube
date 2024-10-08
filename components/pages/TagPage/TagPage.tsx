@@ -9,28 +9,28 @@ import {
   HtmlPageMetaContextResourceType,
   HtmlPageMetaResourceService
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaResourceService/HtmlPageMetaResourceService'
-import { Tag } from '~/modules/PostTag/Infrastructure/Components/Tag/Tag'
+import { Tag } from '~/modules/Categories/Infrastructure/Components/Tag/Tag'
 import { HtmlPageMeta } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMeta'
 import { ProfileHeader } from '~/modules/Shared/Infrastructure/Components/ProfileHeader/ProfileHeader'
 import { useAvatarColor } from '~/hooks/AvatarColor'
 import styles from './TagPage.module.scss'
 import { useRouter } from 'next/router'
-import { TagPageComponentDto } from '~/modules/PostTag/Infrastructure/Dtos/TagPageComponentDto'
+import { TagPageComponentDto } from '~/modules/Categories/Infrastructure/Dtos/TagPageComponentDto'
 
-export interface TagPageProps {
+export interface CategoryPageProps {
   initialPage: number
   initialOrder: PostsPaginationSortingType
-  tag: TagPageComponentDto
+  category: TagPageComponentDto
   initialPosts: PostCardComponentDto[]
   initialPostsNumber: number
   htmlPageMetaContextProps: HtmlPageMetaContextProps
   baseUrl: string
 }
 
-export const TagPage: NextPage<TagPageProps> = ({
+export const TagPage: NextPage<CategoryPageProps> = ({
   initialPage,
   initialOrder,
-  tag,
+  category,
   initialPosts,
   initialPostsNumber,
   htmlPageMetaContextProps,
@@ -39,7 +39,6 @@ export const TagPage: NextPage<TagPageProps> = ({
   const { t } = useTranslation('tags')
   const locale = useRouter().locale ?? 'en'
   const getRandomColor = useAvatarColor()
-  const tagColor = getRandomColor(tag.name)
 
   const structuredData = {
     '@context': 'http://schema.org',
@@ -47,21 +46,21 @@ export const TagPage: NextPage<TagPageProps> = ({
     itemListElement: [{
       '@type': 'ListItem',
       position: 1,
-      name: tag.name,
-      item: `${baseUrl}/${locale}/tags/${tag.slug}`,
+      name: category.name,
+      item: `${baseUrl}/${locale}/categories/${category.slug}`,
     }],
   }
 
-  let canonicalUrl = `${baseUrl}/tags/${tag.slug}`
+  let canonicalUrl = `${baseUrl}/categories/${category.slug}`
 
   if (locale !== 'en') {
-    canonicalUrl = `${baseUrl}/${locale}/tags/${tag.slug}`
+    canonicalUrl = `${baseUrl}/${locale}/categories/${category.slug}`
   }
 
   const htmlPageMetaUrlProps = (
     new HtmlPageMetaResourceService(
-      t('tag_page_title', { tagName: tag.name }),
-      t('tag_page_description', { tagName: tag.name }),
+      t('tag_page_title', { tagName: category.name }),
+      t('tag_page_description', { tagName: category.name }),
       HtmlPageMetaContextResourceType.ARTICLE,
       canonicalUrl
     )
@@ -77,19 +76,18 @@ export const TagPage: NextPage<TagPageProps> = ({
     <div className={ styles.tagPage__container }>
       <HtmlPageMeta { ...htmlPageMetaProps } />
 
-      { /* TODO: Add imageAlt when tags have imageUrl */ }
+      { /* TODO: Add imageAlt when categories have imageUrl */ }
       <ProfileHeader
-        name={ tag.name }
+        name={ category.name }
         imageAlt={ '' }
-        imageUrl={ tag.imageUrl }
-        customColor={ tagColor }
+        imageUrl={ category.imageUrl }
         rounded={ false }
       />
 
       <Tag
         initialPage={ initialPage }
         initialOrder={ initialOrder }
-        tag={ tag }
+        tag={ category }
         initialPosts={ initialPosts }
         initialPostsNumber={ initialPostsNumber }
       />

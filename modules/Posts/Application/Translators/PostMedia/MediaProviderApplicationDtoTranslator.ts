@@ -8,6 +8,14 @@ export class MediaProviderApplicationDtoTranslator {
       id: mediaProvider.id,
       name: mediaProvider.name,
       logoUrl: mediaProvider.logoUrl,
+      maxResolution: mediaProvider.maxResolution,
+      advertisingLevel: mediaProvider.advertisingLevel,
+      delayBetweenDownloads: mediaProvider.delayBetweenDownloads,
+      downloadSpeed: mediaProvider.downloadSpeed,
+      freeDownloadsDay: mediaProvider.freeDownloadsDay,
+      refUrl: mediaProvider.refUrl,
+      multiQuality: mediaProvider.multiQuality,
+      paymentRequired: mediaProvider.paymentRequired,
     }
   }
 }
