@@ -10,12 +10,12 @@ import { GetPostPostCommentsResponseDto } from '~/modules/Posts/Application/Dtos
 import { CommentsApiService } from '~/modules/Posts/Infrastructure/Frontend/CommentsApiService'
 import useTranslation from 'next-translate/useTranslation'
 import { AddCommentInput } from '~/modules/Posts/Infrastructure/Components/AddCommentInput/AddCommentInput'
-import toast from 'react-hot-toast'
 import { PostCommentList } from '~/modules/Posts/Infrastructure/Components/PostComment/PostCommentList/PostCommentList'
 import { PostChildComments } from '~/modules/Posts/Infrastructure/Components/PostChildComment/PostChildComments'
 import { ReactionComponentDto } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDto'
 import { APIException } from '~/modules/Shared/Infrastructure/FrontEnd/ApiException'
 import { defaultPerPage, PaginationHelper } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
+import { useToast } from '~/components/AppToast/ToastContext'
 
 interface Props {
   postId: string
@@ -37,13 +37,14 @@ export const PostComments: FC<Props> = ({ postId, setIsOpen, setCommentsNumber, 
   const commentApiService = new CommentsApiService()
 
   const { t } = useTranslation('post_comments')
+  const { error, success } = useToast()
 
   const router = useRouter()
   const locale = router.locale ?? 'en'
 
   const createComment = async (comment: string) => {
     if (comment === '') {
-      toast.error(t('empty_comment_is_not_allowed_error_message'))
+      error(t('empty_comment_is_not_allowed_error_message'))
 
       return
     }

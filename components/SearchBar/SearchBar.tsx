@@ -1,11 +1,11 @@
 import { ChangeEvent, createRef, FC, KeyboardEvent, Ref, useEffect, useState } from 'react'
 import styles from './SearchBar.module.scss'
 import { CiSearch } from 'react-icons/ci'
-import { Tooltip } from '~/components/Tooltip/Tooltip'
 import { IconButton } from '~/components/IconButton/IconButton'
 import { TfiClose } from 'react-icons/tfi'
 import useTranslation from 'next-translate/useTranslation'
-import * as uuid from 'uuid'
+import { Tooltip2 } from '~/components/Tooltip2/Tooltip'
+import { nanoid } from 'nanoid'
 
 export type Style = 'main' | 'sub'
 
@@ -38,7 +38,7 @@ export const SearchBar: FC<Partial<Props> & Omit<Props, 'style' | 'clearBarOnSea
 
   useEffect(() => {
     setMounted(true)
-    setTooltipId(uuid.v4())
+    setTooltipId(nanoid())
 
     if (inputRef && inputRef.current && inputRef.current !== document.activeElement) {
       inputRef.current.focus()
@@ -107,13 +107,13 @@ export const SearchBar: FC<Partial<Props> & Omit<Props, 'style' | 'clearBarOnSea
         onClick={ handleSearch }
         data-tooltip-id={ tooltipId }
         data-tooltip-content={ searchIconTitle }
-        title={ searchIconTitle }
       >
         <CiSearch/>
         { mounted
-          ? <Tooltip
+          ? <Tooltip2
             tooltipId={ tooltipId }
             place={ 'bottom' }
+            content={ searchIconTitle }
           />
           : null
         }

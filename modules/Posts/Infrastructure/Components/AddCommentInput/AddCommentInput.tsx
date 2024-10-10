@@ -4,7 +4,7 @@ import { BsChatDots } from 'react-icons/bs'
 import { AutoSizableTextArea } from './AutoSizableTextArea'
 import useTranslation from 'next-translate/useTranslation'
 import { AvatarImage } from '~/components/AvatarImage/AvatarImage'
-import toast from 'react-hot-toast'
+import { useToast } from '~/components/AppToast/ToastContext'
 
 interface Props {
   onAddComment: (username: string, comment: string) => void
@@ -14,11 +14,14 @@ interface Props {
 export const AddCommentInput: FC<Props> = ({ onAddComment, disabled }) => {
   const [comment, setComment] = useState<string>('')
   const [username, setUsername] = useState<string>('')
+
   const { t } = useTranslation('post_comments')
+
+  const { error } = useToast()
 
   const onClickAddComment = (comment: string) => {
     if (disabled) {
-      toast.error(t('action_cannot_be_performed_error_message'))
+      error(t('action_cannot_be_performed_error_message'))
 
       return
     }

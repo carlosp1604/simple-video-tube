@@ -22,16 +22,14 @@ export const AppMenu: FC<Props> = ({ onClickMenuButton, setOpenLanguageMenu }) =
   const [title, setTitle] = useState<string>('')
   const { blocked } = useUsingRouterContext()
   const [openSearchBar, setOpenSearchBar] = useState<boolean>(false)
-  const { success, dismissible } = useToast()
+  const { dismissible, error } = useToast()
   const { t } = useTranslation('app_menu')
   const router = useRouter()
   const locale = useRouter().locale ?? 'en'
 
   const onSearch = async () => {
-    const toast = (await import('react-hot-toast')).default
-
     if (blocked) {
-      toast.error(t('action_cannot_be_performed_error_message'))
+      error(t('action_cannot_be_performed_error_message'))
 
       return
     }
@@ -40,7 +38,7 @@ export const AppMenu: FC<Props> = ({ onClickMenuButton, setOpenLanguageMenu }) =
     const cleanTitle = dompurify.sanitize(title.trim())
 
     if (cleanTitle === '') {
-      dismissible(t('empty_search_error_message'))
+      error(t('empty_search_error_message'))
 
       return
     }
@@ -60,7 +58,7 @@ export const AppMenu: FC<Props> = ({ onClickMenuButton, setOpenLanguageMenu }) =
 
       setOpenSearchBar(false)
     } else {
-      toast.error(t('already_searching_term_error_message'))
+      error(t('already_searching_term_error_message'))
     }
   }
 

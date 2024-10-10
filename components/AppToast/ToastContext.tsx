@@ -1,9 +1,10 @@
 import { Context, createContext, useContext, useMemo } from 'react'
+import { ToastType } from '~/components/AppToast/Toast'
 
 interface ToastContextState {
-  success: (content: string) => void
-  error: (content: string) => void
-  dismissible: (content: string) => void
+  success: (content: string, id?: string) => void
+  error: (content: string, id?: string) => void
+  dismissible: (content: string, type: ToastType, id?: string) => void
   remove: (id: string) => void
 }
 

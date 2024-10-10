@@ -18,15 +18,22 @@ export const ToastProvider: FC<ToastContextProps> = ({ children }) => {
   const addToast = (
     type: ToastType,
     content: string,
+    id: string | undefined = undefined,
     dismissible = false,
     duration = 5000
   ) => {
-    const id = Math.floor(Math.random() * 10000000)
+    let toastId: string
+
+    if (id) {
+      toastId = id
+    } else {
+      toastId = String(Math.floor(Math.random() * 10000000))
+    }
 
     dispatch({
       type: 'add',
       toast: {
-        id: String(id),
+        id: toastId,
         content,
         type,
         duration,
@@ -36,16 +43,16 @@ export const ToastProvider: FC<ToastContextProps> = ({ children }) => {
     })
   }
 
-  const success = (content: string) => {
-    addToast('success', content)
+  const success = (content: string, id: string | undefined = undefined) => {
+    addToast('success', content, id)
   }
 
-  const error = (content: string) => {
-    addToast('error', content)
+  const error = (content: string, id: string | undefined = undefined) => {
+    addToast('error', content, id)
   }
 
-  const dismissible = (content: string) => {
-    addToast('error', content, true)
+  const dismissible = (content: string, type: ToastType, id: string | undefined = undefined) => {
+    addToast(type, content, id, true)
   }
 
   const remove = (id: string) => {

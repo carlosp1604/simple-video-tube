@@ -1,11 +1,11 @@
 import { FC, useEffect, useState } from 'react'
-import styles from './AppToast.module.scss'
-import { BsCheckCircle, BsX } from 'react-icons/bs'
-import { Toast } from '~/components/AppToast/Toast'
+import styles from './Toast.module.scss'
+import { BsCheck, BsX } from 'react-icons/bs'
+import { Toast as ToastInterface } from '~/components/AppToast/Toast'
 
-export type AppToastProps = Omit<Toast, 'id'>
+export type AppToastProps = Omit<ToastInterface, 'id'>
 
-export const AppToast: FC<AppToastProps> = ({ type, duration, content, dismissible, onRemove }) => {
+export const Toast: FC<AppToastProps> = ({ type, duration, content, dismissible, onRemove }) => {
   const [hovered, setHovered] = useState(false)
   const [timeoutId, setTimeoutId] = useState<number | null>(null)
 
@@ -32,20 +32,24 @@ export const AppToast: FC<AppToastProps> = ({ type, duration, content, dismissib
 
   return (
     <div
-      className={ styles.appToast__container }
+      className={ `${styles.toast__container} ${type === 'error' ? styles.toast__container_error : ''}` }
       onMouseOver={ () => setHovered(true) }
       onMouseLeave={ () => setHovered(false) }
     >
-      <BsCheckCircle className={ styles.appToast__icon }/>
-      <div className={ styles.appToast__content }>
+      { type === 'success'
+        ? <BsCheck className={ `${styles.toast__icon} ${styles.toast__icon_succes}` }/>
+        : <BsX className={ `${styles.toast__icon} ${styles.toast__icon_error}` }/>
+      }
+
+      <div className={ styles.toast__content }>
         { content }
       </div>
       { dismissible
         ? <button
-            className={ styles.appToast__closeButton }
+            className={ styles.toast__closeButton }
             onClick={ () => onRemove() }
           >
-            <BsX/>
+            <BsX className={ styles.toast__closeIcon }/>
           </button>
         : null
       }

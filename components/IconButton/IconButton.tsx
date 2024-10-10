@@ -1,7 +1,7 @@
 import { FC, ReactElement, useEffect, useState } from 'react'
 import styles from './IconButton.module.scss'
-import { Tooltip } from '~/components/Tooltip/Tooltip'
-import * as uuid from 'uuid'
+import { Tooltip2 } from '~/components/Tooltip2/Tooltip'
+import { nanoid } from 'nanoid'
 
 interface Props {
   onClick: (() => void) | undefined
@@ -23,7 +23,7 @@ export const IconButton: FC<Partial<Props> & Pick<Props, 'onClick' | 'icon' | 't
 
   useEffect(() => {
     setMounted(true)
-    setTooltipId(uuid.v4())
+    setTooltipId(nanoid())
   }, [])
 
   return (
@@ -41,10 +41,11 @@ export const IconButton: FC<Partial<Props> & Pick<Props, 'onClick' | 'icon' | 't
     >
       { icon }
       { showTooltip && mounted
-        ? <Tooltip
-          tooltipId={ tooltipId }
-          place={ 'bottom' }
-        />
+        ? <Tooltip2
+            tooltipId={ tooltipId }
+            place={ 'top' }
+            content={ title }
+          />
         : null
       }
 

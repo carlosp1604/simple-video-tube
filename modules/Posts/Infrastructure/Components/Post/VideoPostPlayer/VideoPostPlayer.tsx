@@ -2,11 +2,9 @@ import { createRef, FC, ReactElement, useEffect, useMemo, useState } from 'react
 import styles from './VideoPostPlayer.module.scss'
 import { BsFileEarmarkBreak, BsThreeDotsVertical } from 'react-icons/bs'
 import useTranslation from 'next-translate/useTranslation'
-import { v4 as uuidv4 } from 'uuid'
 import { MediaUrlComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostMedia/MediaUrlComponentDto'
 import { PostMediaComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostMedia/PostMediaComponentDto'
 import { VideoLoadingState } from '~/components/VideoLoadingState/VideoLoadingState'
-import { Tooltip } from '~/components/Tooltip/Tooltip'
 import { MediaUrlsHelper } from '~/modules/Posts/Infrastructure/Frontend/MediaUrlsHelper'
 import { useFirstRender } from '~/hooks/FirstRender'
 import { HtmlVideoPlayer } from '~/components/VideoPlayer/HtmlVideoPlayer'
@@ -16,6 +14,8 @@ import {
   VideoPostCategory
 } from '~/modules/Shared/Infrastructure/FrontEnd/AnalyticsEvents/PostPage'
 import dynamic from 'next/dynamic'
+import { Tooltip2 } from '~/components/Tooltip2/Tooltip'
+import { nanoid } from 'nanoid'
 
 export interface Props {
   title: string
@@ -63,7 +63,7 @@ export const VideoPostPlayer: FC<Props> = ({ embedPostMedia, videoPostMedia, tit
     }
 
     setMounted(true)
-    setTooltipId(uuidv4())
+    setTooltipId(nanoid())
   }, [])
 
   if (selectableUrls.length === 0) {
@@ -86,7 +86,6 @@ export const VideoPostPlayer: FC<Props> = ({ embedPostMedia, videoPostMedia, tit
         onClick={ () => setMenuOpen(!menuOpen) }
         title={ t('post_video_player_selector_button_title') }
         data-tooltip-id={ tooltipId }
-        data-tooltip-content={ t('post_video_player_selector_button_title') }
       >
         <BsThreeDotsVertical className={ styles.videoPostPlayer__optionIcon }/>
       </button>
@@ -117,9 +116,10 @@ export const VideoPostPlayer: FC<Props> = ({ embedPostMedia, videoPostMedia, tit
     )
 
     sourceSelectorButtonToolTip = (
-      <Tooltip
+      <Tooltip2
         tooltipId={ tooltipId }
         place={ 'left' }
+        content={ t('post_video_player_selector_button_title') }
       />
     )
   }

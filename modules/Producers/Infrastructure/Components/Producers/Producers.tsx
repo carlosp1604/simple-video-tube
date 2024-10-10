@@ -29,6 +29,7 @@ import { FilterOptions } from '~/modules/Shared/Infrastructure/FrontEnd/FilterOp
 import { ProducerQueryParamsParser } from '~/modules/Producers/Infrastructure/Frontend/ProducerQueryParamsParser'
 import { SearchBar } from '~/components/SearchBar/SearchBar'
 import { CommonButton } from '~/modules/Shared/Infrastructure/Components/CommonButton/CommonButton'
+import { useToast } from '~/components/AppToast/ToastContext'
 
 export interface ProducersPagePaginationState {
   page: number
@@ -60,6 +61,7 @@ export const Producers: FC<Props> = ({
   })
   const [loading, setLoading] = useState<boolean>(false)
   const [searchBarTerm, setSearchBarTerm] = useState<string>('')
+  const { error } = useToast()
 
   const router = useRouter()
   const firstRender = useFirstRender()
@@ -90,8 +92,6 @@ export const Producers: FC<Props> = ({
   }
 
   const onSearch = async () => {
-    const toast = (await import('react-hot-toast')).default
-
     const dompurify = (await import('dompurify')).default
     const cleanTerm = dompurify.sanitize(searchBarTerm.trim())
 
@@ -104,7 +104,7 @@ export const Producers: FC<Props> = ({
     }
 
     if (currentTerm && currentTerm.value === cleanTerm) {
-      toast.error(t('already_searching_term_error_message'))
+      error(t('already_searching_term_error_message'))
 
       return
     }

@@ -1,10 +1,11 @@
 import { MenuOptionComponentInterface } from '~/components/MenuOptions/MenuOptions'
-import { FC, ReactElement, useEffect, useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
+import { FC, ReactElement, useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
 import Link from 'next/link'
 import styles from './MenuSideBarOption.module.scss'
 import { Tooltip2 } from '~/components/Tooltip2/Tooltip'
+import { useClickAnimation } from '~/hooks/ClickAnimation/ClickAnimation'
+import { nanoid } from 'nanoid'
 
 interface Props {
   menuOption: MenuOptionComponentInterface
@@ -14,14 +15,19 @@ interface Props {
 export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
   const [mounted, setMounted] = useState<boolean>(false)
   const [tooltipId, setTooltipId] = useState<string>('')
+  const linkRef = useRef<HTMLAnchorElement>(null)
+  const divRef = useRef<HTMLDivElement>(null)
 
   const buildPortal = (component: ReactElement) => {
     return ReactDOM.createPortal(component, document.getElementById('tooltip-container') as HTMLElement)
   }
 
+  useClickAnimation(linkRef)
+  useClickAnimation(divRef)
+
   useEffect(() => {
     setMounted(true)
-    setTooltipId(uuidv4())
+    setTooltipId(nanoid())
   }, [])
 
   if (menuOption.action) {
@@ -34,11 +40,12 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
           ${menuOption.isActive ? styles.menuSidebarOption__menuItemContent__active : ''}
         ` }
         target={ menuOption.action.blank ? '_blank' : '_self' }
-        tooltip-id={ tooltipId }
+        data-tooltip-id={ tooltipId }
+        ref={ linkRef }
       >
         { !menuOpen && mounted
           ? buildPortal(<Tooltip2
-            id={ tooltipId }
+            tooltipId={ tooltipId }
             place={ 'right' }
             content={ menuOption.title }
           />)
@@ -66,13 +73,14 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
         ${menuOption.isActive ? styles.menuSidebarOption__menuItemContent__active : ''}
       ` }
         onClick={ menuOption.onClick }
-        tooltip-id={ tooltipId }
+        data-tooltip-id={ tooltipId }
+        ref={ divRef }
       >
-        { mounted
+        { mounted && !menuOpen
           ? buildPortal(<Tooltip2
-            id={ tooltipId }
+            tooltipId={ tooltipId }
             place={ 'right' }
-            content={ 'asdasdasdasdas' }
+            content={ menuOption.title }
           />)
           : null
         }

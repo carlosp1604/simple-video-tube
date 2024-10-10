@@ -10,11 +10,25 @@ export interface ToastState {
 
 export const toastReducer = (state: ToastState, action: Action) => {
   switch (action.type) {
-    case 'add':
+    case 'add': {
+      const toastIndex = state.toasts.findIndex((toast) => action.toast.id === toast.id)
+
+      if (toastIndex !== -1) {
+        const updatedToasts = state.toasts
+
+        updatedToasts[toastIndex] = action.toast
+
+        return {
+          ...state,
+          toasts: updatedToasts,
+        }
+      }
+
       return {
         ...state,
         toasts: [...state.toasts, action.toast],
       }
+    }
 
     case 'delete': {
       const updatedToasts = state.toasts.filter(

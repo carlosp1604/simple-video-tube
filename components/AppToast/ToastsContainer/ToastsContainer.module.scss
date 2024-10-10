@@ -1,34 +1,33 @@
 .toastsContainer {
   &__container {
-    @apply fixed z-50 flex flex-col gap-y-4 w-full mx-auto items-center
-    transition-width;
+    @apply fixed z-toast flex flex-col gap-y-4 left-1/2 -translate-x-1/2;
   }
 
   &__item {
-    @apply hidden transition;
+    @apply hidden transition scale-0;
 
     &-enter {
-      @apply block -translate-y-full opacity-0 transition-all;
+      @apply block -translate-y-full opacity-0 scale-50 transition-all;
     }
 
     &-enter-active {
-      @apply block translate-y-0 opacity-100 transition-all duration-300;
+      @apply block translate-y-0 scale-100 opacity-100 transition-all duration-300;
     }
 
     &-enter-done {
-      @apply block translate-y-0 opacity-100;
+      @apply block translate-y-0 opacity-100 scale-100;
     }
 
     &-exit {
-      @apply block translate-y-0 opacity-100;
+      @apply block translate-y-0 opacity-100 scale-100;
     }
 
     &-exit-active {
-      @apply block opacity-0 -translate-y-full transition-all duration-300;
+      @apply block opacity-0 -translate-y-full transition-all scale-50 duration-300;
     }
 
     &-exit-done {
-      @apply hidden -translate-y-full opacity-0;
+      @apply hidden -translate-y-full opacity-0 scale-50;
     }
   }
 }

@@ -12,7 +12,6 @@ import {
 } from '~/modules/Posts/Application/GetPostPostChildComments/GetPostPostChildCommentsResponseDto'
 import useTranslation from 'next-translate/useTranslation'
 import { AddCommentInput } from '~/modules/Posts/Infrastructure/Components/AddCommentInput/AddCommentInput'
-import toast from 'react-hot-toast'
 import {
   PostChildCommentList
 } from '~/modules/Posts/Infrastructure/Components/PostChildComment/PostChildCommentList/PostChildCommentList'
@@ -20,6 +19,7 @@ import { ReactionComponentDto } from '~/modules/Reactions/Infrastructure/Compone
 import { CommentsApiService } from '~/modules/Posts/Infrastructure/Frontend/CommentsApiService'
 import { APIException } from '~/modules/Shared/Infrastructure/FrontEnd/ApiException'
 import { defaultPerPage, PaginationHelper } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
+import { useToast } from '~/components/AppToast/ToastContext'
 
 interface Props {
   commentToReply: PostCommentComponentDto
@@ -47,13 +47,14 @@ export const PostChildComments: FC<Props> = ({
   const repliesAreaRef = useRef<HTMLDivElement>(null)
 
   const { t } = useTranslation('post_comments')
+  const { error, success } = useToast()
 
   const router = useRouter()
   const locale = router.locale ?? 'en'
 
   const createReply = async (comment: string) => {
     if (comment === '') {
-      toast.error(t('empty_comment_is_not_allowed_error_message'))
+      error(t('empty_comment_is_not_allowed_error_message'))
 
       return
     }
@@ -70,7 +71,7 @@ export const PostChildComments: FC<Props> = ({
       setReplies([componentResponse, ...replies])
       onAddReply(null)
 
-      toast.success(t('post_child_comment_added_success_message'))
+      success(t('post_child_comment_added_success_message'))
     } catch (exception: unknown) {
       if (!(exception instanceof APIException)) {
         console.error(exception)
@@ -78,7 +79,7 @@ export const PostChildComments: FC<Props> = ({
         return
       }
 
-      toast.error(t(`api_exceptions:${exception.translationKey}`))
+      error(t(`api_exceptions:${exception.translationKey}`))
     }
   }
 
@@ -92,7 +93,7 @@ export const PostChildComments: FC<Props> = ({
       return response
     } catch (exception: unknown) {
       console.error(exception)
-      toast.error(t('server_error_error_message'))
+      error(t('server_error_error_message'))
 
       return null
     }

@@ -4,7 +4,7 @@ import {
   ReactNode,
   RefObject,
   useEffect,
-  useLayoutEffect,
+  useLayoutEffect, useMemo,
   useRef,
   useState
 } from 'react'
@@ -13,9 +13,13 @@ import styles from './Tooltip.module.scss'
 export type TooltipPlaces = 'left' | 'right' | 'top' | 'bottom'
 
 interface TooltipProps {
-  id: string
+  tooltipId: string
   place: TooltipPlaces
   content: string | ReactNode
+}
+
+interface OptionalTooltipProps {
+  padding: number
 }
 
 interface Position {
@@ -23,12 +27,12 @@ interface Position {
   y: number
 }
 
-interface Dimensions {
-  width: number
-  height: number
-}
-
-export const Tooltip2: FC<TooltipProps> = ({ id, place, content }) => {
+export const Tooltip2: FC<Required<TooltipProps> & Partial<OptionalTooltipProps>> = ({
+  tooltipId,
+  place,
+  content,
+  padding = 10,
+}) => {
   const [showTooltip, setShowTooltip] = useState<boolean>(false)
   const [height, setHeight] = useState<number>(0)
   const [width, setWidth] = useState<number>(0)
@@ -36,11 +40,13 @@ export const Tooltip2: FC<TooltipProps> = ({ id, place, content }) => {
   const ref: RefObject<HTMLDivElement> = useRef(null)
 
   useEffect(() => {
-    const element = document.querySelector(`[tooltip-id="${id}"]`)
+    const element = document.querySelector(`[data-tooltip-id="${tooltipId}"]`)
 
     if (element) {
+      setElementRect(element.getBoundingClientRect())
+
       const handler = () => {
-        const element = document.querySelector(`[tooltip-id="${id}"]`)
+        const element = document.querySelector(`[data-tooltip-id="${tooltipId}"]`)
 
         if (element) {
           setElementRect(element.getBoundingClientRect())
@@ -56,8 +62,8 @@ export const Tooltip2: FC<TooltipProps> = ({ id, place, content }) => {
       element.addEventListener('touchstart', () => setShowTooltip(true))
       element.addEventListener('mouseover', () => setShowTooltip(true))
 
-      setElementRect(element.getBoundingClientRect())
       document.addEventListener('scroll', handler)
+      window.addEventListener('resize', handler)
       document.addEventListener('pointerover', handlePointerOutside)
 
       return () => {
@@ -65,9 +71,10 @@ export const Tooltip2: FC<TooltipProps> = ({ id, place, content }) => {
         document.removeEventListener('mouseover', () => setShowTooltip(true))
         document.removeEventListener('pointerover', handlePointerOutside)
         document.removeEventListener('scroll', handler)
+        window.removeEventListener('resize', handler)
       }
     }
-  }, [id])
+  }, [tooltipId])
 
   useLayoutEffect(() => {
     if (ref.current) {
@@ -78,136 +85,136 @@ export const Tooltip2: FC<TooltipProps> = ({ id, place, content }) => {
     }
   }, [showTooltip])
 
-  const calculatePositionForTopPlace = () => {
-    // y: bottom + offset padding
-
-    // si la anchura de la referencia es mayor que el tooltip
-    // padding = (refWith - tooltipWidth) / 2
-    // x = padding + x
-
-    // si la anchura del tooltip es mayor que la referencia
-    // padding = (tooltipWidth - refWidth) / 2
-    // x = padding - x
-
+  const calculateXPosition = (place: TooltipPlaces, deviation = 0): number | null => {
     if (!elementRect) {
       return null
     }
 
-    const y = elementRect.top - height - 10
-    let x = 0
+    switch (place) {
+      case 'bottom':
+      case 'top': {
+        let x = 0
 
-    if (elementRect.width > width) {
-      const padding = (elementRect.width - width) / 2
+        if (elementRect.width > width) {
+          const calculatedPadding = (elementRect.width - width) / 2
 
-      x = elementRect.x + padding
-    } else {
-      // 45 - 30 = 15 /2 = 7,5
-      const padding = (width - elementRect.width) / 2
+          x = elementRect.x + calculatedPadding + deviation
+        } else {
+          const calculatedPadding = (width - elementRect.width) / 2
 
-      x = elementRect.x - padding
-    }
+          x = elementRect.x - calculatedPadding + deviation
+        }
 
-    return {
-      x, y,
+        return x
+      }
+
+      case 'right':
+        return elementRect.right + padding + deviation
+
+      case 'left':
+        return elementRect.left - width - padding + deviation
+
+      default:
+        return null
     }
   }
 
-  const calculatePositionForRightPlace = () => {
-    // y: bottom + offset padding
-
-    // si la anchura de la referencia es mayor que el tooltip
-    // padding = (refWith - tooltipWidth) / 2
-    // x = padding + x
-
-    // si la anchura del tooltip es mayor que la referencia
-    // padding = (tooltipWidth - refWidth) / 2
-    // x = padding - x
-
+  const calculateYPosition = (place: TooltipPlaces, deviation = 0): number | null => {
     if (!elementRect) {
       return null
     }
 
-    let y = elementRect.top
-    const x = elementRect.right + 10
+    switch (place) {
+      case 'bottom':
+        return elementRect.bottom + padding + deviation
+      case 'top':
+        return elementRect.top - height - padding + deviation
 
-    const elementHeight = elementRect.bottom - elementRect.top
+      case 'right':
+      case 'left':
+        return elementRect.top
 
-    if (elementHeight > height) {
-      const padding = (elementHeight - height) / 2
-
-      y = elementRect.y + padding
-    } else {
-      // 45 - 30 = 15 /2 = 7,5
-      const padding = (height - elementHeight) / 2
-
-      y = elementRect.y - padding
-    }
-
-    return {
-      x, y,
+      default:
+        return null
     }
   }
 
-  const calculatePositionForLeftPlace = () => {
-
-  }
-
-  const calculatePositionForBottomPlace = (): Position | null => {
-    // y: bottom + offset padding
-
-    // si la anchura de la referencia es mayor que el tooltip
-    // padding = (refWith - tooltipWidth) / 2
-    // x = padding + x
-
-    // si la anchura del tooltip es mayor que la referencia
-    // padding = (tooltipWidth - refWidth) / 2
-    // x = padding - x
-
+  const checkIsVisible = (): boolean => {
     if (!elementRect) {
+      return false
+    }
+
+    return (
+      elementRect.top >= 0 &&
+      elementRect.left >= 0 &&
+      elementRect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      elementRect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    )
+  }
+
+  const detectAndCorrectOverFlow = (position: Position | null): Position | null => {
+    if (!position) {
       return null
     }
 
-    const y = elementRect.bottom + 10
-    let x = 0
+    let x = position.x
+    let y = position.y
 
-    if (elementRect.width > width) {
-      const padding = (elementRect.width - width) / 2
-
-      x = elementRect.x + padding
-    } else {
-      // 45 - 30 = 15 /2 = 7,5
-      const padding = (width - elementRect.width) / 2
-
-      x = elementRect.x - padding
+    if (width + (2 * padding) >= window.innerWidth) {
+      return position
     }
 
-    return {
-      x, y,
+    if (height + (2 * padding) >= window.innerHeight) {
+      return position
     }
+
+    if (position.x < 0) {
+      console.log('Overflow left')
+
+      x = padding
+    }
+
+    if (window) {
+      if (window.innerWidth < width + position.x) {
+        console.log('Overflow right')
+        x = window.innerWidth - (width + padding)
+      }
+    }
+
+    if (position.y < 0) {
+      if (checkIsVisible()) {
+        console.log('Overflow top')
+
+        const newYPosition = calculateYPosition('bottom')
+
+        if (!newYPosition) {
+          return null
+        }
+
+        y = newYPosition
+      }
+    }
+
+    return { x, y }
   }
 
-  const position = () => {
-    if (place === 'bottom') {
-      return calculatePositionForBottomPlace()
-    }
+  const position = useMemo(() => {
+    const x = calculateXPosition(place)
+    const y = calculateYPosition(place)
 
-    if (place === 'right') {
-      return calculatePositionForRightPlace()
-    }
-
-    if (place === 'top') {
-      return calculatePositionForTopPlace()
+    if (x && y) {
+      return detectAndCorrectOverFlow({ x, y })
     }
 
     return null
-  }
+  }, [elementRect, height, width, showTooltip])
 
   return (
     <div
       className={ `${styles.tooltip__container} ${showTooltip ? styles.tooltip__container_visible : ''}` }
       style={ {
-        '--x-position': `${position()?.x ?? 0}px`,
-        '--y-position': `${position()?.y ?? 0}px`,
+        '--x-position': `${position?.x ?? 0}px`,
+        '--y-position': `${position?.y ?? 0}px`,
       } as CSSProperties }
       ref={ ref }
     >

@@ -1,11 +1,11 @@
 import { FC, Ref } from 'react'
-import { Toast } from '~/components/AppToast/Toast'
-import { AppToast } from '~/components/AppToast/AppToast'
+import { Toast as ToastInterface } from '~/components/AppToast/Toast'
+import { Toast } from '~/components/AppToast/Toast/Toast'
 import styles from './ToastsContainer.module.scss'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 export interface ToastWithNodeRef {
-  toast: Toast
+  toast: ToastInterface
   nodeRef: Ref<HTMLDivElement>
 }
 
@@ -34,7 +34,7 @@ const ToastsContainer: FC<ToastsContainerProps> = ({ toasts }) => {
             className={ styles.toastsContainer__item }
             ref={ toast.nodeRef }
           >
-            <AppToast { ...toast.toast } />
+            <Toast { ...toast.toast } />
           </div>
         </CSSTransition>
       )) }

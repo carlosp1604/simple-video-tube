@@ -41,8 +41,15 @@ module.exports = {
       '2xl': '1536px',
     },
     extend: {
+      keyframes: {
+        ripple: {
+          '0%': { transform: 'scale(0)', opacity: '0.5' },
+          '100%': { transform: 'scale(6)', opacity: '0' },
+        },
+      },
       animation: {
         'bounce-short': 'bounce 0.3s ease-in-out 2',
+        'click-ripple': 'ripple 1s linear forwards',
       },
       boxShadow: {
         all: '0px 0px 10px 2px rgba(0, 0, 0, 0.3)',
@@ -83,7 +90,7 @@ module.exports = {
         toast: {
           error: {
             bg: '#DC143C',
-            icon: '#FFA07A',
+            icon: '#F28585',
           },
           bg: '#78451a',
           icon: '#b88b5c',
@@ -129,6 +136,7 @@ module.exports = {
         'top-mobile',
         'app-menu',
         'mobile-menu',
+        'toast',
         'tooltip',
         'modal-backdrop',
       ]),

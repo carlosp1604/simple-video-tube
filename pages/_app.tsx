@@ -1,24 +1,23 @@
 import '~/styles/globals.scss'
 import type { AppProps } from 'next/app'
-import styles from '~/styles/pages/_app.module.scss'
-import { useState } from 'react'
-import { Roboto } from 'next/font/google'
-import UsingRouterProvider from '~/modules/Shared/Infrastructure/Components/UsingRouterProvider'
-import 'react-tooltip/dist/react-tooltip.css'
-import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
-import ReactGA from 'react-ga4'
 import Head from 'next/head'
-import { TopMobileMenu } from '~/components/TopMobileMenu/TopMobileMenu'
+import styles from '~/styles/pages/_app.module.scss'
+import dynamic from 'next/dynamic'
+import ReactGA from 'react-ga4'
+import UsingRouterProvider from '~/modules/Shared/Infrastructure/Components/UsingRouterProvider'
+import { Roboto } from 'next/font/google'
 import { AppMenu } from '~/components/AppMenu/AppMenu'
+import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { MobileMenu } from '~/components/AppMenu/MobileMenu'
 import { MenuSideBar } from '~/components/MenuSideBar/MenuSideBar'
 import { LanguageMenu } from '~/modules/Shared/Infrastructure/Components/LanguageMenu/LanguageMenu'
+import { ToastProvider } from '~/components/AppToast/ToastProvider'
+import { TopMobileMenu } from '~/components/TopMobileMenu/TopMobileMenu'
 import { AppProgressBar } from '~/components/AppProgressBar/AppProgressBar'
-import { MobileMenu } from '~/components/AppMenu/MobileMenu'
 import {
   TrafficstarsVideoSlider
 } from '~/modules/Shared/Infrastructure/Components/Trafficstars/TrafficstarsVideoSlider'
-import { ToastProvider } from '~/components/AppToast/ToastProvider'
 
 const AppFooter = dynamic(() => import('~/components/AppFooter/AppFooter')
   .then((module) => module.AppFooter),
@@ -31,7 +30,9 @@ const AppBanner = dynamic(() => import('~/modules/Shared/Infrastructure/Componen
 )
 
 const LiveCams = dynamic(() =>
-  import('~/components/LiveCams/LiveCams').then((module) => module.LiveCams))
+  import('~/components/LiveCams/LiveCams').then((module) => module.LiveCams),
+{ ssr: false }
+)
 
 const roboto = Roboto({
   weight: ['100', '300', '400', '500', '700', '900'],

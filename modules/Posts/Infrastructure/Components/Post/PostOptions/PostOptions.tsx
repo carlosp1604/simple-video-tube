@@ -17,6 +17,7 @@ import {
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
 import { ReportModal } from '~/modules/Reports/Infrastructure/Components/ReportModal/ReportModal'
+import { useToast } from '~/components/AppToast/ToastContext'
 
 const DownloadMenu = dynamic(() => import(
   '~/modules/Posts/Infrastructure/Components/Post/DownloadMenu/DownloadMenu'
@@ -50,12 +51,11 @@ export const PostOptions: FC<Props> = ({
   const { pathname } = useRouter()
 
   const { t } = useTranslation('post')
+  const { error } = useToast()
 
   const onClickLikeDislike = async (reactionType: ReactionType) => {
     if (loading) {
-      const toast = (await import('react-hot-toast')).default
-
-      toast.error(t('action_cannot_be_performed_error_message'))
+      error(t('action_cannot_be_performed_error_message'))
 
       return
     }
@@ -71,9 +71,8 @@ export const PostOptions: FC<Props> = ({
 
       return
     }
-    const toast = (await import('react-hot-toast')).default
 
-    toast.error(t('post_download_no_downloads_error_message'))
+    error(t('post_download_no_downloads_error_message'))
   }
 
   let downloadMenu: ReactElement | null = null
@@ -98,13 +97,13 @@ export const PostOptions: FC<Props> = ({
     downloadButton = (
       <span
         className={ styles.postOptions__optionItem }
-        onClick={ () => {
+        onClick={ async () => {
           ReactGA.event({
             category: VideoPostCategory,
             action: ClickDownloadButtonAction,
             label: pathname,
           })
-          onClickDownloadButton()
+          await onClickDownloadButton()
         } }
       >
         <BsDownload className={ styles.postOptions__optionItemIcon }/>

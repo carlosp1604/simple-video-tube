@@ -5,10 +5,11 @@ import useTranslation from 'next-translate/useTranslation'
 import Image from 'next/image'
 import { IoLanguageOutline } from 'react-icons/io5'
 import { useRouter } from 'next/router'
-import { v4 as uuidv4 } from 'uuid'
 import { ModalMenuHeader } from '~/modules/Shared/Infrastructure/Components/ModalMenuHeader/ModalMenuHeader'
 import dynamic from 'next/dynamic'
 import { rgbDataURL } from '~/modules/Shared/Infrastructure/FrontEnd/BlurDataUrlHelper'
+import { useToast } from '~/components/AppToast/ToastContext'
+import { nanoid } from 'nanoid'
 
 const Modal = dynamic(() =>
   import('~/components/Modal/Modal').then((module) => module.Modal),
@@ -21,22 +22,20 @@ export interface Props {
 }
 
 export const LanguageMenu: FC<Props> = ({ isOpen, onClose }) => {
-  const [languageMenuToastId] = useState<string>(uuidv4())
+  const [languageMenuToastId] = useState<string>(nanoid())
 
   const { t } = useTranslation('menu')
+  const { error } = useToast()
 
   const { pathname, query, asPath, push } = useRouter()
   const locale = useRouter().locale ?? 'en'
 
   const onClickOption = async (currentLocale: string, newLocale: string) => {
-    const toast = (await import('react-hot-toast')).default
-
     if (currentLocale !== newLocale) {
       await push({ pathname, query }, asPath, { locale: newLocale, scroll: false })
-      toast.remove(languageMenuToastId)
       onClose()
     } else {
-      toast.error(t('language_menu_already_on_language_error_message'), { id: languageMenuToastId })
+      error(t('language_menu_already_on_language_error_message'), languageMenuToastId)
     }
   }
 

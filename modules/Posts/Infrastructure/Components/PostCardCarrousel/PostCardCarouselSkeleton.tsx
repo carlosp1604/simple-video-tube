@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { Carousel, KeyedComponent } from '~/components/Carousel/Carousel'
-import * as uuid from 'uuid'
 import { PostCardSkeleton } from '~/modules/Posts/Infrastructure/Components/PostCard/PostCardSkeleton/PostCardSkeleton'
+import { nanoid } from 'nanoid'
 
 interface Props {
   postCardsNumber: number
@@ -13,7 +13,7 @@ export const PostCardCarouselSkeleton: FC<Partial<Props> & Pick<Props, 'postCard
   loading = false,
 }) => {
   const uuidGenerator = () => {
-    return uuid.v4()
+    return nanoid()
   }
 
   const postCardsSkeleton: KeyedComponent[] = []

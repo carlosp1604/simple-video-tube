@@ -4,10 +4,10 @@ import useTranslation from 'next-translate/useTranslation'
 import { BiLike, BiSolidLike } from 'react-icons/bi'
 import { useRouter } from 'next/router'
 import { NumberFormatter } from '~/modules/Shared/Infrastructure/FrontEnd/NumberFormatter'
-import * as uuid from 'uuid'
 import { AiOutlineLoading } from 'react-icons/ai'
-import toast from 'react-hot-toast'
 import { Tooltip2 } from '~/components/Tooltip2/Tooltip'
+import { useToast } from '~/components/AppToast/ToastContext'
+import { nanoid } from 'nanoid'
 
 interface Props {
   liked: boolean
@@ -20,20 +20,22 @@ interface Props {
 export const LikeButton: FC<Props> = ({ liked, onLike, onDeleteLike, reactionsNumber, disabled }) => {
   const { t } = useTranslation('common')
   let { locale } = useRouter()
+  const { error } = useToast()
+
   const [mounted, setMounted] = useState<boolean>(false)
   const [tooltipId, setTooltipId] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     setMounted(true)
-    setTooltipId(uuid.v4())
+    setTooltipId(nanoid())
   }, [])
 
   locale = locale || 'en'
 
   const onClickButton = async () => {
     if (loading || disabled) {
-      toast.error(t('action_cannot_be_performed_error_message'))
+      error(t('action_cannot_be_performed_error_message'))
 
       return
     }
@@ -75,22 +77,22 @@ export const LikeButton: FC<Props> = ({ liked, onLike, onDeleteLike, reactionsNu
       ${disabled ? styles.likeButton__container_disabled : ''}
       ` }
     >
-      { mounted && !disabled && !loading &&
-        <Tooltip2
-          id={ tooltipId }
-          place={ 'top' }
-          content={ liked ? t('like_reaction_active_title_button') : t('like_reaction_title_button') }
-        /> }
       <button className={ `
         ${styles.likeButton__likeButton}
         ${liked ? styles.likeButton__likeButton_active : ''}
       ` }
-        tooltip-id={ tooltipId }
+        data-tooltip-id={ tooltipId }
         disabled={ disabled }
         onClick={ onClickButton }
       >
         { iconElement }
       </button>
+      { mounted && !disabled && !loading &&
+        <Tooltip2
+          tooltipId={ tooltipId }
+          place={ 'top' }
+          content={ liked ? t('like_reaction_active_title_button') : t('like_reaction_title_button') }
+        /> }
       { NumberFormatter.compatFormat(reactionsNumber, locale) }
     </div>
   )
