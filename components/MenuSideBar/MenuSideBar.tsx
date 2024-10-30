@@ -1,21 +1,26 @@
-import { Dispatch, FC, SetStateAction } from 'react'
+import { FC } from 'react'
 import styles from './MenuSideBar.module.scss'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
-import { BsHouse, BsStar, BsTags } from 'react-icons/bs'
+import { BsStar } from 'react-icons/bs'
 import { MenuOptionComponentInterface } from '~/components/MenuOptions/MenuOptions'
-import { TfiWorld } from 'react-icons/tfi'
 import { MenuSideBarOption } from './MenuSideBarOption/MenuSideBarOption'
 import { MdLiveTv } from 'react-icons/md'
+import { TfiWorld } from 'react-icons/tfi'
+import { useLanguageMenuContext } from '~/hooks/LanguageMenuContext'
+import { ThemeSwitcher } from '~/components/ThemeSwitcher/ThemeSwitcher'
+import { GoHome } from 'react-icons/go'
+import { AiOutlineTag } from 'react-icons/ai'
 
 export interface Props {
-  setOpenLanguageMenu: Dispatch<SetStateAction<boolean>>
   menuOpen: boolean
 }
 
-export const MenuSideBar: FC<Props> = ({ setOpenLanguageMenu, menuOpen }) => {
+export const MenuSideBar: FC<Props> = ({ menuOpen }) => {
   const { pathname } = useRouter()
   const { t } = useTranslation('menu')
+
+  const { setOpen } = useLanguageMenuContext()
 
   const menuOptions: MenuOptionComponentInterface[] = [
     {
@@ -25,8 +30,9 @@ export const MenuSideBar: FC<Props> = ({ setOpenLanguageMenu, menuOpen }) => {
         url: '/',
         blank: false,
       },
-      picture: <BsHouse />,
+      picture: <GoHome />,
       onClick: undefined,
+      onClickInfoButton: undefined,
     },
     /**
      {
@@ -49,6 +55,7 @@ export const MenuSideBar: FC<Props> = ({ setOpenLanguageMenu, menuOpen }) => {
       },
       picture: <BsStar />,
       onClick: undefined,
+      onClickInfoButton: undefined,
     },
     {
       title: t('menu_producers_button_title'),
@@ -59,16 +66,18 @@ export const MenuSideBar: FC<Props> = ({ setOpenLanguageMenu, menuOpen }) => {
       },
       picture: <MdLiveTv />,
       onClick: undefined,
+      onClickInfoButton: undefined,
     },
     {
-      title: t('menu_tags_button_title'),
+      title: t('menu_categories_button_title'),
       isActive: pathname === '/categories',
       action: {
         url: '/categories',
         blank: false,
       },
-      picture: <BsTags />,
+      picture: <AiOutlineTag />,
       onClick: undefined,
+      onClickInfoButton: undefined,
     },
   ]
 
@@ -77,9 +86,8 @@ export const MenuSideBar: FC<Props> = ({ setOpenLanguageMenu, menuOpen }) => {
     isActive: false,
     action: undefined,
     picture: <TfiWorld />,
-    onClick: () => {
-      setOpenLanguageMenu(true)
-    },
+    onClick: () => setOpen(true),
+    onClickInfoButton: undefined,
   })
 
   return (
@@ -99,6 +107,7 @@ export const MenuSideBar: FC<Props> = ({ setOpenLanguageMenu, menuOpen }) => {
             )
           }) }
         </div>
+        <ThemeSwitcher />
       </div>
     </aside>
   )

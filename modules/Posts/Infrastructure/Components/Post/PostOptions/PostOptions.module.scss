@@ -1,42 +1,45 @@
 .post-options {
   &__container {
-    @apply flex flex-nowrap gap-x-2 overflow-x-scroll scrollbar-hide
-      -mx-5 pl-5;
+    @apply flex flex-nowrap gap-x-2 overflow-x-scroll
+    scrollbar-hide -mx-5 pl-5;
   }
 
   &__option-item {
     @apply flex flex-row flex-shrink-0 items-center gap-x-2
-    rounded-full bg-base-800 py-2 cursor-pointer text-xs px-3
-    transition-colors text-base-300;
+    rounded-full bg-base-300 py-2 cursor-pointer text-xs px-3
+    transition-colors text-black outline-none
+    dark:bg-base-800 dark:text-base-100 dark:transition-colors;
 
     @screen md {
       @apply text-base;
     }
 
-    &:hover, &:focus {
-      @apply text-brand-primary-bg transition-colors;
+    &:hover {
+      @apply text-brand-primary-bg
+      dark:text-brand-primary-bg;
     }
 
     &:disabled {
-      @apply bg-base-900 text-base-600 transition-colors cursor-default;
-    }
-
-    &_active {
-      @apply text-brand-primary-bg bg-base-900 transition-colors;
+      @apply bg-base-200 text-base-500 transition-colors
+      dark:transition-colors dark:bg-base-900
+      dark:text-base-600;
     }
   }
 
   &__like-dislike-section {
-    @apply flex flex-row flex-shrink-0 items-center gap-x-2 cursor-default
-    rounded-md bg-base-800 py-2 px-3 transition-colors;
+    @apply flex flex-row flex-shrink-0 items-center gap-x-2
+    cursor-default rounded-full bg-base-300 py-2 px-3
+    transition-colors dark:bg-base-800 dark:transition-colors;
 
     &_disabled {
-      @apply bg-base-900 transition-colors;
+      @apply bg-base-200 transition-colors
+      dark:bg-base-900 dark:transition-colors;
     }
   }
 
   &__like-dislike-separator {
-    @apply text-xl text-base-400;
+    @apply text-xl text-base-600
+    dark:text-base-400;
   }
 
   &__loading-icon {
@@ -49,5 +52,9 @@
     @screen tb {
       @apply text-base;
     }
+  }
+
+  &__optionItemQuantity {
+    @apply ml-0.5 text-brand-primary-bg font-bold;
   }
 }

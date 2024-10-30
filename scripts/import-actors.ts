@@ -25,8 +25,8 @@ const findOrCreateActor = async (actor: any): Promise<void> => {
     randomUUID(),
     actor.slug,
     actor.name,
-    actor.description ?? null,
     actor.image_url,
+    0,
     nowDate,
     nowDate,
     null

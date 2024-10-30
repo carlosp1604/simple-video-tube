@@ -1,7 +1,6 @@
 .pagination-bar {
   &__container {
-    @apply flex px-5 -mx-5 border-t pt-2 border-base-800
-      overflow-x-scroll scrollbar-hide;
+    @apply flex px-5 -mx-5 overflow-x-scroll scrollbar-hide;
 
     @screen md {
       @apply mx-0;
@@ -10,35 +9,10 @@
 
   &__list-container {
     @apply flex flex-row h-full w-full
-      gap-x-0.5 items-center justify-center;
+    gap-x-0.5 items-center justify-center;
 
     @screen md {
       @apply gap-x-2.5;
-    }
-  }
-
-  &__page-number-item {
-    @apply h-full transition-colors;
-    list-style-type: none;
-  }
-
-  &__page-number-link {
-    @apply flex items-center justify-center p-1.5 px-3 rounded-md
-      h-full w-full text-base-600 text-sm border-2 border-transparent
-      transition;
-
-    &:hover {
-      @apply text-base-100 transition-colors border-brand-primary-bg
-        bg-base-900;
-    }
-
-    @screen md {
-      @apply p-2 px-4 text-lg;
-    }
-
-    &_current-page {
-      @apply text-base-100 pointer-events-none font-black
-        border-brand-primary-bg bg-base-900;
     }
   }
 
@@ -50,39 +24,21 @@
     }
   }
 
-  &__right-page-button-hide {
-    @apply opacity-0 translate-x-full transition pointer-events-none;
-  }
-
-  &__left-page-button-hide {
-    @apply opacity-0 -translate-x-full transition pointer-events-none;
-  }
-
-  &__error-state {
-    @apply flex flex-col gap-y-10 justify-center items-center text-base
-      p-5 mb-5 bg-base-800 text-base-400 rounded-lg text-center
-      whitespace-pre-wrap;
-  }
-
-  &__error-icon {
-    @apply text-red h-20 w-20;
-  }
-
   &__error-button {
-    @apply border border-brand-primary-bg p-2 text-base-100 rounded-lg
-      transition-colors text-sm;
+    @apply mx-auto;
+  }
+
+  &__error-link {
+    @apply bg-brand-primary-light text-white p-2 rounded-lg
+    transition-colors text-sm mx-auto;
 
     &:hover {
-      @apply text-base-100 bg-brand-primary-bg transition-colors;
+      @apply text-base-100 bg-brand-primary-dark
+      transition-colors;
     }
-  }
 
-  &__no-paginated-state {
-    @apply flex justify-center items-center gap-x-3 border-b
-      border-base-800 p-2 text-base-200 font-light mt-5;
-  }
-
-  &__no-paginated-state-icon {
-    @apply bg-brand-primary-bg p-1 text-2xl rounded-lg;
+    &:active {
+      @apply text-base-100 transition-colors;
+    }
   }
 }

@@ -1,0 +1,5 @@
+export const CATEGORY_VALIDATION = 'category-validation-exception'
+export const CATEGORY_SERVER_ERROR = 'category-server-error'
+export const CATEGORY_METHOD = 'category-method-not-allowed'
+export const CATEGORY_BAD_REQUEST = 'category-bad-request'
+export const CATEGORY_CATEGORY_NOT_FOUND = 'category-category-not-found'

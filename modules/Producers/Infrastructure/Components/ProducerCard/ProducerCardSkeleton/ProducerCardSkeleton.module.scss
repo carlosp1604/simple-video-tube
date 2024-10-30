@@ -1,7 +1,8 @@
 .producer-card-skeleton {
   &__container {
-    @apply flex flex-col items-start overflow-hidden shadow-base-950
-      shadow-lg rounded-md gap-y-1;
+    @apply flex flex-col items-start overflow-hidden
+    shadow-base-300 shadow-lg rounded-md gap-y-1
+    dark:shadow-base-950;
   }
 
   &__image-wrapper {
@@ -9,15 +10,16 @@
   }
 
   &__producer-image {
-    @apply h-full w-full bg-base-800;
+    @apply h-full w-full bg-base-300 dark:bg-base-800;
   }
 
   &__data-container {
-    @apply flex flex-col p-2 w-full gap-y-3;
+    @apply flex flex-col p-2 w-full gap-y-2;
   }
 
   &__producer-name {
-    @apply h-3 w-full bg-base-700 rounded-md;
+    @apply h-3 w-3/4 rounded-md bg-base-300
+    dark:bg-base-700;
   }
 
   &__count-section {
@@ -25,6 +27,7 @@
   }
 
   &__count-item {
-    @apply h-3 w-1/4 bg-base-800 rounded-md;
+    @apply h-3 w-1/4 rounded-md bg-base-400
+    dark:bg-base-800;
   }
 }

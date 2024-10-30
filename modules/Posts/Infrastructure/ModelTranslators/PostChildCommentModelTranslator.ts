@@ -36,7 +36,7 @@ export class PostChildCommentModelTranslator {
       prismaPostCommentModel.id,
       prismaPostCommentModel.comment,
       prismaPostCommentModel.userIp,
-      prismaPostCommentModel.username,
+      prismaPostCommentModel.userName,
       // if it's a child comment we are sure the parentCommentId is not null
       prismaPostCommentModel.parentCommentId as string,
       DateTime.fromJSDate(prismaPostCommentModel.createdAt),
@@ -56,7 +56,7 @@ export class PostChildCommentModelTranslator {
       deletedAt: postChildComment.deletedAt?.toJSDate() ?? null,
       updatedAt: postChildComment.updatedAt.toJSDate(),
       postId: null,
-      username: postChildComment.username,
+      userName: postChildComment.userName,
     }
   }
 }

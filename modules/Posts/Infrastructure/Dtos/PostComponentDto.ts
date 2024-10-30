@@ -8,7 +8,7 @@ export interface PostComponentDtoActorDto {
   readonly name: string
 }
 
-export interface PostComponentDtoTagDto {
+export interface PostComponentDtoCategoryDto {
   readonly id: string
   readonly name: string
   readonly slug: string
@@ -28,12 +28,13 @@ export interface PostComponentDto {
   readonly thumb: string
   readonly resolution: number
   readonly duration: number
+  readonly parsedISO8601Duration: string
   readonly video: VideoComponentDto
   readonly formattedPublishedAt: string
   readonly publishedAt: string
   readonly description: string
   readonly actors: PostComponentDtoActorDto[]
-  readonly tags: PostComponentDtoTagDto[]
+  readonly categories: PostComponentDtoCategoryDto[]
   readonly producer: PostComponentDtoProducerDto | null
   readonly actor: PostComponentDtoActorDto | null
   readonly postMediaVideoType: PostMediaComponentDto[]

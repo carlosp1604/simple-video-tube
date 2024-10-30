@@ -1,6 +1,10 @@
 {
   "action_cannot_be_performed_error_message": "No puedes hacer esto ahora, espera a que termine la operación actual",
   "add_comment_button_title": "Añade tu comentario",
+  "add_comment_comment_label_title": "Comentario",
+  "add_comment_name_label_title": "Nombre",
+  "add_comment_name_invalid_name_message_error": "Nombre inválido [4-256 caracteres]",
+  "add_comment_name_placeholder": "Nombre de usuario",
   "add_comment_placeholder": "Escribe tu comentario",
   "add_comment_section_login_button_title": "Iniciar sesión",
   "add_comment_section_login_title": "Inicia sesión para agregar un comentario",
@@ -11,7 +15,8 @@
   "comment_section_load_more": "Cargar más comentarios",
   "comment_section_title": "Comentarios",
   "delete_comment_option_title": "Eliminar comentario",
-  "empty_comment_is_not_allowed_error_message": "Introduce un comentario",
+  "empty_comment_is_not_allowed_error_message": "Introduce un comentario. Los comentarios vacíos no están permitidos",
+  "empty_username_is_not_allowed_error_message": "Introduce un nombre de usuario",
   "post_child_comment_added_success_message": "Respuesta agregada exitosamente",
   "post_comment_added_success_message": "Comentario agregado exitosamente",
   "post_comment_deleted_success_message": "Comentario eliminado exitosamente",
@@ -22,6 +27,5 @@
   "post_comment_reaction_user_already_reacted": "Ya has reaccionado a este comentario",
   "post_comment_reaction_user_has_not_reacted": "Todavía no has reaccionado a este comentario",
   "replies_section_load_more": "Cargar más respuestas",
-  "replies_section_title": "Respuestas",
-  "user_must_be_authenticated_error_message": "Para realizar esta acción necesitas iniciar sesión"
+  "replies_section_title": "Respuestas"
 }

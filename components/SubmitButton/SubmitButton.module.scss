@@ -8,24 +8,24 @@
   }
 
   &__container {
-    @apply w-full px-4 py-2 border-2 border-base-700 rounded-lg
-    text-sm font-bold text-base-700 transition-colors duration-100;
+    @apply w-full px-4 py-2 border-2 border-brand-primary-light
+    bg-brand-primary-light rounded-lg text-sm font-bold text-white
+    transition-colors;
 
-    &__enabled {
-      @apply text-base-300 bg-transparent border-brand-primary-dark
-      transition-colors duration-500;
+    &:disabled {
+      @apply border-base-400 text-base-400
+      bg-transparent transition-colors
+      dark:border-base-600 dark:text-base-600;
 
-      &:active, &:focus, &:hover {
-        @apply bg-brand-primary-dark;
+      &:active, &:hover {
+        @apply bg-transparent border-base-400
+        dark:border-base-600;
       }
     }
 
-    &__emphasize {
-      @apply border-blue bg-blue/50 text-base-100 ;
-
-      &:active, &:focus, &:hover {
-        @apply bg-blue text-base-100;
-      }
+    &:active, &:hover {
+      @apply bg-brand-primary-dark border-brand-primary-dark
+      transition-colors;
     }
 
     @screen md {

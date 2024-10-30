@@ -5,11 +5,11 @@ import {
   HtmlPageMetaContextService
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaContextService'
 import DOMPurify from 'isomorphic-dompurify'
-import { Settings } from 'luxon'
 import { QueryParamsParserConfiguration } from '~/modules/Shared/Infrastructure/FrontEnd/QueryParamsParser'
 import { PostFilterOptions } from '~/modules/Posts/Infrastructure/Frontend/PostFilterOptions'
 import { PostsPaginationSortingType } from '~/modules/Posts/Infrastructure/Frontend/PostsPaginationSortingType'
 import { PostsQueryParamsParser } from '~/modules/Posts/Infrastructure/Frontend/PostsQueryParamsParser'
+import { i18nConfig } from '~/i18n.config'
 
 export const getServerSideProps: GetServerSideProps<SearchPageProps> = async (context) => {
   const search = context.query.search
@@ -28,10 +28,7 @@ export const getServerSideProps: GetServerSideProps<SearchPageProps> = async (co
     }
   }
 
-  const locale = context.locale ?? 'en'
-
-  Settings.defaultLocale = locale
-  Settings.defaultZone = 'Europe/Madrid'
+  const locale = context.locale ?? i18nConfig.defaultLocale
 
   const configuration:
     Omit<QueryParamsParserConfiguration<PostFilterOptions, PostsPaginationSortingType>, 'filters' | 'perPage'> = {
@@ -69,16 +66,11 @@ export const getServerSideProps: GetServerSideProps<SearchPageProps> = async (co
     'public, s-maxage=86400, stale-while-revalidate=300'
   )
 
-  const htmlPageMetaContextService = new HtmlPageMetaContextService(context)
-  const { env } = process
-
-  let baseUrl = ''
-
-  if (!env.BASE_URL) {
-    throw Error('Missing env var: BASE_URL. Required in the search page')
-  } else {
-    baseUrl = env.BASE_URL
-  }
+  const htmlPageMetaContextService = new HtmlPageMetaContextService(
+    context,
+    { includeQuery: false, includeLocale: true },
+    { index: true, follow: true }
+  )
 
   return {
     props: {
@@ -86,7 +78,6 @@ export const getServerSideProps: GetServerSideProps<SearchPageProps> = async (co
       initialSortingOption: paginationQueryParams.sortingOptionType ?? configuration.sortingOptionType.defaultValue,
       initialPage: paginationQueryParams.page ?? configuration.page.defaultValue,
       htmlPageMetaContextProps: htmlPageMetaContextService.getProperties(),
-      baseUrl,
     },
   }
 }

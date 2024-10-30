@@ -1,7 +1,8 @@
 .common-button {
   &__container {
-    @apply flex-shrink-0 rounded-md text-sm bg-brand-primary-bg
-    text-body font-normal transition-colors p-2;
+    @apply flex-shrink-0 rounded-md text-sm bg-brand-primary-light
+    text-body-light font-normal transition-colors p-2
+    dark:bg-brand-primary-bg;
 
     &:hover {
       @apply text-base-100 bg-brand-primary-dark
@@ -13,7 +14,8 @@
     }
 
     &:disabled {
-      @apply bg-body text-base-500 transition-colors;
+      @apply bg-base-200 text-base-500 transition-colors
+      dark:bg-base-900;
     }
   }
 }

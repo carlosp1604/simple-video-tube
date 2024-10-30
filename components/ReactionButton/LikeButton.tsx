@@ -1,13 +1,12 @@
 import { FC, ReactElement, useEffect, useState } from 'react'
-import styles from './LikeButton.module.scss'
+import styles from './ReactionButton.module.scss'
 import useTranslation from 'next-translate/useTranslation'
-import { BiLike, BiSolidLike } from 'react-icons/bi'
 import { useRouter } from 'next/router'
 import { NumberFormatter } from '~/modules/Shared/Infrastructure/FrontEnd/NumberFormatter'
-import { AiOutlineLoading } from 'react-icons/ai'
-import { Tooltip2 } from '~/components/Tooltip2/Tooltip'
+import { AiOutlineLike, AiOutlineLoading, AiTwotoneLike } from 'react-icons/ai'
 import { useToast } from '~/components/AppToast/ToastContext'
 import { nanoid } from 'nanoid'
+import { Tooltip } from '~/components/Tooltip/Tooltip'
 
 interface Props {
   liked: boolean
@@ -56,31 +55,27 @@ export const LikeButton: FC<Props> = ({ liked, onLike, onDeleteLike, reactionsNu
   if (!loading) {
     if (liked) {
       iconElement = (
-        <BiSolidLike className={ styles.likeButton__likeIcon }
+        <AiTwotoneLike className={ styles.reactionButton__reactionIcon }
          title={ t('like_reaction_active_title_button') }
         />
       )
     } else {
       iconElement = (
-        <BiLike className={ styles.likeButton__likeIcon }
+        <AiOutlineLike className={ styles.reactionButton__reactionIcon }
           title={ t('like_reaction_title_button') }
         />
       )
     }
   } else {
-    iconElement = (<AiOutlineLoading className={ styles.likeButton__loadingIcon } />)
+    iconElement = (<AiOutlineLoading className={ styles.reactionButton__loadingIcon } />)
   }
 
   return (
-    <div className={ `
-      ${styles.likeButton__container}
-      ${disabled ? styles.likeButton__container_disabled : ''}
-      ` }
+    <div
+      className={ `${styles.reactionButton__container} ${disabled ? styles.reactionButton__container_disabled : ''}` }
     >
-      <button className={ `
-        ${styles.likeButton__likeButton}
-        ${liked ? styles.likeButton__likeButton_active : ''}
-      ` }
+      <button
+        className={ `${styles.reactionButton__reactionButton} ${liked ? styles.reactionButton__likeButtonActive : ''}` }
         data-tooltip-id={ tooltipId }
         disabled={ disabled }
         onClick={ onClickButton }
@@ -88,7 +83,7 @@ export const LikeButton: FC<Props> = ({ liked, onLike, onDeleteLike, reactionsNu
         { iconElement }
       </button>
       { mounted && !disabled && !loading &&
-        <Tooltip2
+        <Tooltip
           tooltipId={ tooltipId }
           place={ 'top' }
           content={ liked ? t('like_reaction_active_title_button') : t('like_reaction_title_button') }

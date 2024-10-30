@@ -2,30 +2,34 @@ import Link from 'next/link'
 import styles from './AppMenu.module.scss'
 import { SearchBar } from '~/components/SearchBar/SearchBar'
 import { useRouter } from 'next/router'
-import { Dispatch, FC, SetStateAction, useState } from 'react'
+import { FC, useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { IconButton } from '~/components/IconButton/IconButton'
-import { CiSearch } from 'react-icons/ci'
 import { useUsingRouterContext } from '~/hooks/UsingRouterContext'
 import Image from 'next/image'
-import { BsArrowUpShort } from 'react-icons/bs'
-import { HiBars3 } from 'react-icons/hi2'
-import { rgbDataURL } from '~/modules/Shared/Infrastructure/FrontEnd/BlurDataUrlHelper'
 import { useToast } from '~/components/AppToast/ToastContext'
+import { useLanguageMenuContext } from '~/hooks/LanguageMenuContext'
+import { rgbDataURL } from '~/modules/Shared/Infrastructure/FrontEnd/BlurDataUrlHelper'
+import { IoSearch } from 'react-icons/io5'
+import { FaArrowUp } from 'react-icons/fa'
+import { HiMiniBars3BottomLeft } from 'react-icons/hi2'
+import { i18nConfig } from '~/i18n.config'
 
 export interface Props {
   onClickMenuButton : () => void
-  setOpenLanguageMenu: Dispatch<SetStateAction<boolean>>
 }
 
-export const AppMenu: FC<Props> = ({ onClickMenuButton, setOpenLanguageMenu }) => {
+export const AppMenu: FC<Props> = ({ onClickMenuButton }) => {
   const [title, setTitle] = useState<string>('')
-  const { blocked } = useUsingRouterContext()
   const [openSearchBar, setOpenSearchBar] = useState<boolean>(false)
-  const { dismissible, error } = useToast()
-  const { t } = useTranslation('app_menu')
   const router = useRouter()
-  const locale = useRouter().locale ?? 'en'
+
+  const { error } = useToast()
+  const { t } = useTranslation('app_menu')
+  const { setOpen } = useLanguageMenuContext()
+  const { blocked } = useUsingRouterContext()
+
+  const locale = useRouter().locale ?? i18nConfig.defaultLocale
 
   const onSearch = async () => {
     if (blocked) {
@@ -68,7 +72,7 @@ export const AppMenu: FC<Props> = ({ onClickMenuButton, setOpenLanguageMenu }) =
         <div className={ styles.appMenu__leftContainer }>
           <IconButton
             onClick={ onClickMenuButton }
-            icon={ <HiBars3 /> }
+            icon={ <HiMiniBars3BottomLeft /> }
             title={ t('app_menu_menu_button') }
           />
           <Link href='/' shallow={ true }>
@@ -83,7 +87,7 @@ export const AppMenu: FC<Props> = ({ onClickMenuButton, setOpenLanguageMenu }) =
           </Link>
           <button
             className={ styles.appMenu__languageButton }
-            onClick={ () => setOpenLanguageMenu(true) }
+            onClick={ () => setOpen(true) }
             title={ t('language_button_title') }
           >
             <Image
@@ -96,6 +100,7 @@ export const AppMenu: FC<Props> = ({ onClickMenuButton, setOpenLanguageMenu }) =
               placeholder={ 'blur' }
               blurDataURL={ rgbDataURL(81, 80, 80) }
             />
+            { locale }
           </button>
         </div>
         <div className={ `
@@ -105,16 +110,16 @@ export const AppMenu: FC<Props> = ({ onClickMenuButton, setOpenLanguageMenu }) =
           <SearchBar
             onChange={ (value: string) => setTitle(value) }
             onSearch={ onSearch }
+            focus={ openSearchBar }
             placeHolderTitle={ t('app_menu_search_menu_placeholder_title') }
             searchIconTitle={ t('app_menu_search_button_title') }
-            focus={ openSearchBar }
           />
         </div>
         <div className={ styles.appMenu__rightContainer }>
           <div className={ styles.appMenu__mobileSearchButton }>
             <IconButton
               onClick={ () => setOpenSearchBar(!openSearchBar) }
-              icon={ openSearchBar ? <BsArrowUpShort /> : <CiSearch /> }
+              icon={ openSearchBar ? <FaArrowUp /> : <IoSearch /> }
               title={ openSearchBar ? t('search_bar_contract_title') : t('search_bar_expand_title') }
               showTooltip={ true }
             />

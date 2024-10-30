@@ -117,7 +117,7 @@ model PostComment {
   parentComment   PostComment?  @relation("Replies", fields: [parentCommentId], references: [id])
   parentCommentId String?       @map("parent_comment_id")
   userIp          String        @map("user_ip")
-  username        String        @map("username")
+  userName        String        @map("user_name")
   createdAt       DateTime      @map("created_at")
   updatedAt       DateTime      @map("updated_at")
   deletedAt       DateTime?     @map("deleted_at")

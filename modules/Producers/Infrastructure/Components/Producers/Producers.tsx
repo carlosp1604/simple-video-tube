@@ -71,9 +71,6 @@ export const Producers: FC<Props> = ({
     PaginationSortingType.POPULARITY,
     PaginationSortingType.NAME_FIRST,
     PaginationSortingType.NAME_LAST,
-    // TODO: Add this when is supported by prisma
-    // PaginationSortingType.MORE_POSTS,
-    // PaginationSortingType.LESS_POSTS,
   ]
 
   const updateQueryOnSearch = async (producerName: string) => {
@@ -178,6 +175,7 @@ export const Producers: FC<Props> = ({
       .then(() => {
         setLoading(false)
       })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query])
 
   const sortingMenu = (
@@ -212,7 +210,9 @@ export const Producers: FC<Props> = ({
   } else {
     galleryHeader = (
       <CommonGalleryHeader
-        title={ t('producers_gallery_title') }
+        title={ pagination.page === 1
+          ? t('producers_gallery_title')
+          : t('producers_gallery_title_with_page_number', { pageNumber: pagination.page }) }
         subtitle={ t('producers_gallery_subtitle', { producersNumber }) }
         loading={ loading }
         sortingMenu={ sortingMenu }
@@ -237,9 +237,9 @@ export const Producers: FC<Props> = ({
           onSearch={ onSearch }
           placeHolderTitle={ t('producers_search_placeholder_title') }
           searchIconTitle={ t('producers_search_button_title') }
-          focus={ true }
           style={ 'sub' }
           clearBarOnSearch={ true }
+          focus={ false }
         />
       </div>
 
@@ -255,7 +255,7 @@ export const Producers: FC<Props> = ({
         pagesNumber={ PaginationHelper.calculatePagesNumber(producersNumber, defaultPerPage) }
         disabled={ loading }
         linkMode={ linkMode }
-        onPageChange={ () => window.scrollTo({ top: 0 }) }
+        onPageChange={ () => window.scrollTo({ top: 0, behavior: 'smooth' }) }
       />
     </div>
   )

@@ -1,12 +1,13 @@
 .app-menu {
   &__layer {
-    @apply fixed top-0 z-app-menu transition duration-500 w-full
-    backdrop-filter backdrop-blur-lg bg-opacity-60 bg-body;
+    @apply fixed top-0 z-app-menu w-full bg-body-light
+    transition-colors border-b border-base-300 h-14
+    dark:bg-body-dark dark:border-base-800 dark:transition-colors;
   }
 
   &__container {
     @apply flex justify-between items-center mx-auto px-5
-    py-0.5 z-50 overflow-hidden gap-x-4;
+    py-0.5 z-app-menu overflow-hidden gap-x-4 h-full;
 
     @screen md {
       @apply gap-x-10 justify-between;
@@ -14,14 +15,14 @@
   }
 
   &__logo-image {
-    @apply object-contain max-h-8 w-auto h-full transition-all;
+    @apply object-contain max-h-6 w-auto h-full transition-all;
 
     @screen md {
-      @apply w-32 transition-all;
+      @apply w-32 transition-all max-h-8;
     }
 
     &:hover {
-      @apply invert transition-all;
+      @apply grayscale transition-all;
     }
   }
 
@@ -50,7 +51,7 @@
   }
 
   &__search-container {
-    @apply hidden absolute top-12 w-full left-0 p-1.5;
+    @apply hidden absolute top-14 w-full left-0 p-1.5;
 
     &__open {
       @apply block;
@@ -65,84 +66,16 @@
     }
   }
 
-  &__loading-menu-icon {
-    @apply h-6 w-6 animate-spin;
-  }
-
-  &__user-avatar-button {
-    @apply h-12 w-12 p-2 transition-transform;
-
-    &:hover, &:focus {
-      @apply scale-110 transition-transform;
-    }
-
-    @screen md {
-      @apply p-1.5;
-    }
-
-    @screen lg {
-      @apply p-1;
-    }
-  }
-
-  &__user-avatar-image {
-    @apply w-full h-full object-cover self-center rounded-full;
-  }
-
-  &__user-avatar {
-    @apply h-full w-full text-lg font-semibold;
-  }
-
-  &__util-links-container {
-    @apply flex flex-nowrap m-auto gap-x-1 px-5 scrollbar-hide
-    sticky top-14 z-app-menu overflow-x-scroll;
-
-    @screen lg {
-      @apply hidden;
-    }
-
-    @screen md {
-      @apply justify-center;
-    }
-  }
-
-  &__util-link {
-    @apply flex whitespace-nowrap gap-x-1 items-center bg-base-800 rounded-2xl
-    px-3 p-2 text-xs text-base-300 mr-0 ml-0;
-
-    @screen md {
-      @apply text-sm;
-    }
-
-    &:first-child {
-      @apply ml-auto;
-    }
-
-    &:last-child {
-      @apply mr-auto;
-    }
-
-    @screen md {
-      @apply mx-0;
-      &:first-child {
-        @apply mx-0;
-      }
-
-      &:last-child {
-        @apply mx-0;
-      }
-    }
-  }
-
   &__language-button {
-    @apply h-4 self-start mt-3;
+    @apply flex h-8 p-1 gap-x-1 items-center justify-center
+    uppercase text-xs rounded-lg transition-colors;
 
     &:hover {
-      @apply animate-pulse;
+      @apply border-brand-primary-light transition-colors;
     }
   }
 
   &__language-image {
-    @apply h-full w-auto;
+    @apply h-6 w-6 object-contain overflow-hidden;
   }
 }

@@ -120,7 +120,7 @@ async function handlePost (request: NextApiRequest, response: NextApiResponse) {
   const { commentId, postId } = request.query
 
   const comment = request.body.comment
-  const username = request.body.username
+  const userName = request.body.userName
 
   if (!commentId || !postId) {
     return handleBadRequest(response)
@@ -132,7 +132,7 @@ async function handlePost (request: NextApiRequest, response: NextApiResponse) {
     apiRequest = CreatePostChildCommentRequestSanitizer.sanitize({
       parentCommentId: String(commentId),
       comment,
-      username,
+      userName,
       postId: String(postId),
     })
   } catch (exception: unknown) {

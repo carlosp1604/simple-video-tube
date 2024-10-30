@@ -69,6 +69,10 @@ export class PaginationHelper {
   }
 
   public static calculatePagesNumber (itemsNumber: number, perPage: number): number {
+    if (itemsNumber === 0) {
+      return 1
+    }
+
     const pageNumber = Math.floor(itemsNumber / perPage)
 
     const reminder = itemsNumber % perPage

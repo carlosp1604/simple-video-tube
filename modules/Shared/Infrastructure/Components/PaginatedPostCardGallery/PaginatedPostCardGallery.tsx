@@ -6,13 +6,6 @@ import { PostsPaginationSortingType } from '~/modules/Posts/Infrastructure/Front
 import { FC, ReactElement, useEffect, useState } from 'react'
 import { ElementLinkMode } from '~/modules/Shared/Infrastructure/FrontEnd/ElementLinkMode'
 import { PostFilterOptions } from '~/modules/Posts/Infrastructure/Frontend/PostFilterOptions'
-import {
-  PostCardComponentDtoTranslator
-} from '~/modules/Posts/Infrastructure/Translators/PostCardComponentDtoTranslator'
-import {
-  PostsQueryParamsParser
-} from '~/modules/Posts/Infrastructure/Frontend/PostsQueryParamsParser'
-import { useGetPosts } from '~/hooks/GetPosts'
 import { useFirstRender } from '~/hooks/FirstRender'
 import { FetchFilter } from '~/modules/Shared/Infrastructure/FrontEnd/FetchFilter'
 import dynamic from 'next/dynamic'
@@ -23,8 +16,12 @@ import {
 } from '~/modules/Shared/Infrastructure/Components/CommonGalleryHeader/CommonGalleryHeader'
 import { useUsingRouterContext } from '~/hooks/UsingRouterContext'
 import { GetPostsApplicationResponse } from '~/modules/Posts/Application/Dtos/GetPostsApplicationDto'
-import { PaginationSortingType } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationSortingType'
+import {
+  PaginationSortingType
+} from '~/modules/Shared/Infrastructure/FrontEnd/PaginationSortingType'
 import { QueryParamsParserConfiguration } from '~/modules/Shared/Infrastructure/FrontEnd/QueryParamsParser'
+import { ParsedUrlQuery } from 'querystring'
+import { i18nConfig } from '~/i18n.config'
 
 const PaginationBar = dynamic(() =>
   import('~/components/PaginationBar/PaginationBar').then((module) => module.PaginationBar), { ssr: false }
@@ -65,11 +62,10 @@ export interface Props {
   onPostsFetched: (postsNumber: number, posts: PostCardComponentDto[]) => void
   emptyState: ReactElement
   onPaginationStateChanges: PaginationStateChange | undefined
-  customPostsFetcher: PostsFetcher | undefined
 }
 
 export const PaginatedPostCardGallery: FC<Partial<Props> & Omit<Props,
-  'term' | 'initialPostsNumber' | 'initialPosts' | 'linkMode' | 'onPaginationStateChanges' | 'customPostsFetcher'
+  'term' | 'initialPostsNumber' | 'initialPosts' | 'linkMode' | 'onPaginationStateChanges'
 >> = ({
   title,
   term = undefined,
@@ -87,7 +83,6 @@ export const PaginatedPostCardGallery: FC<Partial<Props> & Omit<Props,
   emptyState,
   onPaginationStateChanges = undefined,
   onPostsFetched,
-  customPostsFetcher = undefined,
 }) => {
   const [posts, setPosts] =
     useState<PostCardComponentDto[]>(initialPosts ?? [])
@@ -97,8 +92,7 @@ export const PaginatedPostCardGallery: FC<Partial<Props> & Omit<Props,
 
   const router = useRouter()
   const { query } = router
-  const locale = router.locale ?? 'en'
-  const { getPosts } = useGetPosts()
+  const locale = router.locale ?? i18nConfig.defaultLocale
   const firstRender = useFirstRender()
   const { setBlocked } = useUsingRouterContext()
 
@@ -108,29 +102,13 @@ export const PaginatedPostCardGallery: FC<Partial<Props> & Omit<Props,
     filters,
   })
 
-  // TODO: Add support to change perPage prop
-  const configuration:
-    Omit<QueryParamsParserConfiguration<PostFilterOptions, PostsPaginationSortingType>, 'perPage'> = {
-      page: {
-        defaultValue: 1,
-        maxValue: Infinity,
-        minValue: 1,
-      },
-      filters: {
-        filtersToParse,
-      },
-      sortingOptionType: {
-        defaultValue: defaultSortingOption,
-        parseableOptionTypes: sortingOptions,
-      },
-    }
-
   const updatePosts = async (
     page:number,
     order: PostsPaginationSortingType,
     filters: FetchFilter<PostFilterOptions>[]
   ) => {
-    setLoading(true)
+    const PostsQueryParamsParser = (await import('~/modules/Posts/Infrastructure/Frontend/PostsQueryParamsParser'))
+      .PostsQueryParamsParser
 
     const parsedFilters = filters.map((filter) => {
       return {
@@ -139,50 +117,87 @@ export const PaginatedPostCardGallery: FC<Partial<Props> & Omit<Props,
       }
     })
 
-    let fetchPosts = customPostsFetcher
+    const PostsApiService =
+        (await import('~/modules/Posts/Infrastructure/Frontend/PostsApiService')).PostsApiService
+    const fromOrderTypeToComponentSortingOption =
+      (await import('~/modules/Shared/Infrastructure/FrontEnd/PaginationSortingType'))
+        .fromOrderTypeToComponentSortingOption
 
-    if (!fetchPosts) {
-      fetchPosts = getPosts
-    }
+    const postsApiService = new PostsApiService()
 
-    const newPosts =
-      await fetchPosts(page, order, parsedFilters)
+    const componentOrder = fromOrderTypeToComponentSortingOption(order)
 
-    if (newPosts) {
-      const newPostsCards = newPosts.posts.map((post) => {
-        return PostCardComponentDtoTranslator.fromApplication(post, locale ?? 'en')
-      })
+    try {
+      setLoading(true)
 
-      setPostsNumber(newPosts.postsNumber)
-      setPosts(newPostsCards)
-      onPostsFetched(newPosts.postsNumber, newPostsCards)
-    }
-
-    setLoading(false)
-  }
-
-  const arraysEqual = (
-    currentFiltersArray: FetchFilter<PostFilterOptions>[],
-    newFiltersArray: FetchFilter<PostFilterOptions>[]) => {
-    if (currentFiltersArray.length !== newFiltersArray.length) {
-      return false
-    }
-
-    for (const currentFilterArray of currentFiltersArray) {
-      const foundOnNewArray = newFiltersArray.find((newFilter) =>
-        newFilter.type === currentFilterArray.type && newFilter.value === currentFilterArray.value
+      const newPosts = await postsApiService.getPosts(
+        page,
+        defaultPerPage,
+        componentOrder.criteria,
+        componentOrder.option,
+        parsedFilters,
+        locale
       )
 
-      if (!foundOnNewArray) {
-        return false
+      setPosts(newPosts.posts)
+      setPostsNumber(newPosts.postsNumber)
+      onPostsFetched(newPosts.postsNumber, newPosts.posts)
+    } catch (exception: unknown) {
+      console.error(exception)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleQueryChange = async (query: ParsedUrlQuery) => {
+    const configuration:
+      Omit<QueryParamsParserConfiguration<PostFilterOptions, PostsPaginationSortingType>, 'perPage'> = {
+        page: {
+          defaultValue: 1,
+          maxValue: Infinity,
+          minValue: 1,
+        },
+        filters: {
+          filtersToParse,
+        },
+        sortingOptionType: {
+          defaultValue: defaultSortingOption,
+          parseableOptionTypes: sortingOptions,
+        },
       }
 
-      const index = newFiltersArray.indexOf(foundOnNewArray)
+    const PostsQueryParamsParser = (await import('~/modules/Posts/Infrastructure/Frontend/PostsQueryParamsParser'))
+      .PostsQueryParamsParser
 
-      newFiltersArray.splice(index, 1)
+    const PaginatedPostCardGalleryHelper =
+      (await import('~/modules/Posts/Infrastructure/Frontend/PaginatedPostCardGalleryHelper'))
+        .PaginatedPostCardGalleryHelper
+
+    const queryParams = new PostsQueryParamsParser(query, configuration)
+
+    const newPage = queryParams.page ?? configuration.page.defaultValue
+
+    const newOrder = queryParams.sortingOptionType ?? configuration.sortingOptionType.defaultValue
+
+    const newFilters = queryParams.filters
+
+    if (
+      newPage === paginationState.page &&
+      newOrder === paginationState.order &&
+      PaginatedPostCardGalleryHelper.arraysEqual(paginationState.filters, newFilters)
+    ) {
+      return
     }
 
-    return true
+    setPaginationState({ page: newPage, order: newOrder, filters: newFilters })
+
+    setBlocked(true)
+
+    await updatePosts(newPage, newOrder, newFilters)
+
+    onPaginationStateChanges && onPaginationStateChanges(newPage, newOrder, newFilters)
+
+    setBlocked(false)
   }
 
   useEffect(() => {
@@ -197,30 +212,8 @@ export const PaginatedPostCardGallery: FC<Partial<Props> & Omit<Props,
       return
     }
 
-    const queryParams = new PostsQueryParamsParser(query, configuration)
-
-    const newPage = queryParams.page ?? configuration.page.defaultValue
-
-    const newOrder = queryParams.sortingOptionType ?? configuration.sortingOptionType.defaultValue
-
-    const newFilters = queryParams.filters
-
-    if (
-      newPage === paginationState.page &&
-      newOrder === paginationState.order &&
-      arraysEqual(paginationState.filters, newFilters)
-    ) {
-      return
-    }
-
-    setPaginationState({ page: newPage, order: newOrder, filters: newFilters })
-
-    setBlocked(true)
-    updatePosts(newPage, newOrder, newFilters)
-      .then(() => {
-        onPaginationStateChanges && onPaginationStateChanges(newPage, newOrder, newFilters)
-        setBlocked(false)
-      })
+    handleQueryChange(query).then()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query])
 
   const onClickSortingMenu = async (option: PaginationSortingType) => {

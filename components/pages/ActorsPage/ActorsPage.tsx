@@ -12,7 +12,6 @@ import {
 import { HtmlPageMeta } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMeta'
 import { Actors } from '~/modules/Actors/Infrastructure/Components/Actors/Actors'
 import { MobileBanner } from '~/modules/Shared/Infrastructure/Components/Banner/MobileBanner'
-import { useRouter } from 'next/router'
 
 export interface ActorsPageProps {
   initialSearchTerm: string
@@ -21,7 +20,6 @@ export interface ActorsPageProps {
   initialActors: ActorCardDto[]
   initialActorsNumber: number
   htmlPageMetaContextProps: HtmlPageMetaContextProps
-  baseUrl: string
 }
 
 export const ActorsPage: NextPage<ActorsPageProps> = ({
@@ -31,23 +29,15 @@ export const ActorsPage: NextPage<ActorsPageProps> = ({
   initialPage,
   initialOrder,
   htmlPageMetaContextProps,
-  baseUrl,
 }) => {
   const { t } = useTranslation('actors')
-  const locale = useRouter().locale ?? 'en'
-
-  let canonicalUrl = `${baseUrl}/actors`
-
-  if (locale !== 'en') {
-    canonicalUrl = `${baseUrl}/${locale}/actors`
-  }
 
   const htmlPageMetaUrlProps = (
     new HtmlPageMetaResourceService(
       t('actors_page_title'),
       t('actors_page_description'),
       HtmlPageMetaContextResourceType.ARTICLE,
-      canonicalUrl
+      htmlPageMetaContextProps.canonicalUrl
     )
   ).getProperties()
 

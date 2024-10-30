@@ -1,19 +1,22 @@
 import { FC, ReactElement, useMemo } from 'react'
 import styles from './PaginationBar.module.scss'
-import { BsCaretLeft, BsCaretRight, BsSkipEnd, BsSkipStart, BsXCircle } from 'react-icons/bs'
 import useTranslation from 'next-translate/useTranslation'
-import { TbNumber1 } from 'react-icons/tb'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { ElementLinkMode } from '~/modules/Shared/Infrastructure/FrontEnd/ElementLinkMode'
 import { PaginationHelper } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
 import { PaginationBarButton } from '~/components/PaginationBar/PaginationBarButton/PaginationBarButton'
 import { CommonButton } from '~/modules/Shared/Infrastructure/Components/CommonButton/CommonButton'
+import {
+  MdKeyboardArrowLeft,
+  MdKeyboardArrowRight,
+  MdKeyboardDoubleArrowLeft,
+  MdKeyboardDoubleArrowRight
+} from 'react-icons/md'
 
 interface Props {
   pageNumber: number
   pagesNumber: number
-  onePageStateTitle: string
   disabled: boolean
   linkMode: ElementLinkMode | undefined
   onPageChange: (page: number) => void
@@ -22,7 +25,6 @@ interface Props {
 export const PaginationBar: FC<Partial<Props> & Pick<Props, 'pagesNumber' | 'pageNumber' | 'linkMode'>> = ({
   pagesNumber,
   pageNumber,
-  onePageStateTitle,
   linkMode,
   disabled = false,
   onPageChange = undefined,
@@ -63,30 +65,14 @@ export const PaginationBar: FC<Partial<Props> & Pick<Props, 'pagesNumber' | 'pag
     )
   })
 
-  if (availablePages.length === 1) {
-    if (onePageStateTitle && !disabled) {
-      return (
-        <span className={ styles.paginationBar__noPaginatedState }>
-          <TbNumber1 className={ styles.paginationBar__noPaginatedStateIcon }/>
-          { onePageStateTitle }
-        </span>
-      )
-    }
-
-    return null
-  }
-
   let content: ReactElement
 
   if (pageNumber > pagesNumber && !disabled) {
     if (linkMode) {
-      content = (
-        <div className={ styles.paginationBar__errorState }>
-          <BsXCircle className={ styles.paginationBar__errorIcon }/>
-          { t('error_state_description') }
+      return (
           <Link
             href={ { pathname, query: buildQuery(1) } }
-            className={ styles.paginationBar__errorButton }
+            className={ styles.paginationBar__errorLink }
             title={ t('error_state_button_title') }
             shallow={ linkMode.shallowNavigation }
             scroll={ linkMode.scrollOnClick }
@@ -94,28 +80,27 @@ export const PaginationBar: FC<Partial<Props> & Pick<Props, 'pagesNumber' | 'pag
           >
             { t('error_state_button_title') }
           </Link>
-        </div>
       )
     } else {
-      content = (
-        <div className={ styles.paginationBar__errorState }>
-          <BsXCircle className={ styles.paginationBar__errorIcon }/>
-          { t('error_state_description') }
+      return (
+        <span className={ styles.paginationBar__errorButton }>
           <CommonButton
             title={ t('error_state_button_title') }
             disabled={ false }
             onClick={ () => onPageChange && onPageChange(1) }
           />
-        </div>
+        </span>
       )
     }
+  } else if (pagesNumber === 1) {
+    return null
   } else {
     content = (
       <div className={ styles.paginationBar__container }>
         <ul className={ styles.paginationBar__listContainer }>
           <PaginationBarButton
             title={ t('first_page_button_title') }
-            linkTitle={ <BsSkipStart className={ styles.paginationBar__stepIcon }/> }
+            linkTitle={ <MdKeyboardDoubleArrowLeft className={ styles.paginationBar__stepIcon }/> }
             href={ { pathname, query: buildQuery(1) } }
             active={ false }
             linkMode={ linkMode }
@@ -126,7 +111,7 @@ export const PaginationBar: FC<Partial<Props> & Pick<Props, 'pagesNumber' | 'pag
           />
           <PaginationBarButton
             title={ t('previous_page_button_title') }
-            linkTitle={ <BsCaretLeft className={ styles.paginationBar__stepIcon }/> }
+            linkTitle={ <MdKeyboardArrowLeft className={ styles.paginationBar__stepIcon }/> }
             href={ { pathname, query: buildQuery(pageNumber - 1) } }
             active={ false }
             linkMode={ linkMode }
@@ -154,7 +139,7 @@ export const PaginationBar: FC<Partial<Props> & Pick<Props, 'pagesNumber' | 'pag
 
           <PaginationBarButton
             title={ t('next_page_button_title') }
-            linkTitle={ <BsCaretRight className={ styles.paginationBar__stepIcon }/> }
+            linkTitle={ <MdKeyboardArrowRight className={ styles.paginationBar__stepIcon }/> }
             href={ { pathname, query: buildQuery(pageNumber + 1) } }
             active={ false }
             linkMode={ linkMode }
@@ -166,7 +151,7 @@ export const PaginationBar: FC<Partial<Props> & Pick<Props, 'pagesNumber' | 'pag
 
           <PaginationBarButton
             title={ t('last_page_button_title') }
-            linkTitle={ <BsSkipEnd className={ styles.paginationBar__stepIcon }/> }
+            linkTitle={ <MdKeyboardDoubleArrowRight className={ styles.paginationBar__stepIcon }/> }
             href={ { pathname, query: buildQuery(pagesNumber) } }
             active={ false }
             linkMode={ linkMode }

@@ -22,7 +22,7 @@ export class CreatePostChildComment {
   constructor (private readonly postRepository: PostRepositoryInterface) {}
 
   public async create (request: CreatePostChildCommentApplicationRequestDto): Promise<PostChildCommentApplicationDto> {
-    new UsernameValidator().validate(request.username)
+    new UsernameValidator().validate(request.userName)
 
     const post = await this.getPost(request.postId)
 
@@ -48,7 +48,7 @@ export class CreatePostChildComment {
     request: CreatePostChildCommentApplicationRequestDto
   ): PostChildComment {
     try {
-      return post.addChildComment(request.parentCommentId, request.comment, request.userIp, request.username)
+      return post.addChildComment(request.parentCommentId, request.comment, request.userIp, request.userName)
     } catch (exception: unknown) {
       if (!(exception instanceof PostDomainException)) {
         throw exception

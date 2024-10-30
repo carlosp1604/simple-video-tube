@@ -13,6 +13,7 @@ export const useTimer = ({ initialTime = 0 }) => {
     const interval = setInterval(() => getTime(), 1000)
 
     return () => clearInterval(interval)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time])
 
   return time

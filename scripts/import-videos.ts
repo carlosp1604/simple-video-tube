@@ -2,10 +2,8 @@ import * as fs from 'fs'
 import { Post } from '~/modules/Posts/Domain/Post'
 import { randomUUID } from 'crypto'
 import { DateTime } from 'luxon'
-import { PostMeta } from '~/modules/Posts/Domain/PostMeta'
 import { Collection } from '~/modules/Shared/Domain/Relationship/Collection'
 import { Actor } from '~/modules/Actors/Domain/Actor'
-import { Category } from '~/modules/Categories/Domain/Category'
 import { Producer } from '~/modules/Producers/Domain/Producer'
 import { Relationship } from '~/modules/Shared/Domain/Relationship/Relationship'
 import { Translation } from '~/modules/Translations/Domain/Translation'
@@ -14,12 +12,13 @@ import { MediaUrl, MediaUrlType } from '~/modules/Posts/Domain/PostMedia/MediaUr
 import { MysqlProducerRepository } from '~/modules/Producers/Infrastructure/MysqlProducerRepository'
 import { MysqlPostRepository } from '~/modules/Posts/Infrastructure/MysqlPostRepository'
 import { MysqlActorRepository } from '~/modules/Actors/Infrastructure/MysqlActorRepository'
+import { Category } from '~/modules/Categories/Domain/Category'
 import { MysqlCategoryRepository } from '~/modules/Categories/Infrastructure/MysqlCategoryRepository'
 
 const producerRepository = new MysqlProducerRepository()
 const postRepository = new MysqlPostRepository()
 const actorRepository = new MysqlActorRepository()
-const tagRepository = new MysqlCategoryRepository()
+const categoryRepository = new MysqlCategoryRepository()
 
 const findOrCreateActor = async (actor: any): Promise<Actor | null> => {
   console.log(`  - Finding actor with slug: ${actor.slug}`)
@@ -61,44 +60,46 @@ const findOrCreateActor = async (actor: any): Promise<Actor | null> => {
   }
 }
 
-const findOrCreateTag = async (tag: any): Promise<Category | null> => {
-  console.log(`  - Finding tag with slug: ${tag.slug}`)
+const findOrCreateCategory = async (category: any): Promise<Category | null> => {
+  console.log(`  - Finding category with slug: ${category.slug}`)
 
-  const tagExists = await tagRepository.findBySlug(tag.slug)
+  const categoryExists = await categoryRepository.findBySlug(category.slug)
 
-  if (tagExists) {
-    console.log(`\t- Tag with slug: ${tag.slug} found`)
+  if (categoryExists) {
+    console.log(`\t- Category with slug: ${category.slug} found`)
 
-    return tagExists
+    return categoryExists
   }
-  console.log(`\t- Tag not found. Building tag with slug: ${tag.slug}`)
+
+  console.log(`\t- Category not found. Building tag with slug: ${category.slug}`)
 
   const nowDate = DateTime.now()
-  const tagUuid = randomUUID()
+  const categoryUuid = randomUUID()
 
   const translationsCollection :Collection<Translation, string> = Collection.initializeCollection()
 
-  console.log(`\t  - Building tag translations: ${tag.slug}`)
-  for (const language in tag.translations) {
-    for (const field in tag.translations[language]) {
+  console.log(`\t  - Building category translations: ${category.slug}`)
+  for (const language in category.translations) {
+    for (const field in category.translations[language]) {
       const newTranslation = buildTranslation(
         field,
         language,
-        tag.translations[language][field],
-        tagUuid,
-        'PostTag'
+        category.translations[language][field],
+        categoryUuid,
+        'Category'
       )
 
       translationsCollection.addItem(newTranslation, newTranslation.language + newTranslation.field)
     }
   }
 
-  const newTag = new Category(
+  const newCategory = new Category(
     randomUUID(),
-    tag.slug,
-    tag.name,
-    tag.description ?? null,
-    tag.image ?? null,
+    category.slug,
+    category.name,
+    category.description ?? null,
+    category.image ?? null,
+    0,
     nowDate,
     nowDate,
     null,
@@ -106,13 +107,13 @@ const findOrCreateTag = async (tag: any): Promise<Category | null> => {
   )
 
   try {
-    await tagRepository.save(newTag)
+    await categoryRepository.save(newCategory)
 
-    console.log(`\t- Tag with slug: ${tag.slug} saved`)
+    console.log(`\t- Category with slug: ${category.slug} saved`)
 
-    return newTag
+    return newCategory
   } catch (exception: unknown) {
-    console.error(`\t- Cannot save tag with slug: ${tag.slug} `)
+    console.error(`\t- Cannot save category with slug: ${category.slug} `)
     console.error(exception)
 
     return null
@@ -140,9 +141,9 @@ const findOrCreateProducer = async (video: any): Promise<Producer | null> => {
       video.producer.name,
       video.producer.description ?? null,
       video.producer.img,
+      0,
       // TODO: Add support for producers hierarchy
       null,
-      video.producer.brandHexColor,
       nowDate,
       nowDate,
       null
@@ -165,23 +166,6 @@ const findOrCreateProducer = async (video: any): Promise<Producer | null> => {
   console.log(`  - Post with slug: ${video.slug} does not have producer`)
 
   return null
-}
-
-const buildMeta = (
-  type: string,
-  value: string,
-  postUuid: string
-): PostMeta => {
-  const nowDate = DateTime.now()
-
-  return new PostMeta(
-    type,
-    value,
-    postUuid,
-    nowDate,
-    nowDate,
-    null
-  )
 }
 
 const buildTranslation = (
@@ -247,46 +231,25 @@ async function run (
      * Build post meta and create its collection
      *
      **/
-    const metaDuration = buildMeta('duration', String(video.duration), postUuid)
-    const metaThumb = buildMeta('thumb', String(video.thumb), postUuid)
-
-    const metaCollection: Collection<PostMeta, PostMeta['type']> = Collection.initializeCollection()
-
-    metaCollection.addItem(metaDuration, metaDuration.type)
-    metaCollection.addItem(metaThumb, metaThumb.type)
-
-    if (video.trailer) {
-      const metaTrailer = buildMeta('trailer', String(video.trailer), postUuid)
-
-      metaCollection.addItem(metaTrailer, metaTrailer.type)
-    }
-
-    if (video.resolution) {
-      const metaResolution = buildMeta('resolution', String(video.resolution), postUuid)
-
-      metaCollection.addItem(metaResolution, metaResolution.type)
-    }
-
-    console.log('\t- Done')
 
     /**
      * Step 2.2:
-     * Build categories and create its collection
+     * Build tags and create its collection
      * We will find tag per tag to be sure it already exists on database
      *
      **/
     console.log(`  - Building tags collection for post with slug ${video.slug}`)
 
-    const tagsCollection: Collection<Category, Category['id']> = Collection.initializeCollection()
+    const categoryCollection: Collection<Category, Category['id']> = Collection.initializeCollection()
 
     if (video.videoTags.length === 0) {
       console.log('\t- Post has not categories')
     } else {
-      for (const tag of video.videoTags) {
-        const postTag = await findOrCreateTag(tag)
+      for (const category of video.videoTags) {
+        const newCategory = await findOrCreateCategory(category)
 
-        if (postTag) {
-          tagsCollection.addItem(postTag, postTag.id)
+        if (newCategory) {
+          categoryCollection.addItem(newCategory, newCategory.id)
         }
       }
 
@@ -420,8 +383,10 @@ async function run (
       '',
       postUuid,
       video.thumb,
+      null,
       nowDate,
       nowDate,
+      null,
       mediaUrlsCollection
     )
 
@@ -440,25 +405,27 @@ async function run (
         '',
         postUuid,
         video.thumb,
+        null,
         nowDate,
         nowDate,
+        null,
         mediaUrlsCollection
       )
 
       /**
        * Not included for the moment
        *
-      const downloadUrl = new MediaUrl(
-        `${video.direct.title}`,
-        video.direct.id,
-        postMediaUuid,
-        video.direct.downloadUrl,
-        MediaUrlType.DOWNLOAD_URL,
-        nowDate,
-        nowDate
-      )
+       const downloadUrl = new MediaUrl(
+       `${video.direct.title}`,
+       video.direct.id,
+       postMediaUuid,
+       video.direct.downloadUrl,
+       MediaUrlType.DOWNLOAD_URL,
+       nowDate,
+       nowDate
+       )
 
-      mediaUrlsCollection.addItem(downloadUrl, downloadUrl.url) */
+       mediaUrlsCollection.addItem(downloadUrl, downloadUrl.url) */
 
       const embedUrl = new MediaUrl(
         `${video.direct.title}`,
@@ -483,22 +450,26 @@ async function run (
       video.type,
       video.description,
       video.slug,
+      video.duration,
+      video.trailerUrl ?? null,
+      video.externalUrl ?? null,
+      0,
+      video.resolution,
       postProducer !== null ? postProducer.id : null,
       postActor !== null ? postActor.id : null,
       nowDate,
       nowDate,
       null,
       video.publishDate ? DateTime.fromISO(video.publishDate) : nowDate,
-      metaCollection,
-      tagsCollection,
+      categoryCollection,
       actorsCollection,
-      Collection.initializeCollection(),
       Collection.initializeCollection(),
       Collection.initializeCollection(),
       producerRelationship,
       translationsCollection,
       actorRelationship,
-      postMediaCollection
+      postMediaCollection,
+      Collection.initializeCollection()
     )
 
     try {

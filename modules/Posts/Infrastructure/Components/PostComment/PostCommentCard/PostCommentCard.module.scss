@@ -1,24 +1,14 @@
 .post-comment-card {
   &__container {
-    @apply grid gap-2 items-center border-opacity-50 cursor-default;
+    @apply grid gap-2 items-center cursor-default;
     grid-template-areas:
-      "user-logo  user-name-date  options"
-      "user-logo  comment         options";
-    grid-auto-columns: auto 1fr auto;
-  }
-
-  &__user-logo {
-    @apply h-6 w-6 self-start rounded-full object-cover;
-    grid-area: user-logo;
+      "user-logo  user-name-date"
+      "user-logo  comment";
+    grid-auto-columns: auto 1fr;
   }
 
   &__user-avatar {
     @apply h-6 w-6 self-start text-sm font-bold;
-    grid-area: user-logo;
-  }
-
-  &__child-comment-user-logo {
-    @apply h-6 w-6 self-start rounded-full;
     grid-area: user-logo;
   }
 
@@ -28,11 +18,14 @@
   }
 
   &__user-name {
-    @apply text-xs text-base-400 font-semibold;
+    @apply text-xs text-base-700 font-semibold transition-colors
+    dark:text-base-400 dark:transition-colors;
   }
 
   &__comment-date {
-    @apply text-xs text-base-400 leading-snug font-light;
+    @apply text-xs text-base-600 leading-snug font-light
+    transition-colors
+    dark:text-base-400 dark:transition-colors;
 
     @screen md {
       @apply font-light;
@@ -40,19 +33,13 @@
   }
 
   &__separator-icon {
-    @apply text-base-600;
+    @apply text-base-500 transition-colors
+    dark:text-base-600 dark:transition-colors;
   }
 
   &__comment {
-    @apply text-sm font-light whitespace-pre-line break-words overflow-hidden;
+    @apply text-sm font-light whitespace-pre-line
+    break-words overflow-hidden;
     grid-area: comment;
-  }
-
-  &__child-comment {
-    @apply grid gap-2 items-center;
-    grid-template-areas:
-      "user-logo  user-name-date"
-      "user-logo  comment";
-    grid-auto-rows: auto 1fr;
   }
 }

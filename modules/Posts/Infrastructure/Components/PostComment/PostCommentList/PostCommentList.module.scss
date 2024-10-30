@@ -1,6 +1,6 @@
 .post-comment-list {
   &__container {
-    @apply flex flex-col gap-y-4 bg-body;
+    @apply flex flex-col gap-y-4 my-4;
 
     &_loading {
       @apply animate-pulse;
@@ -8,18 +8,30 @@
   }
 
   &__post-comment-container {
-    @apply border-b border-base-800;
+    @apply border-b border-base-300 transition-colors
+    dark:border-base-800 dark:transition-colors;
 
     &:last-of-type {
       @apply border-0;
     }
+  }
+
+  &__postCommentToReplyContainer {
+    @apply sticky top-0 -mx-5 -mt-4 px-5 py-4 bg-base-200
+    z-comment-to-reply dark:bg-base-800;
   }
 
   &__post-comment-skeleton-container {
-    @apply border-b border-base-800 pb-2;
+    @apply border-b border-base-300 pb-2 transition-colors
+    dark:border-base-800 dark:transition-colors;
 
     &:last-of-type {
       @apply border-0;
     }
   }
+
+  &__post-child-comment-list-container-loading {
+    @apply animate-pulse;
+  }
 }
+

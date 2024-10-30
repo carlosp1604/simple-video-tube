@@ -37,7 +37,7 @@ export abstract class QueryParamsParser<T extends FilterOptions, K extends Pagin
   public readonly sortingOptionType: K | null
   protected _parseFailed = false
 
-  constructor (
+  protected constructor (
     query: ParsedUrlQuery,
     configuration: Partial<QueryParamsParserConfiguration<T, K>>
   ) {

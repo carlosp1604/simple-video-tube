@@ -8,6 +8,6 @@
   }
 
   &__option-image {
-    @apply w-8 h-5;
+    @apply w-full h-full object-center object-contain;
   }
 }

@@ -5,7 +5,6 @@ import { GetRelatedPosts } from '~/modules/Posts/Application/GetRelatedPosts/Get
 import { GetPopularProducers } from '~/modules/Producers/Application/GetPopularProducers'
 import { CreatePostReaction } from '~/modules/Posts/Application/CreatePostReaction/CreatePostReaction'
 import { MysqlPostRepository } from '~/modules/Posts/Infrastructure/MysqlPostRepository'
-import { BcryptCryptoService } from '~/helpers/Infrastructure/BcryptCryptoService'
 import { MysqlActorRepository } from '~/modules/Actors/Infrastructure/MysqlActorRepository'
 import { MysqlProducerRepository } from '~/modules/Producers/Infrastructure/MysqlProducerRepository'
 import { asClass, asFunction, createContainer, InjectionMode } from 'awilix'
@@ -36,6 +35,7 @@ import { AddProducerView } from '~/modules/Producers/Application/AddProducerView
 import { GetAllCategories } from '~/modules/Categories/Application/GetAllCategories/GetAllCategories'
 import { MysqlReportRepository } from '~/modules/Reports/Infrastructure/MysqlReportRepository'
 import { CreateReport } from '~/modules/Reports/Application/CreateReport'
+import { AddCategoryView } from '~/modules/Categories/Application/AddCategoryView/AddCategoryView'
 
 /**
  * We create a container to register our classes dependencies
@@ -47,7 +47,6 @@ const container = createContainer({ injectionMode: InjectionMode.CLASSIC })
 /**
  * Register dependencies in the container
  */
-container.register('cryptoService', asClass(BcryptCryptoService))
 // FIXME: This was the only way to make it works...
 container.register('postRepository', asFunction(() => {
   return new MysqlPostRepository()
@@ -80,6 +79,7 @@ container.register('getRelatedPostsUseCase', asClass(GetRelatedPosts))
 container.register('getPostBySlugUseCase', asClass(GetPostBySlug))
 container.register('addPostViewUseCase', asClass(AddPostView))
 container.register('addActorViewUseCase', asClass(AddActorView))
+container.register('addCategoryViewUseCase', asClass(AddCategoryView))
 container.register('addProducerViewUseCase', asClass(AddProducerView))
 container.register('createPostReactionUseCase', asClass(CreatePostReaction))
 container.register('getPostUserInteractionUseCase', asClass(GetPostUserInteraction))

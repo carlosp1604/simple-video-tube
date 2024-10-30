@@ -2,13 +2,17 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const nextTranslate = require('next-translate-plugin')
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   experimental: {
     scrollRestoration: true,
   },
-  // transpilePackages: ['fluid-player'],
   rewrites: async () => [
     {
       source: '/posts-sitemap.xml',
@@ -39,7 +43,17 @@ const nextConfig = {
       destination: '/producers-sitemap/:page',
     },
   ],
-  webpack: (config) => {
+  webpack: (config, { dev, isServer }) => {
+    if (!dev && !isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'react/jsx-runtime.js': 'preact/compat/jsx-runtime',
+        react: 'preact/compat',
+        'react-dom/test-utils': 'preact/test-utils',
+        'react-dom': 'preact/compat',
+      }
+    }
+
     const rules = config.module.rules
       .find((rule) => typeof rule.oneOf === 'object')
       .oneOf.filter((rule) => Array.isArray(rule.use))
@@ -89,4 +103,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextTranslate(nextConfig)
+module.exports = withBundleAnalyzer(nextTranslate(nextConfig))

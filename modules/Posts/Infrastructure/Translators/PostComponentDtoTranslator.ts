@@ -3,7 +3,7 @@ import { PostApplicationDto } from '~/modules/Posts/Application/Dtos/PostApplica
 import {
   PostComponentDto,
   PostComponentDtoActorDto, PostComponentDtoProducerDto,
-  PostComponentDtoTagDto
+  PostComponentDtoCategoryDto
 } from '~/modules/Posts/Infrastructure/Dtos/PostComponentDto'
 import { DateService } from '~/helpers/Infrastructure/DateService'
 import { PostMediaComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostMedia/PostMediaComponentDto'
@@ -20,11 +20,11 @@ export class PostComponentDtoTranslator {
       imageUrl: actor.imageUrl,
     }))
 
-    const tags: PostComponentDtoTagDto[] = applicationDto.tags.map((tag) => {
+    const categories: PostComponentDtoCategoryDto[] = applicationDto.categories.map((categories) => {
       const languageHasTranslations =
-        tag.translations.find((translation) => translation.language === locale)
+        categories.translations.find((translation) => translation.language === locale)
 
-      let nameTranslation = tag.name
+      let nameTranslation = categories.name
 
       if (languageHasTranslations) {
         const nameFieldTranslation =
@@ -37,8 +37,8 @@ export class PostComponentDtoTranslator {
 
       return {
         name: nameTranslation,
-        id: tag.id,
-        slug: tag.slug,
+        id: categories.id,
+        slug: categories.slug,
       }
     })
 
@@ -66,7 +66,7 @@ export class PostComponentDtoTranslator {
 
     const video = VideoComponentDtoTranslator.fromApplicationDto(applicationDto)
 
-    const formattedPublishedAt = (new DateService()).formatDateToDateMedFromIso(applicationDto.publishedAt, locale)
+    const formattedPublishedAt = (new DateService()).formatDate(applicationDto.publishedAt, locale)
 
     const languageHasTranslations = applicationDto.translations.find((translation) => translation.language === locale)
 
@@ -111,7 +111,7 @@ export class PostComponentDtoTranslator {
       slug: applicationDto.slug,
       actors,
       video,
-      tags,
+      categories,
       producer,
       description: descriptionTranslation,
       formattedPublishedAt,
@@ -120,6 +120,7 @@ export class PostComponentDtoTranslator {
       thumb: applicationDto.thumbnailUrl,
       resolution: applicationDto.resolution,
       duration: applicationDto.duration,
+      parsedISO8601Duration: applicationDto.parsedISO8601Duration,
       actor,
       postMediaVideoType,
       postMediaImageType,

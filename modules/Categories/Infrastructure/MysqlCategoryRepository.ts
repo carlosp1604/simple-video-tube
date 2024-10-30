@@ -74,6 +74,29 @@ export class MysqlCategoryRepository implements CategoryRepositoryInterface {
   }
 
   /**
+   * Find a Category given its ID
+   * @param categoryId Category ID
+   * @return Category if found or null
+   */
+  public async findById (categoryId: Category['id']): Promise<Category | null> {
+    const category = await prisma.category.findFirst({
+      where: {
+        id: categoryId,
+        deletedAt: null,
+      },
+      include: {
+        translations: true,
+      },
+    })
+
+    if (category === null) {
+      return null
+    }
+
+    return CategoryModelTranslator.toDomain(category)
+  }
+
+  /**
    * Get all categories from database
    * @return Array of Categories
    */
@@ -88,5 +111,22 @@ export class MysqlCategoryRepository implements CategoryRepositoryInterface {
     })
 
     return categories.map(CategoryModelTranslator.toDomain)
+  }
+
+  /**
+   * Add a new category view for a category given its ID
+   * @param categoryId Category ID
+   */
+  public async addCategoryView (categoryId: Category['id']): Promise<void> {
+    await prisma.category.update({
+      where: {
+        id: categoryId,
+      },
+      data: {
+        viewsCount: {
+          increment: 1,
+        },
+      },
+    })
   }
 }

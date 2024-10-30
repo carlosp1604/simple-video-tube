@@ -1,40 +1,16 @@
 .add-comment-input {
   &__add-comment-section {
-    @apply flex items-center gap-x-4 bg-body p-2 left-0 right-0
-      border-t border-base-800 h-fit;
-    grid-area: add-comment;
+    @apply flex flex-col items-start gap-y-1 bg-body-light
+    p-5 border-base-300 border mt-4 rounded-lg
+    dark:bg-body-dark dark:border-base-800 dark:transition-colors;
   }
 
-  &__add-comment-button {
-    @apply rounded-full bg-brand-primary-dark text-base-100 transition-colors;
-
-    &:disabled {
-      @apply bg-body;
-    }
-
-    &:hover, &:focus {
-      @apply bg-brand-secondary-bg transition-colors;
-    }
-
-    &:active {
-      @apply bg-brand-secondary-dark text-brand-primary-light transition-colors;
-    }
-  }
-
-  &__add-comment-icon {
-    @apply h-8 w-8 p-2 rounded-full transition-colors;
+  &__addCommentLabel {
+    @apply text-xs font-semibold text-black -mb-1
+    dark:text-base-300 ;
 
     @screen md {
-      @apply h-10 w-10 p-3;
-    }
-  }
-
-  &__user-avatar {
-    @apply flex-shrink-0 h-8 w-8 font-semibold rounded-full
-      object-cover;
-
-    @screen md {
-      @apply h-10 w-10;
+      @apply text-sm;
     }
   }
 }

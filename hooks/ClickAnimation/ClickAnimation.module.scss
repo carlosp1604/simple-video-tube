@@ -5,7 +5,7 @@
 
   &::before {
     @apply rounded-full absolute opacity-0 overflow-hidden
-    h-[50px] w-[50px];
+    h-[50px] w-[50px] dark:bg-[var(--effect-color-dark)];
     content: "";
     top: var(--effect-top);
     left: var(--effect-left);
@@ -16,15 +16,6 @@
 .effectContainerActive {
   &::before {
     @apply animate-click-ripple;
-  }
-}
-
-/** Dark Theme styles **/
-:global(.dark) {
-  .effectContainer {
-    &::before {
-      background: var(--effect-color-dark);
-    }
   }
 }
 

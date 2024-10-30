@@ -12,7 +12,7 @@ export class CreatePostCommentRequestDtoTranslator {
   ): CreatePostCommentApplicationRequestDto {
     return {
       postId: request.postId,
-      username: request.username,
+      userName: request.userName,
       userIp,
       comment: request.comment,
     }

@@ -14,7 +14,9 @@ import {
 import {
   HtmlPageMetaContextProps
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaContextProps'
-import { useAvatarColor } from '~/hooks/AvatarColor'
+import { BsStarFill } from 'react-icons/bs'
+import { NumberFormatter } from '~/modules/Shared/Infrastructure/FrontEnd/NumberFormatter'
+import { i18nConfig } from '~/i18n.config'
 
 export interface ActorPageProps {
   actor: ActorPageComponentDto
@@ -32,8 +34,7 @@ export const ActorPage: NextPage<ActorPageProps> = ({
   baseUrl,
 }) => {
   const { t } = useTranslation('actors')
-  const locale = useRouter().locale ?? 'en'
-  const getRandomColor = useAvatarColor()
+  const locale = useRouter().locale ?? i18nConfig.defaultLocale
 
   const structuredData = {
     '@context': 'http://schema.org',
@@ -51,18 +52,12 @@ export const ActorPage: NextPage<ActorPageProps> = ({
     }],
   }
 
-  let canonicalUrl = `${baseUrl}/actors/${actor.slug}`
-
-  if (locale !== 'en') {
-    canonicalUrl = `${baseUrl}/${locale}/actors/${actor.slug}`
-  }
-
   const htmlPageMetaUrlProps = (
     new HtmlPageMetaResourceService(
       t('actor_page_title', { actorName: actor.name }),
       t('actor_page_description', { actorName: actor.name }),
       HtmlPageMetaContextResourceType.ARTICLE,
-      canonicalUrl,
+      htmlPageMetaContextProps.canonicalUrl,
       actor.imageUrl ?? undefined
     )
   ).getProperties()
@@ -81,7 +76,10 @@ export const ActorPage: NextPage<ActorPageProps> = ({
         name={ actor.name }
         imageAlt={ t('actor_image_alt_title', { actorName: actor.name }) }
         imageUrl={ actor.imageUrl }
-        rounded={ true }
+        profileType={ t('actor_page_profile_type_title') }
+        icon={ <BsStarFill /> }
+        subtitle={ t('actor_page_profile_count_title',
+          { viewsNumber: NumberFormatter.compatFormat(actor.viewsCount, locale) }) }
       />
 
       <Actor
@@ -89,6 +87,7 @@ export const ActorPage: NextPage<ActorPageProps> = ({
         actorName={ actor.name }
         actorSlug={ actor.slug }
         initialPosts={ initialPosts }
+        actorViews={ actor.viewsCount }
         initialPostsNumber={ initialPostsNumber }
       />
     </div>

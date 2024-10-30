@@ -1,10 +1,11 @@
 import { FC, useState } from 'react'
 import styles from './AddCommentInput.module.scss'
-import { BsChatDots } from 'react-icons/bs'
-import { AutoSizableTextArea } from './AutoSizableTextArea'
+import { TextArea } from './TextArea'
 import useTranslation from 'next-translate/useTranslation'
-import { AvatarImage } from '~/components/AvatarImage/AvatarImage'
 import { useToast } from '~/components/AppToast/ToastContext'
+import { FormInputSection } from '~/components/FormInputSection/FormInputSection'
+import { NameValidator } from '~/modules/Shared/Infrastructure/FrontEnd/Validators/NameValidator'
+import { CommonButton } from '~/modules/Shared/Infrastructure/Components/CommonButton/CommonButton'
 
 interface Props {
   onAddComment: (username: string, comment: string) => void
@@ -13,7 +14,7 @@ interface Props {
 
 export const AddCommentInput: FC<Props> = ({ onAddComment, disabled }) => {
   const [comment, setComment] = useState<string>('')
-  const [username, setUsername] = useState<string>('')
+  const [userName, setUserName] = useState<string>('')
 
   const { t } = useTranslation('post_comments')
 
@@ -26,37 +27,43 @@ export const AddCommentInput: FC<Props> = ({ onAddComment, disabled }) => {
       return
     }
 
-    onAddComment(username, comment)
+    onAddComment(userName, comment)
     setComment('')
+    setUserName('')
   }
 
-  const avatar = (
-    <AvatarImage
-      imageUrl={ null }
-      avatarClassName={ styles.addCommentInput__userAvatar }
-      imageClassName={ styles.addCommentInput__userAvatar }
-      avatarName={ '' }
-      imageAlt={ '' }
-    />
-  )
+  const enableSubmitButton = () => {
+    return comment !== '' && userName !== ''
+  }
 
   return (
     <div className={ styles.addCommentInput__addCommentSection }>
-      { avatar }
-      <AutoSizableTextArea
+      <FormInputSection
+        label={ t('add_comment_name_label_title') }
+        errorLabel={ t('add_comment_name_invalid_name_message_error') }
+        type={ 'text' }
+        placeholder={ t('add_comment_name_placeholder') }
+        validator={ new NameValidator() }
+        onChange={ setUserName }
+      />
+
+      <span className={ styles.addCommentInput__addCommentLabel }>
+        { t('add_comment_comment_label_title') }
+      </span>
+
+      <TextArea
         placeHolder={ t('add_comment_placeholder') }
         comment={ comment }
         onCommentChange={ (value) => setComment(value) }
         disabled={ disabled }
+        maxLength={ 1024 }
       />
-      <button
-        className={ styles.addCommentInput__addCommentButton }
-        disabled={ disabled }
-        onClick={ () => onClickAddComment(comment) }
+
+      <CommonButton
         title={ t('add_comment_button_title') }
-      >
-        <BsChatDots className={ styles.addCommentInput__addCommentIcon }/>
-      </button>
+        disabled={ disabled || !enableSubmitButton() }
+        onClick={ () => onClickAddComment(comment) }
+      />
     </div>
   )
 }

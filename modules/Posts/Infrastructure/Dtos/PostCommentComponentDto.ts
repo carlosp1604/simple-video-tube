@@ -5,7 +5,7 @@ export interface PostCommentComponentDto {
   comment: string
   postId: string
   createdAt: string
-  username: string
+  userName: string
   repliesNumber: number
   reactionsNumber: number
   userReaction: ReactionComponentDto | null

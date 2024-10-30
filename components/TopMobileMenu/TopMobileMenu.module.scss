@@ -1,7 +1,7 @@
 .top-mobile-menu {
   &__container {
     @apply flex items-center justify-between border-t border-b
-    border-base-800 px-5 py-0.5 my-4 backdrop-blur-lg bg-body/60
+    border-base-800 px-5 py-0.5 my-4 backdrop-blur-lg bg-body-light/60
     overflow-x-scroll scrollbar-hide gap-x-1 sticky top-[52px]
     z-top-mobile;
 

@@ -1,0 +1,33 @@
+.themeSwitcher {
+  &__container {
+    @apply flex flex-row items-center justify-center
+    px-3 rounded-lg gap-0.5 py-0.5 flex-wrap;
+  }
+
+  &__themeOption {
+    @apply text-base-500 p-1 rounded-lg transition-colors;
+
+    &:hover {
+      @apply bg-brand-primary-bg text-white transition-colors
+      dark:bg-brand-primary-light dark:transition-colors;
+    }
+
+    &__active {
+      @apply bg-brand-primary-light rounded-lg text-white
+      transition-colors pointer-events-none dark:bg-brand-primary-bg
+      dark:transition-colors;
+    }
+
+    @screen lg {
+      @apply p-2;
+    }
+  }
+
+  &__themeOptionIcon {
+    @apply text-xl p-0.5;
+
+    @screen lg {
+      @apply text-2xl;
+    }
+  }
+}

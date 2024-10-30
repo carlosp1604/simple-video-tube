@@ -13,26 +13,29 @@
   }
 
   &__search-input {
-    @apply text-base-100 placeholder-base-400 bg-body
-      caret-brand-primary-bg outline-0 pr-12 w-full
-      border border-base-700 px-4 h-10 rounded-md rounded-r-none
-      border-r-0 shadow-lg shadow-base-950 transition-all;
+    @apply text-base-800 placeholder-base-500 bg-body-light
+    caret-brand-primary-bg outline-0 pr-12 w-full
+    border border-base-300 px-4 h-10 rounded-md rounded-r-none
+    border-r-0 transition-all
+    dark:bg-body-dark dark:border-base-700 dark:text-base-100
+    dark:transition-all;
 
     &:hover, &:focus {
-      @apply bg-base-950 transition-colors border-brand-primary-bg
-        outline-none;
-      box-shadow: 2px 0 5px -2px #0c0a09;
+      @apply transition-colors border-brand-primary-bg
+      outline-none shadow-md shadow-base-300
+      dark:bg-base-950 dark:transition-colors
+      dark:border-brand-primary-bg dark:shadow-none;
     }
 
     @screen md {
       @apply rounded-full rounded-r-none border-r-0
-        shadow-none transition-all;
+      shadow-none transition-all;
     }
   }
 
   &__search-input-style2 {
     @apply shadow-none rounded-md rounded-r-none border-none
-    bg-base-800;
+    bg-base-200 dark:bg-base-800 placeholder-base-500;
 
     &:hover, &:focus {
       @apply transition-colors outline-none shadow-none;
@@ -40,21 +43,34 @@
   }
 
   &__search-button {
-    @apply bg-brand-primary-bg rounded-md rounded-l-none border
-      border-brand-primary-bg h-10 w-14 flex items-center justify-center
-      text-2xl text-body outline-0 transition-colors;
+    @apply bg-brand-primary-light rounded-md rounded-l-none border
+    border-brand-primary-dark h-10 w-14 flex items-center justify-center
+    text-sm text-body-light outline-0 transition-colors
+    dark:bg-brand-primary-bg dark:rounded-md dark:rounded-l-none
+    dark:border dark:border-brand-primary-dark dark:text-body-dark
+    dark:transition-colors;
 
     &:hover, :focus {
-      @apply bg-brand-secondary-light border-brand-secondary-light
-      transition-colors;
+      @apply bg-brand-primary-dark transition-colors
+      dark:bg-brand-primary-dark dark:transition-colors;
     }
 
     &:active {
-      @apply outline-none text-base-100 transition-colors;
+      @apply outline-none text-base-800
+      dark:text-base-100;
+    }
+
+    @screen tb {
+      @apply text-base;
     }
 
     @screen md {
-      @apply rounded-full rounded-l-none transition-colors;
+      @apply rounded-full rounded-l-none text-lg
+      dark:rounded-full dark:rounded-l-none;
+    }
+
+    @screen lg {
+      @apply text-2xl;
     }
   }
 
@@ -62,7 +78,8 @@
     @apply border-none;
 
     @screen md {
-      @apply rounded-md rounded-l-none;
+      @apply rounded-md rounded-l-none
+      dark:rounded-md dark:rounded-l-none;
     }
   }
 
@@ -72,6 +89,14 @@
 
   &__clear-button {
     @apply absolute right-0.5 text-2xl text-base-100
-      top-0 -mt-1;
+    top-0 mt-0.5;
+
+    @screen md {
+      @apply mt-0;
+    }
+
+    @screen lg {
+      @apply -mt-1;
+    }
   }
 }

@@ -1,0 +1,41 @@
+.post-comments {
+  &__container {
+    @apply flex flex-col overflow-hidden w-full;
+  }
+
+  &__comments-title-bar {
+    @apply flex items-center justify-between py-0.5 border
+    border-base-300 px-4 transition-colors rounded-t-lg
+    dark:border-base-800 dark:transition-colors;
+  }
+
+  &__comments-title {
+    @apply flex gap-x-4 items-center
+    font-bold dark:text-base-400;
+  }
+
+  &__comments-quantity {
+    @apply text-brand-primary-bg font-black
+    dark:text-brand-primary-dark;
+  }
+
+  &__comments {
+    @apply flex-grow overflow-y-scroll px-5 scrollbar-hide
+    min-h-96 max-h-screen border border-t-0 border-base-300 rounded-b-lg
+    dark:border-base-800 transition-colors dark:transition-colors;
+  }
+
+  &__load-more {
+    @apply hidden text-center bg-base-300 mt-2 py-1 px-4
+    font-bold uppercase rounded-lg transition-colors mx-auto
+    dark:bg-base-700;
+
+    &:hover, &:focus {
+      @apply bg-brand-primary-dark transition-colors;
+    }
+
+    &__visible {
+      @apply flex;
+    }
+  }
+}

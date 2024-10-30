@@ -11,7 +11,7 @@ export class PostComment extends ReactionableModel {
   public comment: string
   public readonly postId: string
   public readonly userIp: string
-  public readonly username: string
+  public readonly userName: string
   public readonly createdAt: DateTime
   public updatedAt: DateTime
   public deletedAt: DateTime | null
@@ -24,7 +24,7 @@ export class PostComment extends ReactionableModel {
     comment: string,
     postId: string,
     userIp: string,
-    username: string,
+    userName: string,
     createdAt: DateTime,
     updatedAt: DateTime,
     deletedAt: DateTime | null,
@@ -35,7 +35,7 @@ export class PostComment extends ReactionableModel {
     this.id = id
     this.comment = comment
     this.userIp = userIp
-    this.username = username
+    this.userName = userName
     this.postId = postId
     this.createdAt = createdAt
     this.updatedAt = updatedAt

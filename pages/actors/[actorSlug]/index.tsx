@@ -15,11 +15,12 @@ import { ActorPage, ActorPageProps } from '~/components/pages/ActorPage/ActorPag
 import {
   HtmlPageMetaContextService
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaContextService'
-import { Settings } from 'luxon'
 import { FilterOptions } from '~/modules/Shared/Infrastructure/FrontEnd/FilterOptions'
+import { i18nConfig } from '~/i18n.config'
 
 export const getServerSideProps: GetServerSideProps<ActorPageProps> = async (context) => {
   const actorSlug = context.query.actorSlug
+  const locale = context.locale ?? i18nConfig.defaultLocale
 
   if (!actorSlug) {
     return {
@@ -27,12 +28,20 @@ export const getServerSideProps: GetServerSideProps<ActorPageProps> = async (con
     }
   }
 
-  const locale = context.locale ?? 'en'
+  if (Object.entries(context.query).length > 1) {
+    return {
+      redirect: {
+        destination: `/${locale}/actors/${actorSlug}`,
+        permanent: false,
+      },
+    }
+  }
 
-  Settings.defaultLocale = locale
-  Settings.defaultZone = 'Europe/Madrid'
-
-  const htmlPageMetaContextService = new HtmlPageMetaContextService(context)
+  const htmlPageMetaContextService = new HtmlPageMetaContextService(
+    context,
+    { includeQuery: false, includeLocale: true },
+    { index: true, follow: true }
+  )
 
   const { env } = process
   let baseUrl = ''
@@ -55,6 +64,7 @@ export const getServerSideProps: GetServerSideProps<ActorPageProps> = async (con
       name: '',
       imageUrl: '',
       id: '',
+      viewsCount: 0,
     },
     initialPosts: [],
     initialPostsNumber: 0,

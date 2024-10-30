@@ -1,0 +1,48 @@
+.dropdownMenu {
+  &__container {
+    @apply relative z-menu-dropdown;
+  }
+
+  &__button {
+    @apply flex flex-row gap-x-2 items-center justify-between border
+    border-base-200 px-2.5 py-1 rounded-lg leading-relaxed bg-body-light
+    shadow-md shadow-transparent transition-colors
+    dark:border-base-800 dark:bg-body-dark dark:transition-colors;
+
+    &:hover {
+      @apply shadow-base-200 transition-colors
+      dark:shadow-transparent dark:border-base-700
+      dark:transition-colors;
+    }
+  }
+
+  &__dropdownMenuContainer {
+    @apply hidden absolute mt-1 left-[var(--left-side)]
+    right-[var(--right-side)] p-2.5 border border-base-200
+    rounded-md bg-body-light whitespace-nowrap
+    dark:border-base-900 dark:bg-body-dark;
+
+    &__open {
+      @apply block;
+    }
+  }
+}
+
+.dropdownButton {
+  @apply flex flex-row gap-x-2 items-center justify-between border
+  border-base-200 px-2.5 py-1 rounded-lg leading-relaxed bg-body-light
+  shadow-md shadow-transparent transition-colors;
+
+  &:hover {
+    @apply shadow-base-200 transition-colors;
+  }
+}
+
+.dropdownMenuContainer {
+  @apply hidden absolute mt-1 left-[var(--left-side)] right-[var(--right-side)]
+  p-2.5 border border-base-200 rounded-md bg-body-light;
+
+  &__open {
+    @apply block;
+  }
+}

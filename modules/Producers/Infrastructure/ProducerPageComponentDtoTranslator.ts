@@ -9,6 +9,7 @@ export class ProducerPageComponentDtoTranslator {
       imageUrl: applicationDto.imageUrl,
       name: applicationDto.name,
       description: applicationDto.description,
+      viewsNumber: applicationDto.viewsCount,
     }
   }
 }

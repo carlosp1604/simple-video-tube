@@ -1,11 +1,12 @@
 .cam-card {
   &__container {
-    @apply relative overflow-hidden;
+    @apply relative overflow-hidden cursor-default;
   }
 
   &__media-wrapper {
     @apply aspect-w-16 aspect-h-9 rounded-md
-    overflow-hidden bg-base-950 mb-1;
+    overflow-hidden bg-base-300 mb-1
+    dark:bg-base-800;
 
     &:hover {
       @apply cursor-pointer;
@@ -17,41 +18,29 @@
   }
 
   &__live-section {
-    @apply absolute top-1 left-2 text-xs font-bold cursor-default;
+    @apply absolute top-1 left-2 text-xs font-bold
+    pointer-events-none;
   }
 
   &__live-users-viewers {
-    @apply flex gap-x-1 -mt-0.5 items-center cursor-default;
+    @apply flex gap-x-1 -mt-0.5 items-center;
   }
 
   &__live-icon {
-    @apply p-0.5 rounded-full text-lg cursor-default;
+    @apply p-0.5 rounded-full text-lg;
   }
 
   &__live-time {
-    @apply hidden;
+    @apply hidden pointer-events-none;
 
     &__visible {
-      @apply block absolute top-9 left-2 text-xs font-bold bg-red h-fit w-fit
-      p-0.5 rounded-lg cursor-default;
-    }
-  }
-
-  &__play-button {
-    @apply absolute top-2 right-2 h-fit w-fit p-2 rounded-full
-    backdrop-blur bg-brand-primary-bg/50 text-base-50;
-
-    &__hidden {
-      @apply hidden;
-    }
-
-    @screen md {
-      @apply hidden;
+      @apply block absolute top-9 left-2 text-xs font-bold
+      text-white bg-red h-fit w-fit p-0.5 rounded-lg;
     }
   }
 
   &__title {
-    @apply flex flex-col text-sm font-normal cursor-default;
+    @apply flex flex-col font-normal;
   }
 
   &__username {
@@ -59,7 +48,7 @@
   }
 
   &__description {
-    @apply text-xs text-base-300 line-clamp-2;
+    @apply text-base-500 line-clamp-2;
   }
 
   &__title-link {

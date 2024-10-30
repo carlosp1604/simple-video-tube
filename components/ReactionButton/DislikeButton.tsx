@@ -1,22 +1,26 @@
 import { FC, ReactElement, useEffect, useState } from 'react'
-import styles from './DislikeButton.module.scss'
+import styles from './ReactionButton.module.scss'
 import useTranslation from 'next-translate/useTranslation'
-import { BiDislike, BiSolidDislike } from 'react-icons/bi'
-import { AiOutlineLoading } from 'react-icons/ai'
-import { Tooltip2 } from '~/components/Tooltip2/Tooltip'
+import { AiOutlineDislike, AiOutlineLoading, AiTwotoneDislike } from 'react-icons/ai'
 import { useToast } from '~/components/AppToast/ToastContext'
 import { nanoid } from 'nanoid'
+import { Tooltip } from '~/components/Tooltip/Tooltip'
+import { NumberFormatter } from '~/modules/Shared/Infrastructure/FrontEnd/NumberFormatter'
+import { useRouter } from 'next/router'
+import { i18nConfig } from '~/i18n.config'
 
 interface Props {
   disliked: boolean
   onDislike: () => Promise<void>
   onDeleteDislike: () => Promise<void>
+  reactionsNumber: number
   disabled: boolean
 }
 
-export const DislikeButton: FC<Props> = ({ disliked, onDislike, onDeleteDislike, disabled }) => {
+export const DislikeButton: FC<Props> = ({ disliked, onDislike, onDeleteDislike, disabled, reactionsNumber }) => {
   const { t } = useTranslation('common')
   const { error } = useToast()
+  const locale = useRouter().locale ?? i18nConfig.defaultLocale
 
   const [mounted, setMounted] = useState<boolean>(false)
   const [tooltipId, setTooltipId] = useState<string>('')
@@ -49,22 +53,22 @@ export const DislikeButton: FC<Props> = ({ disliked, onDislike, onDeleteDislike,
 
   if (!loading) {
     if (disliked) {
-      iconElement = (<BiSolidDislike className={ styles.dislikeButton__dislikeIcon } />)
+      iconElement = (<AiTwotoneDislike className={ styles.reactionButton__dislikeIcon } />)
     } else {
-      iconElement = (<BiDislike className={ styles.dislikeButton__dislikeIcon } />)
+      iconElement = (<AiOutlineDislike className={ styles.reactionButton__dislikeIcon } />)
     }
   } else {
-    iconElement = (<AiOutlineLoading className={ styles.dislikeButton__loadingIcon } />)
+    iconElement = (<AiOutlineLoading className={ styles.reactionButton__loadingIcon } />)
   }
 
   return (
     <div className={ `
-      ${styles.dislikeButton__container}
-      ${disabled ? styles.dislikeButton__container_disabled : ''}
+      ${styles.reactionButton__container}
+      ${disabled ? styles.reactionButton__container_disabled : ''}
     ` }>
       <button className={ `
-        ${styles.dislikeButton__dislikeButton}
-        ${disliked ? styles.dislikeButton__dislikeButton_active : ''}
+        ${styles.reactionButton__reactionButton}
+        ${disliked ? styles.reactionButton__dislikeButtonActive : ''}
       ` }
         disabled={ disabled }
         onClick={ onClickButton }
@@ -73,12 +77,13 @@ export const DislikeButton: FC<Props> = ({ disliked, onDislike, onDeleteDislike,
         { iconElement }
       </button>
       { mounted && !disabled && !loading &&
-        <Tooltip2
+        <Tooltip
           tooltipId={ tooltipId }
           place={ 'bottom' }
           content={ disliked ? t('dislike_reaction_active_title_button') : t('dislike_reaction_title_button') }
         />
       }
+      { NumberFormatter.compatFormat(reactionsNumber, locale) }
     </div>
   )
 }

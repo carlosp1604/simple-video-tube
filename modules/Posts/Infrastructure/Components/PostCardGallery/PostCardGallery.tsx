@@ -33,7 +33,6 @@ export const PostCardGallery: FC<Partial<Props> & Pick<Props, 'posts'>> = ({
       .map((index) => (
         <PostCardSkeleton
           key={ index }
-          showProducerImage={ true }
           loading={ loading }
         />
       ))

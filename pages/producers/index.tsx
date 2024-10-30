@@ -12,15 +12,12 @@ import {
 import {
   HtmlPageMetaContextService
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaContextService'
-import { Settings } from 'luxon'
 import { ProducerQueryParamsParser } from '~/modules/Producers/Infrastructure/Frontend/ProducerQueryParamsParser'
 import { FilterOptions } from '~/modules/Shared/Infrastructure/FrontEnd/FilterOptions'
+import { i18nConfig } from '~/i18n.config'
 
 export const getServerSideProps: GetServerSideProps<ProducersPageProps> = async (context) => {
-  const locale = context.locale ?? 'en'
-
-  Settings.defaultLocale = locale
-  Settings.defaultZone = 'Europe/Madrid'
+  const locale = context.locale ?? i18nConfig.defaultLocale
 
   const paginationQueryParams = new ProducerQueryParamsParser(
     context.query,
@@ -34,8 +31,6 @@ export const getServerSideProps: GetServerSideProps<ProducersPageProps> = async 
           PaginationSortingType.POPULARITY,
           PaginationSortingType.NAME_FIRST,
           PaginationSortingType.NAME_LAST,
-          // PaginationSortingType.MORE_POSTS,
-          // PaginationSortingType.LESS_POSTS,
         ],
       },
       page: { defaultValue: 1, minValue: 1, maxValue: Infinity },
@@ -53,22 +48,17 @@ export const getServerSideProps: GetServerSideProps<ProducersPageProps> = async 
     }
   }
 
-  const { env } = process
-  let baseUrl = ''
-
-  if (!env.BASE_URL) {
-    throw Error('Missing env var: BASE_URL. Required in the producers page')
-  } else {
-    baseUrl = env.BASE_URL
-  }
-
   // Experimental: Try yo improve performance
   context.res.setHeader(
     'Cache-Control',
-    'public, s-maxage=60, stale-while-revalidate=300'
+    'public, s-maxage=50, stale-while-revalidate=10'
   )
 
-  const htmlPageMetaContextService = new HtmlPageMetaContextService(context)
+  const htmlPageMetaContextService = new HtmlPageMetaContextService(
+    context,
+    { includeQuery: false, includeLocale: true },
+    { index: true, follow: true }
+  )
 
   const props: ProducersPageProps = {
     initialSearchTerm: '',
@@ -77,7 +67,6 @@ export const getServerSideProps: GetServerSideProps<ProducersPageProps> = async 
     initialOrder: paginationQueryParams.sortingOptionType ?? PaginationSortingType.NAME_FIRST,
     initialPage: paginationQueryParams.page ?? 1,
     htmlPageMetaContextProps: htmlPageMetaContextService.getProperties(),
-    baseUrl,
   }
 
   const getProducers = container.resolve<GetProducers>('getProducersUseCase')

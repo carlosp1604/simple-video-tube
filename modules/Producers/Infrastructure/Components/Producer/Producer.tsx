@@ -13,6 +13,7 @@ import {
 } from '~/modules/Shared/Infrastructure/Components/PaginatedPostCardGallery/PaginatedPostCardGallery'
 import { NumberFormatter } from '~/modules/Shared/Infrastructure/FrontEnd/NumberFormatter'
 import { FilterOptions } from '~/modules/Shared/Infrastructure/FrontEnd/FilterOptions'
+import { i18nConfig } from '~/i18n.config'
 
 export interface Props {
   initialPage: number
@@ -32,7 +33,7 @@ export const Producer: FC<Props> = ({
   const [postsNumber, setPostsNumber] = useState<number>(initialPostsNumber)
 
   const router = useRouter()
-  const locale = router.locale ?? 'en'
+  const locale = router.locale ?? i18nConfig.defaultLocale
 
   const { t } = useTranslation('producers')
 
@@ -49,11 +50,10 @@ export const Producer: FC<Props> = ({
   }
 
   useEffect(() => {
-    try {
-      (new ProducersApiService()).addProducerView(producer.id)
-    } catch (exception: unknown) {
-      console.error(exception)
-    }
+    (new ProducersApiService()).addProducerView(producer.id)
+      .then()
+      .catch((exception) => console.error(exception))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const emptyState = (
@@ -64,27 +64,25 @@ export const Producer: FC<Props> = ({
   )
 
   return (
-    <>
-      <PaginatedPostCardGallery
-        key={ locale }
-        title={ 'producers:producer_posts_gallery_title' }
-        subtitle={ t('producer_posts_gallery_posts_quantity',
-          { postsNumber: NumberFormatter.compatFormat(postsNumber, locale) }) }
-        term={ { title: 'producerName', value: producer.name } }
-        headerTag={ 'h2' }
-        page={ initialPage }
-        order={ initialOrder }
-        initialPosts={ initialPosts }
-        initialPostsNumber={ initialPostsNumber }
-        filters={ [{ type: FilterOptions.PRODUCER_SLUG, value: producer.slug }] }
-        filtersToParse={ [FilterOptions.PRODUCER_SLUG] }
-        linkMode={ linkMode }
-        sortingOptions={ sortingOptions }
-        defaultSortingOption={ PaginationSortingType.LATEST }
-        onPostsFetched={ (postsNumber, _posts) => setPostsNumber(postsNumber) }
-        emptyState={ emptyState }
-        onPaginationStateChanges={ undefined }
-      />
-    </>
+    <PaginatedPostCardGallery
+      key={ locale }
+      title={ 'producers:producer_posts_gallery_title' }
+      subtitle={ t('producer_posts_gallery_posts_quantity',
+        { postsNumber: NumberFormatter.compatFormat(postsNumber, locale) }) }
+      term={ { title: 'producerName', value: producer.name } }
+      headerTag={ 'h2' }
+      page={ initialPage }
+      order={ initialOrder }
+      initialPosts={ initialPosts }
+      initialPostsNumber={ initialPostsNumber }
+      filters={ [{ type: FilterOptions.PRODUCER_SLUG, value: producer.slug }] }
+      filtersToParse={ [FilterOptions.PRODUCER_SLUG] }
+      linkMode={ linkMode }
+      sortingOptions={ sortingOptions }
+      defaultSortingOption={ PaginationSortingType.LATEST }
+      onPostsFetched={ (postsNumber, _posts) => setPostsNumber(postsNumber) }
+      emptyState={ emptyState }
+      onPaginationStateChanges={ undefined }
+    />
   )
 }

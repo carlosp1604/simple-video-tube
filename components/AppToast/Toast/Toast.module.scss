@@ -1,7 +1,8 @@
 .toast {
   &__container {
-    @apply grid px-5 max-w-sm bg-toast-bg rounded-lg py-2.5
-    gap-x-4 items-center cursor-default shadow-lg shadow-body leading-snug;
+    @apply grid px-5 bg-toast-bg rounded-lg py-2.5 gap-x-4
+    items-center cursor-default shadow-lg shadow-body-dark/50
+    leading-snug text-base-50 max-w-md w-fit mx-auto dark:shadow-body-dark;
     grid-template-areas: "icon  content   close-button";
     grid-auto-columns: auto auto 1fr;
 
@@ -33,11 +34,11 @@
 
   &__closeButton {
     @apply -mt-1 -mr-3 self-start p-2 rounded-full
-    bg-body/10 transition-colors text-base-300;
+    bg-body-light/10 transition-colors text-base-300;
     grid-area: close-button;
 
     &:hover {
-      @apply bg-body/40 text-white transition-colors;
+      @apply bg-body-light/40 text-white transition-colors;
     }
   }
 

@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, ReactElement } from 'react'
 import styles from './CommonButton.module.scss'
 
 type CommonButtonCallback = () => void
@@ -9,7 +9,11 @@ export interface Props {
   onClick: CommonButtonCallback
 }
 
-export const CommonButton: FC<Props> = ({ title, disabled, onClick }) => {
+export interface OptionalProps {
+  icon: ReactElement
+}
+
+export const CommonButton: FC<Props & Partial<OptionalProps>> = ({ title, disabled, onClick, icon = undefined }) => {
   return (
     <button
       className={ styles.commonButton__container }
@@ -17,6 +21,7 @@ export const CommonButton: FC<Props> = ({ title, disabled, onClick }) => {
       disabled={ disabled }
       onClick={ onClick }
     >
+      { icon }
       { title }
     </button>
   )

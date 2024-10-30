@@ -4,7 +4,8 @@
   }
 
   &__input-label {
-    @apply text-xs font-semibold text-base-300;
+    @apply text-xs font-semibold text-black
+    dark:text-base-300;
 
     @screen md {
       @apply text-sm;
@@ -12,8 +13,8 @@
   }
 
   &__input-error-message {
-    @apply text-xs font-light text-red opacity-0 -translate-y-1 transition
-      duration-300;
+    @apply text-xs font-normal text-red opacity-0 -translate-y-1 transition
+    duration-300;
 
     &_visible {
       @apply opacity-100 transition translate-y-0 duration-300;
@@ -25,19 +26,22 @@
   }
 
   &__input-element {
-    @apply bg-body p-1.5 rounded-lg outline-0
-      transition-colors;
+    @apply bg-body-light p-1.5 rounded-lg outline-none border
+    border-base-300 placeholder-base-500 transition-colors
+    dark:placeholder-base-400 dark:bg-body-dark dark:border-base-800
+    dark:transition-colors;
 
     &:hover, &:focus {
-      @apply bg-base-950 shadow shadow-2xl shadow-base-950
-        caret-brand-primary-bg outline-none;
+      @apply border-brand-primary-light caret-brand-primary-bg
+      dark:bg-base-950 dark:border-brand-primary-bg transition-colors
+      dark:caret-brand-primary-bg dark:transition-colors;
     }
 
     &_error {
-      @apply border-red transition-colors duration-300;
+      @apply border-red dark:border-red;
 
-      &:focus {
-        @apply border-red transition-colors duration-300;
+      &:hover, &:focus {
+        @apply border-red dark:border-red;
       }
     }
   }

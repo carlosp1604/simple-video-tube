@@ -3,8 +3,8 @@
   "games_advertising_title": "Porn games",
   "ia_advertising_title": "Nude IA",
   "language_menu_already_on_language_error_message": "The application is already in this language",
-  "language_menu_english_option_title": "English",
-  "language_menu_spanish_option_title": "Spanish",
+  "language_menu_en_option_title": "English",
+  "language_menu_es_option_title": "Spanish",
   "language_menu_subtitle": "Choose the language in which you want the application to be displayed",
   "language_menu_title": "Application Language",
   "live_cams_advertising_title": "Live cams",
@@ -19,12 +19,11 @@
   "menu_reacted_button_title": "Reacted",
   "menu_saved_button_title": "Saved",
   "menu_stars_button_title": "Stars",
-  "menu_tags_button_title": "Tags",
+  "menu_categories_button_title": "Categories",
+  "menu_theme_button_title": "Theme",
   "menu_trending_button_title": "Trending",
   "menu_user_history_button_title": "History",
   "the_porn_dude_link_title": "ThePornDude",
   "user_already_on_path": "You are here already",
-  "user_menu_option_not_available_message": "This feature will be available soon. Stay tuned!",
-  "user_menu_profile_button": "My Profile",
-  "user_must_be_authenticated_error_message": "Sign in to access this feature"
+  "user_menu_profile_button": "My Profile"
 }

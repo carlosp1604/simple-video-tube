@@ -1,6 +1,5 @@
 import { NextPage } from 'next'
 import { PostCardComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostCardComponentDto'
-import { ProducerComponentDto } from '~/modules/Producers/Infrastructure/Dtos/ProducerComponentDto'
 import useTranslation from 'next-translate/useTranslation'
 import { PostsPaginationSortingType } from '~/modules/Posts/Infrastructure/Frontend/PostsPaginationSortingType'
 import {
@@ -14,21 +13,20 @@ import {
 import { HtmlPageMeta } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMeta'
 import { MobileBanner } from '~/modules/Shared/Infrastructure/Components/ExoclickBanner/MobileBanner'
 import { useRouter } from 'next/router'
+import { i18nConfig } from '~/i18n.config'
 
 export interface Props {
   page: number
   order: PostsPaginationSortingType
   initialPosts: PostCardComponentDto[]
   initialPostsNumber: number
-  producers: ProducerComponentDto[]
-  activeProducer: ProducerComponentDto | null
   htmlPageMetaContextProps: HtmlPageMetaContextProps
   baseUrl: string
 }
 
 export const HomePage: NextPage<Props> = (props: Props) => {
   const { t } = useTranslation('home_page')
-  const locale = useRouter().locale ?? 'en'
+  const locale = useRouter().locale ?? i18nConfig.defaultLocale
 
   const structuredData = {
     '@context': 'http://schema.org',
@@ -74,8 +72,6 @@ export const HomePage: NextPage<Props> = (props: Props) => {
 
       <Home
         page={ props.page }
-        activeProducer={ props.activeProducer }
-        producers={ props.producers }
         initialPosts={ props.initialPosts }
         initialPostsNumber={ props.initialPostsNumber }
         order={ props.order }

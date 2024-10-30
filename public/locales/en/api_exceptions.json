@@ -11,6 +11,8 @@
   "delete_post_comment_post_comment_cannot_be_deleted_error_message": "It is not possible to delete the comment/reply. Please try again later",
   "delete_post_comment_post_comment_not_found_error_message": "The comment or reply you are trying to delete was not found",
   "delete_post_comment_post_not_found_error_message": "The post related to the comment you are trying to delete does not exist. It is not possible to delete a comment from a post that does not exist",
+  "invalid_name_error_message": "Invalid name",
+  "invalid_email_error_message": "Invalid email",
   "post_not_found_error_message": "Post not found",
   "post_reaction_does_not_exist_error_message": "User have not yet reacted to this post",
   "post_save_cannot_remove_saved_post_error_message": "Post cannot be removed from saved post user's list",
@@ -20,7 +22,6 @@
   "server_error_error_message": "Service not available. Try later",
   "something_went_wrong_error_message": "Something went wrong while trying to perform the operation. Try later",
   "user_already_reacted_to_post_error_message": "User have already reacted to this post",
-  "user_forbidden_resource_error_message": "The user does not have access to the resource",
-  "user_must_be_authenticated_error_message": "You must sign in to perform this action",
-  "user_not_found_error_message": "The user who made the request does not exist. Logging out"
+  "user_already_reported_post_error_message": "User have already reported this post",
+  "user_forbidden_resource_error_message": "The user does not have access to the resource"
 }

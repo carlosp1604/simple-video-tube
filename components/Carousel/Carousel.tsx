@@ -20,7 +20,7 @@ export const Carousel: FC<Props> = ({ children, itemsAutoWidth, onEndReached }) 
   const [showScrollButtons, setShowScrollButtons] = useState(false)
   const scrollElement = createRef<HTMLDivElement>()
 
-  const { t } = useTranslation('carousel')
+  const { t } = useTranslation('common')
 
   const checkIfEndIsReached = () => {
     if (scrollElement.current) {
@@ -42,13 +42,13 @@ export const Carousel: FC<Props> = ({ children, itemsAutoWidth, onEndReached }) 
 
   const handleScrollXRightClick = () => {
     if (scrollElement.current) {
-      scrollElement.current.scrollLeft += (scrollElement.current.offsetWidth - 170)
+      scrollElement.current.scrollLeft += (scrollElement.current.offsetWidth - 20)
     }
   }
 
   const handleScrollXLeftClick = () => {
     if (scrollElement.current) {
-      scrollElement.current.scrollLeft -= (scrollElement.current.offsetWidth - 170)
+      scrollElement.current.scrollLeft -= (scrollElement.current.offsetWidth - 20)
     }
   }
 

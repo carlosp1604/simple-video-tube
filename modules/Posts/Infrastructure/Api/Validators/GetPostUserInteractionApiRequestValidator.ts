@@ -9,7 +9,6 @@ import {
 export class GetPostUserInteractionApiRequestValidator {
   private static getPostUserInteractionApiRequestSchema = z.object({
     postId: z.string().uuid(),
-    userId: z.string().uuid(),
   })
 
   public static validate (request: GetPostUserInteractionApiRequestDto): PostsApiRequestValidatorError | void {

@@ -114,7 +114,7 @@ async function handleGET (request: NextApiRequest, response: NextApiResponse) {
 async function handlePOST (request: NextApiRequest, response: NextApiResponse) {
   const { postId } = request.query
   const comment = request.body.comment
-  const username = request.body.username
+  const userName = request.body.userName
 
   const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
 
@@ -127,7 +127,7 @@ async function handlePOST (request: NextApiRequest, response: NextApiResponse) {
   try {
     apiRequest = CreatePostCommentRequestSanitizer.sanitize({
       comment,
-      username,
+      userName,
       postId: String(postId),
     })
   } catch (exception: unknown) {

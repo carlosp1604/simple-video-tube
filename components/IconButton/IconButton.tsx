@@ -1,7 +1,9 @@
-import { FC, ReactElement, useEffect, useState } from 'react'
+import { FC, ReactElement, Ref, useEffect, useRef, useState } from 'react'
 import styles from './IconButton.module.scss'
-import { Tooltip2 } from '~/components/Tooltip2/Tooltip'
 import { nanoid } from 'nanoid'
+import { Tooltip } from '~/components/Tooltip/Tooltip'
+import { useClickAnimation } from '~/hooks/ClickAnimation/ClickAnimation'
+import TailwindConfig from '~/tailwind.config'
 
 interface Props {
   onClick: (() => void) | undefined
@@ -20,6 +22,14 @@ export const IconButton: FC<Partial<Props> & Pick<Props, 'onClick' | 'icon' | 't
 }) => {
   const [mounted, setMounted] = useState<boolean>(false)
   const [tooltipId, setTooltipId] = useState<string>('')
+  const ref: Ref<HTMLButtonElement> = useRef(null)
+
+  useClickAnimation(ref, {
+    color: {
+      dark: TailwindConfig.theme.extend.colors.base['500'],
+      light: TailwindConfig.theme.extend.colors.base['500'],
+    },
+  })
 
   useEffect(() => {
     setMounted(true)
@@ -28,6 +38,7 @@ export const IconButton: FC<Partial<Props> & Pick<Props, 'onClick' | 'icon' | 't
 
   return (
     <button
+      ref={ ref }
       className={ styles.iconButton__button }
       onClick={ () => {
         if (onClick !== undefined && !disabled) {
@@ -37,14 +48,14 @@ export const IconButton: FC<Partial<Props> & Pick<Props, 'onClick' | 'icon' | 't
       title={ title }
       disabled={ disabled }
       data-tooltip-id={ tooltipId }
-      data-tooltip-content={ title }
     >
       { icon }
       { showTooltip && mounted
-        ? <Tooltip2
+        ? <Tooltip
             tooltipId={ tooltipId }
-            place={ 'top' }
+            place={ 'bottom' }
             content={ title }
+            padding={ 5 }
           />
         : null
       }

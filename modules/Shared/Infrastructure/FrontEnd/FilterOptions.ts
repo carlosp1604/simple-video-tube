@@ -3,7 +3,7 @@ export enum FilterOptions {
   SEARCH = 'search',
   PRODUCER_SLUG = 'producerSlug',
   ACTOR_SLUG = 'actorSlug',
-  TAG_SLUG = 'tagSlug',
+  CATEGORY_SLUG = 'categorySlug',
   PRODUCER_NAME = 'producerName',
   ACTOR_NAME = 'actorName',
   TAG_NAME = 'tagName',

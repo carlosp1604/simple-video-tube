@@ -11,7 +11,7 @@ export class CreatePostChildCommentApiRequestValidator {
       .trim()
       .min(1, { message: 'Comment cannot be empty' }),
     postId: z.string({}).uuid(),
-    username: z.string().min(1),
+    userName: z.string().min(1),
     parentCommentId: z.string().uuid(),
   })
 

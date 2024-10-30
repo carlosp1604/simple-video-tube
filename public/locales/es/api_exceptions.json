@@ -11,6 +11,8 @@
   "delete_post_comment_post_comment_cannot_be_deleted_error_message": "No es posible eliminar el comentario/respuesta. Inténtelo más tarde nuevamente",
   "delete_post_comment_post_comment_not_found_error_message": "El comentario o respuesta que intentas eliminar no fue encontrado",
   "delete_post_comment_post_not_found_error_message": "El post relacionado al comentario que intentas eliminar no existe. No es posible eliminar un comentario de un post que no existe",
+  "invalid_name_error_message": "El nombre no es válido",
+  "invalid_email_error_message": "El email no es válido",
   "post_not_found_error_message": "El post no fue encontrado",
   "post_reaction_does_not_exist_error_message": "El usuario todavía no ha reaccionado al post",
   "post_save_cannot_remove_saved_post_error_message": "No se puede eliminar el post de la lista de posts guardados del usuario",
@@ -20,7 +22,6 @@
   "server_error_error_message": "Servicio no disponible. Inténtalo después",
   "something_went_wrong_error_message": "Algo salió mal al intentar realizar la operación. Inténtalo después",
   "user_already_reacted_to_post_error_message": "El usuario ya ha reaccionado a este post",
-  "user_forbidden_resource_error_message": "El usuario no tiene acceso al recurso",
-  "user_must_be_authenticated_error_message": "Para realizar esta acción necesitas iniciar sesión",
-  "user_not_found_error_message": "El usuario que hizo la petición no existe. Cerrando sesión"
+  "user_already_reported_post_error_message": "El usuario ya ha reportado este post",
+  "user_forbidden_resource_error_message": "El usuario no tiene acceso al recurso"
 }

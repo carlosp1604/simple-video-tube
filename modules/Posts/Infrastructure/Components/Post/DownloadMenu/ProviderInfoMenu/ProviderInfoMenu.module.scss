@@ -1,0 +1,34 @@
+.providerInfoMenu {
+  &__container {
+    @apply flex flex-col gap-y-2 px-5 pb-5;
+  }
+
+  &__refButton {
+    @apply p-1 px-4 text-center bg-brand-primary-light
+    text-white outline-none rounded-lg;
+
+    &:hover {
+      @apply bg-brand-primary-bg text-white dark:text-white;
+    }
+  }
+
+  &__title {
+    @apply font-bold text-center pb-2;
+  }
+
+  &__dataContainer {
+    @apply grid gap-0.5 rounded-lg overflow-hidden;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  &__itemContainer {
+    @apply flex flex-col bg-base-300 font-bold
+    text-base-500 py-1 px-2
+    dark:bg-base-700 dark:text-base-400;
+  }
+
+  &__itemValue {
+    @apply font-bold text-black dark:text-white;
+  }
+
+}

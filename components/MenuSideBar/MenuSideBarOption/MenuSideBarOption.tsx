@@ -1,11 +1,10 @@
 import { MenuOptionComponentInterface } from '~/components/MenuOptions/MenuOptions'
-import { FC, ReactElement, useEffect, useRef, useState } from 'react'
+import { FC, ReactElement, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import Link from 'next/link'
 import styles from './MenuSideBarOption.module.scss'
-import { Tooltip2 } from '~/components/Tooltip2/Tooltip'
-import { useClickAnimation } from '~/hooks/ClickAnimation/ClickAnimation'
 import { nanoid } from 'nanoid'
+import { Tooltip } from '~/components/Tooltip/Tooltip'
 
 interface Props {
   menuOption: MenuOptionComponentInterface
@@ -15,15 +14,10 @@ interface Props {
 export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
   const [mounted, setMounted] = useState<boolean>(false)
   const [tooltipId, setTooltipId] = useState<string>('')
-  const linkRef = useRef<HTMLAnchorElement>(null)
-  const divRef = useRef<HTMLDivElement>(null)
 
   const buildPortal = (component: ReactElement) => {
     return ReactDOM.createPortal(component, document.getElementById('tooltip-container') as HTMLElement)
   }
-
-  useClickAnimation(linkRef)
-  useClickAnimation(divRef)
 
   useEffect(() => {
     setMounted(true)
@@ -41,10 +35,9 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
         ` }
         target={ menuOption.action.blank ? '_blank' : '_self' }
         data-tooltip-id={ tooltipId }
-        ref={ linkRef }
       >
         { !menuOpen && mounted
-          ? buildPortal(<Tooltip2
+          ? buildPortal(<Tooltip
             tooltipId={ tooltipId }
             place={ 'right' }
             content={ menuOption.title }
@@ -52,14 +45,14 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
           : null
         }
         <span className={ styles.menuSidebarOption__menuItemIcon }>
-        { menuOption.picture }
-      </span>
+          { menuOption.picture }
+        </span>
         <span className={ `
-        ${styles.menuSidebarOption__menuItemText}
-        ${menuOpen ? styles.menuSidebarOption__menuItemText__open : ''}
-      ` }>
-        { menuOption.title }
-      </span>
+          ${styles.menuSidebarOption__menuItemText}
+          ${menuOpen ? styles.menuSidebarOption__menuItemText__open : ''}
+        ` }>
+          { menuOption.title }
+        </span>
       </Link>
     )
   }
@@ -74,10 +67,9 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
       ` }
         onClick={ menuOption.onClick }
         data-tooltip-id={ tooltipId }
-        ref={ divRef }
       >
         { mounted && !menuOpen
-          ? buildPortal(<Tooltip2
+          ? buildPortal(<Tooltip
             tooltipId={ tooltipId }
             place={ 'right' }
             content={ menuOption.title }
@@ -85,14 +77,14 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
           : null
         }
         <span className={ styles.menuSidebarOption__menuItemIcon }>
-        { menuOption.picture }
-      </span>
+          { menuOption.picture }
+        </span>
         <span className={ `
-        ${styles.menuSidebarOption__menuItemText}
-        ${menuOpen ? styles.menuSidebarOption__menuItemText__open : ''}
-      ` }>
-        { menuOption.title }
-      </span>
+          ${styles.menuSidebarOption__menuItemText}
+          ${menuOpen ? styles.menuSidebarOption__menuItemText__open : ''}
+        ` }>
+          { menuOption.title }
+        </span>
       </div>
     )
   }

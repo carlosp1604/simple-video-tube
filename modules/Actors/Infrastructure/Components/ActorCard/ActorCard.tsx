@@ -6,6 +6,7 @@ import { FC } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { NumberFormatter } from '~/modules/Shared/Infrastructure/FrontEnd/NumberFormatter'
 import { useRouter } from 'next/router'
+import { i18nConfig } from '~/i18n.config'
 
 export interface Props {
   actor: ActorCardDto
@@ -14,12 +15,15 @@ export interface Props {
 export const ActorCard: FC<Props> = ({ actor }) => {
   const { t } = useTranslation('actors')
 
-  const locale = useRouter().locale ?? 'en'
+  const locale = useRouter().locale ?? i18nConfig.defaultLocale
 
   return (
     <div className={ styles.actorCard__container }>
       <div className={ styles.actorCard__imageWrapper }>
-        <Link href={ `/actors/${actor.slug}` }>
+        <Link
+          href={ `/actors/${actor.slug}` }
+          title={ actor.name }
+        >
           <AvatarImage
             imageUrl={ actor.imageUrl }
             avatarClassName={ styles.actorCard__actorAvatar }
@@ -34,6 +38,7 @@ export const ActorCard: FC<Props> = ({ actor }) => {
         <Link
           className={ styles.actorCard__actorName }
           href={ `/actors/${actor.slug}` }
+          title={ actor.name }
         >
           { actor.name }
         </Link>
@@ -46,6 +51,5 @@ export const ActorCard: FC<Props> = ({ actor }) => {
         </div>
       </div>
     </div>
-
   )
 }

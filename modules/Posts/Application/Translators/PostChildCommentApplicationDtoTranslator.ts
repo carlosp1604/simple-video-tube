@@ -10,7 +10,7 @@ export class PostChildCommentApplicationDtoTranslator {
       updatedAt: childComment.updatedAt.toISO(),
       parentCommentId: childComment.parentCommentId,
       userIp: childComment.userIp,
-      username: childComment.username,
+      userName: childComment.userName,
     }
   }
 }

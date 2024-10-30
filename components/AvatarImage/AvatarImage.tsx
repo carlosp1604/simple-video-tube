@@ -10,7 +10,6 @@ interface Props {
   avatarName: string
   imageAlt: string
   priority: boolean
-  color: string | undefined
   rounded: boolean
 }
 
@@ -21,11 +20,10 @@ export const AvatarImage: FC<Partial<Props> & Omit<Props, 'priority' | 'color' |
   imageClassName,
   imageAlt,
   priority = false,
-  color = undefined,
-  rounded = true,
+  rounded = false,
 }) => {
   let avatar = (
-    <CommonAvatar className={ avatarClassName } avatarName={ avatarName } color={ color } rounded={ rounded }/>
+    <CommonAvatar className={ avatarClassName } avatarName={ avatarName } rounded={ rounded }/>
   )
 
   if (imageUrl !== null) {

@@ -2,7 +2,7 @@ import { ApplicationException } from '~/modules/Exceptions/Application/Applicati
 import { Category } from '~/modules/Categories/Domain/Category'
 
 export class GetCategoryBySlugApplicationException extends ApplicationException {
-  public static tagNotFoundId = 'get_tag_by_slug_tag_not_found'
+  public static categoryNotFoundId = 'get_category_by_slug_category_not_found'
 
   constructor (message: string, id: string) {
     super(message, id)
@@ -10,10 +10,10 @@ export class GetCategoryBySlugApplicationException extends ApplicationException 
     Object.setPrototypeOf(this, GetCategoryBySlugApplicationException.prototype)
   }
 
-  public static tagNotFound (tagSlug: Category['slug']): GetCategoryBySlugApplicationException {
+  public static categoryNotFound (categorySlug: Category['slug']): GetCategoryBySlugApplicationException {
     return new GetCategoryBySlugApplicationException(
-      `Tag with slug ${tagSlug} was not found`,
-      this.tagNotFoundId
+      `Category with slug ${categorySlug} was not found`,
+      this.categoryNotFoundId
     )
   }
 }

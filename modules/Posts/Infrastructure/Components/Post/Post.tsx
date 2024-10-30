@@ -2,24 +2,21 @@ import styles from './Post.module.scss'
 import { FC, ReactElement, useEffect, useRef, useState } from 'react'
 import { PostComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostComponentDto'
 import { ReactionComponentDto } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDto'
-import {
-  ReactionComponentDtoTranslator
-} from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDtoTranslator'
-import { PostsApiService } from '~/modules/Posts/Infrastructure/Frontend/PostsApiService'
 import { ReactionType } from '~/modules/Reactions/Infrastructure/ReactionType'
-import { useReactPost } from '~/hooks/ReactPost'
 import { PostData } from '~/modules/Posts/Infrastructure/Components/Post/PostData/PostData'
 import { Banner } from '~/modules/Shared/Infrastructure/Components/Banner/Banner'
 import { DesktopBanner } from '~/modules/Shared/Infrastructure/Components/ExoclickBanner/DesktopBanner'
 import { OutstreamBanner } from '~/modules/Shared/Infrastructure/Components/ExoclickBanner/OutstreamBanner'
 import dynamic from 'next/dynamic'
-import { VideoPostType } from '~/modules/Posts/Infrastructure/Components/Post/PostTypes/VideoPostType/VideoPostType'
-import { PostBasicData } from '~/modules/Posts/Infrastructure/Components/Post/PostData/PostBasicData'
+import { VideoPostType } from '~/modules/Posts/Infrastructure/Components/Post/VideoPostType/VideoPostType'
+import { APIException } from '~/modules/Shared/Infrastructure/FrontEnd/ApiException'
+import { useToast } from '~/components/AppToast/ToastContext'
+import useTranslation from 'next-translate/useTranslation'
 
 const PostComments = dynamic(() =>
-  import('~/modules/Posts/Infrastructure/Components/PostComment/PostComments').then((module) => module.PostComments),
-{ ssr: false }
-)
+  import('~/modules/Posts/Infrastructure/Components/PostComment/PostComments/PostComments')
+    .then((module) => module.PostComments),
+{ ssr: false })
 
 export interface Props {
   post: PostComponentDto
@@ -42,62 +39,37 @@ export const Post: FC<Props> = ({
   const [userReaction, setUserReaction] = useState<ReactionComponentDto | null>(null)
   const [commentsOpen, setCommentsOpen] = useState<boolean>(false)
   const [commentsNumber, setCommentsNumber] = useState<number>(postCommentsNumber)
-  const [savedPost, setSavedPost] = useState<boolean>(false)
   const [optionsDisabled, setOptionsDisabled] = useState<boolean>(true)
 
-  const postsApiService = new PostsApiService()
   const commentsRef = useRef<HTMLDivElement>(null)
 
-  const { reactPost, removeReaction } = useReactPost('post')
+  const { success, error } = useToast()
+  const { t } = useTranslation('post')
 
   useEffect(() => {
-    postsApiService.getPostUserInteraction(post.id)
-      .then(async (response) => {
-        if (response.ok) {
-          const jsonResponse = await response.json()
+    import('~/modules/Posts/Infrastructure/Frontend/PostsApiService').then((module) => {
+      const PostsApiService = module.PostsApiService
 
-          setSavedPost(jsonResponse.savedPost)
+      const postsApiService = new PostsApiService()
 
-          if (jsonResponse.userReaction === null) {
-            setUserReaction(null)
-
-            return
-          }
-
-          const userReactionDto =
-              ReactionComponentDtoTranslator.fromApplicationDto(jsonResponse.userReaction)
-
-          setUserReaction(userReactionDto)
-        } else {
-          const jsonResponse = await response.json()
-
-          console.error(jsonResponse)
-        }
-      })
-      .catch((exception) => {
-        console.error(exception)
-      })
-      .finally(() => { setOptionsDisabled(false) })
-
-    if (commentsOpen) {
-      setCommentsOpen(false)
-      new Promise(resolve => setTimeout(resolve, 100)).then(() => {
-        setCommentsOpen(true)
-      })
-    }
-  }, [])
-
-  useEffect(() => {
-    try {
       postsApiService.addPostView(post.id)
         .then((response) => {
           if (response.ok) {
             setViewsNumber(viewsNumber + 1)
           }
         })
-    } catch (exception: unknown) {
-      console.error(exception)
-    }
+        .catch((exception) => console.error(exception))
+
+      postsApiService.getPostUserInteraction(post.id)
+        .then(async (reactionComponent) => {
+          setUserReaction(reactionComponent)
+        })
+        .catch((exception) => {
+          console.error(exception)
+        })
+        .finally(() => { setOptionsDisabled(false) })
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   let commentsComponent: ReactElement | null = null
@@ -125,41 +97,68 @@ export const Post: FC<Props> = ({
   }
 
   const onClickReactButton = async (type: ReactionType) => {
-    if (userReaction !== null && userReaction.reactionType === type) {
-      const deletedReaction = await removeReaction(post.id)
+    const PostsApiService =
+      (await import('~/modules/Posts/Infrastructure/Frontend/PostsApiService')).PostsApiService
 
-      if (deletedReaction) {
+    const postsApiService = new PostsApiService()
+
+    if (userReaction !== null && userReaction.reactionType === type) {
+      try {
+        await postsApiService.deletePostReaction(post.id)
+
         if (userReaction.reactionType === ReactionType.LIKE) {
           setLikesNumber(likesNumber - 1)
         } else {
           setDislikesNumber(dislikesNumber - 1)
         }
         setUserReaction(null)
+
+        success(t('post_reaction_deleted_correctly_message'))
+      } catch (exception: unknown) {
+        if (!(exception instanceof APIException)) {
+          error(t('api_exceptions:something_went_wrong_error_message'))
+
+          console.error(exception)
+
+          return
+        }
+
+        error(t(`api_exceptions:${exception.translationKey}`))
       }
     } else {
-      const userPostReaction = await reactPost(post.id, type)
+      try {
+        const userPostReaction = await postsApiService.createPostReaction(post.id, type)
 
-      if (userPostReaction === null) {
-        return
-      }
-
-      if (userReaction !== null) {
-        if (userPostReaction.reactionType === ReactionType.LIKE) {
-          setLikesNumber(likesNumber + 1)
-          setDislikesNumber(dislikesNumber - 1)
+        if (userReaction !== null) {
+          if (userPostReaction.reactionType === ReactionType.LIKE) {
+            setLikesNumber(likesNumber + 1)
+            setDislikesNumber(dislikesNumber - 1)
+          } else {
+            setLikesNumber(likesNumber - 1)
+            setDislikesNumber(dislikesNumber + 1)
+          }
         } else {
-          setLikesNumber(likesNumber - 1)
-          setDislikesNumber(dislikesNumber + 1)
+          if (userPostReaction.reactionType === ReactionType.LIKE) {
+            setLikesNumber(likesNumber + 1)
+          } else {
+            setDislikesNumber(dislikesNumber + 1)
+          }
         }
-      } else {
-        if (userPostReaction.reactionType === ReactionType.LIKE) {
-          setLikesNumber(likesNumber + 1)
-        } else {
-          setDislikesNumber(dislikesNumber + 1)
-        }
-      }
 
-      setUserReaction(userPostReaction)
+        setUserReaction(userPostReaction)
+
+        success(t('post_reaction_added_correctly_message'))
+      } catch (exception: unknown) {
+        if (!(exception instanceof APIException)) {
+          error(t('api_exceptions:something_went_wrong_error_message'))
+
+          console.error(exception)
+
+          return
+        }
+
+        error(t(`api_exceptions:${exception.translationKey}`))
+      }
     }
   }
 
@@ -169,29 +168,23 @@ export const Post: FC<Props> = ({
         <div className={ styles.post__leftContainer }>
           <VideoPostType
             post={ post }
-            postBasicDataElement={
-              <PostBasicData
-                post={ post }
-                postViewsNumber={ viewsNumber }
-                postLikes={ likesNumber }
-                postDislikes={ dislikesNumber }
-                postCommentsNumber={ commentsNumber }
-              />
-            }
             userReaction={ userReaction }
-            savedPost={ savedPost }
             onClickReactButton={ async (type) => await onClickReactButton(type) }
             onClickCommentsButton={ onClickCommentsButton }
             likesNumber={ likesNumber }
+            dislikesNumber={ dislikesNumber }
             optionsDisabled={ optionsDisabled }
+            postCommentsNumber={ postCommentsNumber }
           />
 
           <PostData
             producer={ post.producer }
             actor={ post.actor }
             postActors={ post.actors }
-            postTags={ post.tags }
+            categories={ post.categories }
             postDescription={ post.description }
+            date={ post.formattedPublishedAt }
+            viewsNumber={ viewsNumber }
           />
         </div>
 
@@ -207,8 +200,9 @@ export const Post: FC<Props> = ({
           </span>
         </div>
       </section>
-      <div className={ styles.post__commentsContainer } ref={ commentsRef }></div>
-      { commentsComponent }
+      <div ref={ commentsRef }>
+        { commentsComponent }
+      </div>
     </div>
   )
 }

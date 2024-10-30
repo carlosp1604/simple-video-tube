@@ -19,11 +19,12 @@ import { PaginationSortingType } from '~/modules/Shared/Infrastructure/FrontEnd/
 import {
   HtmlPageMetaContextService
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaContextService'
-import { Settings } from 'luxon'
 import { FilterOptions } from '~/modules/Shared/Infrastructure/FrontEnd/FilterOptions'
+import { i18nConfig } from '~/i18n.config'
 
 export const getServerSideProps: GetServerSideProps<ProducerPageProps> = async (context) => {
   const producerSlug = context.query.producerSlug
+  const locale = context.locale ?? i18nConfig.defaultLocale
 
   if (!producerSlug) {
     return {
@@ -31,10 +32,14 @@ export const getServerSideProps: GetServerSideProps<ProducerPageProps> = async (
     }
   }
 
-  const locale = context.locale ?? 'en'
-
-  Settings.defaultLocale = locale
-  Settings.defaultZone = 'Europe/Madrid'
+  if (Object.entries(context.query).length > 1) {
+    return {
+      redirect: {
+        destination: `/${locale}/producers/${producerSlug}`,
+        permanent: false,
+      },
+    }
+  }
 
   const paginationQueryParams = new PostsQueryParamsParser(
     context.query,
@@ -74,10 +79,14 @@ export const getServerSideProps: GetServerSideProps<ProducerPageProps> = async (
   // Experimental: Try yo improve performance
   context.res.setHeader(
     'Cache-Control',
-    'public, s-maxage=60, stale-while-revalidate=300'
+    'public, s-maxage=50, stale-while-revalidate=10'
   )
 
-  const htmlPageMetaContextService = new HtmlPageMetaContextService(context)
+  const htmlPageMetaContextService = new HtmlPageMetaContextService(
+    context,
+    { includeQuery: false, includeLocale: true },
+    { index: true, follow: true }
+  )
 
   const props: ProducerPageProps = {
     producer: {
@@ -86,6 +95,7 @@ export const getServerSideProps: GetServerSideProps<ProducerPageProps> = async (
       name: '',
       imageUrl: '',
       id: '',
+      viewsNumber: 0,
     },
     initialOrder: paginationQueryParams.sortingOptionType ?? PaginationSortingType.LATEST,
     initialPage: paginationQueryParams.page ?? 1,

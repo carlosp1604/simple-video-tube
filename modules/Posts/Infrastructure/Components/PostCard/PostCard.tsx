@@ -14,6 +14,7 @@ import {
 } from '~/modules/Posts/Infrastructure/Components/PostCard/PostCardProducerActor/PostCardProducerActorNameLink'
 import { VideoLoadingState } from '~/components/VideoLoadingState/VideoLoadingState'
 import dynamic from 'next/dynamic'
+import { i18nConfig } from '~/i18n.config'
 
 const HoverVideoPlayer = dynamic(() => import('react-hover-video-player')
   .then((module) => module.default), { ssr: false }
@@ -24,9 +25,9 @@ interface Props {
 }
 
 export const PostCard: FC<Props> = ({ post }) => {
-  const { t } = useTranslation('post_card')
+  const { t } = useTranslation('post')
 
-  const locale = useRouter().locale ?? 'en'
+  const locale = useRouter().locale ?? i18nConfig.defaultLocale
 
   const handleVideoHover = (event: MouseEvent<HTMLAnchorElement>, title: string) => {
     event.currentTarget.setAttribute('title', title)
@@ -80,7 +81,7 @@ export const PostCard: FC<Props> = ({ post }) => {
 
     externalLinkIcon = (
       <span
-        className={ styles.postCard__externalIcon }
+        className={ `${styles.postCard__absoluteElement} ${styles.postCard__externalIcon}` }
         title={ t('post_card_external_link_title') }
       >
         <BsLink45Deg />
@@ -90,7 +91,7 @@ export const PostCard: FC<Props> = ({ post }) => {
 
   if (post.resolution) {
     resolutionIcon = (
-      <span className={ styles.postCard__videoResolution } >
+      <span className={ `${styles.postCard__absoluteElement} ${styles.postCard__videoResolution}` } >
         { getResolution(post.resolution) }
       </span>
     )
@@ -110,7 +111,7 @@ export const PostCard: FC<Props> = ({ post }) => {
           onMouseLeave={ (event) => handleVideoHover(event, post.title) }
         >
           { media }
-          <span className={ styles.postCard__videoTime } >
+          <span className={ styles.postCard__absoluteElement } >
             { post.duration }
           </span>
           { resolutionIcon }
@@ -119,7 +120,6 @@ export const PostCard: FC<Props> = ({ post }) => {
       </div>
       <div className={ styles.postCard__videoDataContainer }>
         <div className={ styles.postCard__postData }>
-          { producerNameLink }
           <Link
             href={ postCardLink }
             className={ styles.postCard__videoTitleLink }
@@ -129,6 +129,7 @@ export const PostCard: FC<Props> = ({ post }) => {
           >
             { post.title }
           </Link>
+          { producerNameLink }
           <div className={ styles.postCard__extraData }>
             { t('post_card_post_views', { views: NumberFormatter.compatFormat(post.views, locale) }) }
             <BsDot className={ styles.postCard__separatorIcon }/>

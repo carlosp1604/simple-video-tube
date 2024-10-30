@@ -10,6 +10,7 @@ export interface PostApplicationDto {
   readonly description: string
   readonly slug: string
   readonly duration: number
+  readonly parsedISO8601Duration: string
   readonly trailerUrl: string | null
   readonly thumbnailUrl: string
   readonly externalUrl: string | null
@@ -19,7 +20,7 @@ export interface PostApplicationDto {
   readonly producer: ProducerApplicationDto | null
   readonly actor: ActorApplicationDto | null
   readonly actors: ActorApplicationDto[]
-  readonly tags: CategoryApplicationDto[]
+  readonly categories: CategoryApplicationDto[]
   readonly translations: ModelTranslationsApplicationDto[]
   readonly postMedia: PostMediaApplicationDto[]
   readonly createdAt: string

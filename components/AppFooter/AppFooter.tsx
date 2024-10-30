@@ -4,17 +4,16 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { FaFacebookF, FaTelegramPlane, FaTiktok } from 'react-icons/fa'
 import { FaXTwitter } from 'react-icons/fa6'
-import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
 import Trans from 'next-translate/Trans'
-import ReactGA from 'react-ga4'
 import {
   ClickSocialNetworkProfile,
   SocialNetworkCategory
 } from '~/modules/Shared/Infrastructure/FrontEnd/AnalyticsEvents/Footer'
+import { ThemeSwitcher } from '~/components/ThemeSwitcher/ThemeSwitcher'
+import { sendGAEvent } from '@next/third-parties/google'
 
 export const AppFooter: FC = () => {
-  const { asPath, locale } = useRouter()
   const { t } = useTranslation('footer')
 
   const transCopyright = (
@@ -32,9 +31,8 @@ export const AppFooter: FC = () => {
   let telegramProfile: ReactElement | null = null
 
   const onClickSocialNetworkIcon = (socialNetwork: string) => {
-    ReactGA.event({
+    sendGAEvent('event', ClickSocialNetworkProfile, {
       category: SocialNetworkCategory,
-      action: ClickSocialNetworkProfile,
       label: socialNetwork,
     })
   }
@@ -117,7 +115,7 @@ export const AppFooter: FC = () => {
           { transCopyright }
         </div>
         <Link
-          href='/'
+          href="/"
           shallow={ true }
           className={ styles.appFooter__logoImageLink }
         >
@@ -130,35 +128,16 @@ export const AppFooter: FC = () => {
             sizes={ '100vw' }
           />
         </Link>
-        <div className={ styles.appFooter__languages }>
-          <Link
-            className={ `
-            ${styles.appFooter__languageItem}
-            ${locale === 'es' ? styles.appFooter__languageItem__active : ''}
-          ` }
-            href={ asPath }
-            locale={ 'es' }
-          >
-            { t('spanish_language_title') }
-          </Link>
-
-          <Link
-            className={ `
-            ${styles.appFooter__languageItem}
-            ${locale === 'en' ? styles.appFooter__languageItem__active : ''}
-          ` }
-            href={ asPath }
-            locale={ 'en' }
-          >
-            { t('english_language_title') }
-          </Link>
-        </div>
 
         <div className={ styles.appFooter__socialNetworks }>
           { facebookProfile }
           { xProfile }
           { tiktokProfile }
           { telegramProfile }
+        </div>
+
+        <div className={ styles.appFooter__themeSwitcher }>
+          <ThemeSwitcher />
         </div>
       </div>
     </footer>

@@ -11,19 +11,20 @@ import {
 } from '~/modules/Shared/Infrastructure/InfrastructureSorting'
 import { PostsQueryParamsParser } from '~/modules/Posts/Infrastructure/Frontend/PostsQueryParamsParser'
 import { GetCategoryBySlug } from '~/modules/Categories/Application/GetCategoryBySlug/GetCategoryBySlug'
-import { TagPage, CategoryPageProps } from '~/components/pages/TagPage/TagPage'
+import { CategoryPage, CategoryPageProps } from '~/components/pages/CategoryPage/CategoryPage'
 import {
-  TagPageComponentDtoTranslator
-} from '~/modules/Categories/Infrastructure/Translators/TagPageComponentDtoTranslator'
+  CategoryPageComponentDtoTranslator
+} from '~/modules/Categories/Infrastructure/Translators/CategoryPageComponentDtoTranslator'
 import { PaginationSortingType } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationSortingType'
 import {
   HtmlPageMetaContextService
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaContextService'
-import { Settings } from 'luxon'
 import { FilterOptions } from '~/modules/Shared/Infrastructure/FrontEnd/FilterOptions'
+import { i18nConfig } from '~/i18n.config'
 
 export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (context) => {
   const categorySlug = context.query.categorySlug
+  const locale = context.locale ?? i18nConfig.defaultLocale
 
   if (!categorySlug) {
     return {
@@ -31,10 +32,14 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
     }
   }
 
-  const locale = context.locale ?? 'en'
-
-  Settings.defaultLocale = locale
-  Settings.defaultZone = 'Europe/Madrid'
+  if (Object.entries(context.query).length > 1) {
+    return {
+      redirect: {
+        destination: `/${locale}/categories/${categorySlug}`,
+        permanent: false,
+      },
+    }
+  }
 
   const paginationQueryParams = new PostsQueryParamsParser(
     context.query,
@@ -66,7 +71,7 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
   let baseUrl = ''
 
   if (!env.BASE_URL) {
-    throw Error('Missing env var: BASE_URL. Required in the tag page')
+    throw Error('Missing env var: BASE_URL. Required in the category page')
   } else {
     baseUrl = env.BASE_URL
   }
@@ -74,10 +79,11 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
   // Experimental: Try yo improve performance
   context.res.setHeader(
     'Cache-Control',
-    'public, s-maxage=60, stale-while-revalidate=300'
+    'public, s-maxage=50, stale-while-revalidate=10'
   )
 
-  const htmlPageMetaContextService = new HtmlPageMetaContextService(context)
+  const htmlPageMetaContextService =
+    new HtmlPageMetaContextService(context, { includeQuery: false, includeLocale: true })
 
   const props: CategoryPageProps = {
     category: {
@@ -85,6 +91,7 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
       slug: '',
       name: '',
       id: '',
+      viewsNumber: 0,
     },
     initialOrder: paginationQueryParams.sortingOptionType ?? PaginationSortingType.LATEST,
     initialPage: paginationQueryParams.page ?? 1,
@@ -100,7 +107,7 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
   try {
     const category = await getCategory.get(categorySlug.toString())
 
-    props.category = TagPageComponentDtoTranslator.fromApplicationDto(category, locale)
+    props.category = CategoryPageComponentDtoTranslator.fromApplicationDto(category, locale)
   } catch (exception: unknown) {
     console.error(exception)
 
@@ -125,7 +132,7 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
 
     const producerPosts = await getPosts.get({
       page,
-      filters: [{ type: FilterOptions.TAG_SLUG, value: String(categorySlug) }],
+      filters: [{ type: FilterOptions.CATEGORY_SLUG, value: String(categorySlug) }],
       sortCriteria,
       sortOption,
       postsPerPage: defaultPerPage,
@@ -144,4 +151,4 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
   }
 }
 
-export default TagPage
+export default CategoryPage

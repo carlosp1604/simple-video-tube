@@ -1,7 +1,5 @@
 import { NextPage } from 'next'
-import styles from './PostPage.module.scss'
 import { PostComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostComponentDto'
-import { PostCardComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostCardComponentDto'
 import useTranslation from 'next-translate/useTranslation'
 import { Post } from '~/modules/Posts/Infrastructure/Components/Post/Post'
 import {
@@ -12,31 +10,21 @@ import {
   HtmlPageMetaVideoService
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaResourceService/HtmlPageMetaVideoService'
 import { ReactElement, useEffect, useRef } from 'react'
-import { PostCardGallery } from '~/modules/Posts/Infrastructure/Components/PostCardGallery/PostCardGallery'
 import { MobileBanner } from '~/modules/Shared/Infrastructure/Components/ExoclickBanner/MobileBanner'
 import Script from 'next/script'
-import { useRouter } from 'next/router'
 import { SEOHelper } from '~/modules/Shared/Infrastructure/FrontEnd/SEOHelper'
 
 export interface PostPageProps {
   post: PostComponentDto
-  parsedDuration: string
-  postEmbedUrl: string
-  baseUrl: string
   postViewsNumber: number
   postLikes: number
   postDislikes: number
   postCommentsNumber: number
-  relatedPosts: PostCardComponentDto[]
   htmlPageMetaContextProps: HtmlPageMetaContextProps
 }
 
 export const PostPage: NextPage<PostPageProps> = ({
   post,
-  postEmbedUrl,
-  parsedDuration,
-  baseUrl,
-  relatedPosts,
   postCommentsNumber,
   postViewsNumber,
   postLikes,
@@ -44,7 +32,6 @@ export const PostPage: NextPage<PostPageProps> = ({
   htmlPageMetaContextProps,
 }) => {
   const { t } = useTranslation('post_page')
-  const locale = useRouter().locale ?? 'en'
   const firstClickRef = useRef(0)
 
   const description = SEOHelper.buildDescription(
@@ -98,8 +85,7 @@ export const PostPage: NextPage<PostPageProps> = ({
     description,
     thumbnailUrl: [post.thumb],
     uploadDate: post.publishedAt,
-    duration: parsedDuration,
-    embedUrl: postEmbedUrl,
+    duration: post.parsedISO8601Duration,
     interactionStatistics: [
       {
         '@type': 'InteractionCounter',
@@ -124,19 +110,13 @@ export const PostPage: NextPage<PostPageProps> = ({
     ],
   }
 
-  let canonicalUrl = `${baseUrl}/posts/videos/${post.slug}`
-
-  if (locale !== 'en') {
-    canonicalUrl = `${baseUrl}/${locale}/posts/videos/${post.slug}`
-  }
-
   const htmlPageMetaUrlProps = (
     new HtmlPageMetaVideoService(
       post.title,
       description,
       post.thumb,
-      canonicalUrl,
-      postEmbedUrl,
+      htmlPageMetaContextProps.canonicalUrl,
+      htmlPageMetaContextProps.url,
       post.duration
     )
   ).getProperties()
@@ -144,19 +124,6 @@ export const PostPage: NextPage<PostPageProps> = ({
     ...htmlPageMetaContextProps,
     resourceProps: htmlPageMetaUrlProps,
     structuredData: JSON.stringify(structuredData),
-  }
-
-  let relatedPostsSection: ReactElement | null = null
-
-  if (relatedPosts.length > 0) {
-    relatedPostsSection = (
-      <div className={ styles.postPage__relatedVideos }>
-        <span className={ styles.postPage__relatedVideosTitle }>
-          { t('video_related_videos_title') }
-        </span>
-        <PostCardGallery posts={ relatedPosts } />
-      </div>
-    )
   }
 
   return (
@@ -175,8 +142,6 @@ export const PostPage: NextPage<PostPageProps> = ({
         postDislikes={ postDislikes }
         postViewsNumber={ postViewsNumber }
       />
-
-      { relatedPostsSection }
     </>
   )
 }

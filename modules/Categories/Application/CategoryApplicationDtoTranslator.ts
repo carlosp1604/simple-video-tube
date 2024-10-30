@@ -13,6 +13,7 @@ export class CategoryApplicationDtoTranslator {
       name: category.name,
       imageUrl: category.imageUrl,
       description: category.description,
+      viewsCount: category.viewsCount,
       translations: CategoryTranslationTranslatorDto.fromDomain(category),
       createdAt: category.createdAt.toISO(),
     }

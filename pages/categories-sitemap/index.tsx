@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next'
 import { container } from '~/awilix.container'
 import { getServerSideSitemapLegacy } from 'next-sitemap'
 import { GetAllCategories } from '~/modules/Categories/Application/GetAllCategories/GetAllCategories'
+import { i18nConfig } from '~/i18n.config'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const getCategories = container.resolve<GetAllCategories>('getAllCategoriesUseCase')
@@ -23,16 +24,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
   }
 
-  const locale = context.locale ?? 'en'
-
   const fields = categories.map((category) => ({
     loc: `${baseUrl}/categories/${category.slug}`,
     // TODO: Change this for updatedAt field
     lastmod: category.createdAt,
-    alternateRefs: [{
-      href: `${baseUrl}/${locale}/categories/${category.slug}`,
-      hreflang: 'es',
-    }],
+    alternateRefs: i18nConfig.locales.map((locale) => (
+      {
+        href: `${baseUrl}/${locale}/categories/${category.slug}`,
+        hreflang: locale,
+      }
+    )),
   }))
 
   return getServerSideSitemapLegacy(context, fields)

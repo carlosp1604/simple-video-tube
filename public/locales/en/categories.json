@@ -1,0 +1,21 @@
+{
+  "category_image_alt_title": "{{categoryName}} profile image",
+  "category_page_description": "Watch the best videos categorized by {{categoryName}}",
+  "category_page_profile_count_title": "{{categoriesNumber}} views",
+  "category_page_profile_type_title": "Category",
+  "category_page_title": "Videos categorized by {{categoryName}}",
+  "category_posts_empty_state_subtitle": "There is still no post categorized by {{categoryName}}\nCome back another time",
+  "category_posts_empty_state_title": "Nothing to see here",
+  "category_posts_gallery_posts_quantity": "{{postsNumber}} posts",
+  "category_posts_gallery_title": "Posts categorized by <0>{{categoryName}}</0>",
+  "categories_gallery_empty_state_subtitle": "It seems that there are no category that match the criteria you have indicated\nTry changing your search parameters and try again",
+  "categories_gallery_empty_state_title": "We haven't found anything",
+  "categories_gallery_subtitle": "{{categoriesNumber}} categories",
+  "categories_gallery_title": "Categories",
+  "categories_page_description": "Search for your favorite categories and watch their videos for free in HD!",
+  "categories_page_title": "Categories. Free videos in HD",
+  "categories_search_button_title": "Search for categories",
+  "categories_search_placeholder_title": "Search for categories by name",
+  "categories_search_result_title": "Results for <0>{{searchTerm}}</0>",
+  "categories_see_all_button_title": "See all"
+}

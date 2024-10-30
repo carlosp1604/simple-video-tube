@@ -12,12 +12,12 @@ export class GetCategoryBySlug {
   public constructor (readonly categoryRepository: CategoryRepositoryInterface) {}
 
   public async get (categorySlug: string): Promise<GetCategoryBySlugApplicationResponseDto> {
-    const tag = await this.categoryRepository.findBySlug(categorySlug)
+    const category = await this.categoryRepository.findBySlug(categorySlug)
 
-    if (tag === null) {
-      throw GetCategoryBySlugApplicationException.tagNotFound(categorySlug)
+    if (category === null) {
+      throw GetCategoryBySlugApplicationException.categoryNotFound(categorySlug)
     }
 
-    return CategoryApplicationDtoTranslator.fromDomain(tag)
+    return CategoryApplicationDtoTranslator.fromDomain(category)
   }
 }

@@ -13,6 +13,7 @@ import {
 import { NumberFormatter } from '~/modules/Shared/Infrastructure/FrontEnd/NumberFormatter'
 import { FetchFilter } from '~/modules/Shared/Infrastructure/FrontEnd/FetchFilter'
 import { FilterOptions } from '~/modules/Shared/Infrastructure/FrontEnd/FilterOptions'
+import { i18nConfig } from '~/i18n.config'
 
 export interface Props {
   initialSearchTerm: string
@@ -29,7 +30,7 @@ export const Search: FC<Props> = ({
   const [searchTerm, setSearchTerm] = useState<string>(initialSearchTerm)
   const { t } = useTranslation('search')
   const router = useRouter()
-  const locale = router.locale ?? 'en'
+  const locale = router.locale ?? i18nConfig.defaultLocale
 
   const linkMode: ElementLinkMode = {
     replace: false,

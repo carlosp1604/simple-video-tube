@@ -1,12 +1,7 @@
 import { GetPosts } from '~/modules/Posts/Application/GetPosts/GetPosts'
 import { container } from '~/awilix.container'
-import { GetPopularProducers } from '~/modules/Producers/Application/GetPopularProducers'
 import { HomePage, Props } from '~/components/pages/HomePage/HomePage'
 import { GetServerSideProps } from 'next'
-import { allPostsProducerDto } from '~/modules/Producers/Infrastructure/Components/AllPostsProducerDto'
-import {
-  ProducerComponentDtoTranslator
-} from '~/modules/Producers/Infrastructure/Translators/ProducerComponentDtoTranslator'
 import {
   PostCardComponentDtoTranslator
 } from '~/modules/Posts/Infrastructure/Translators/PostCardComponentDtoTranslator'
@@ -20,19 +15,14 @@ import { PaginationSortingType } from '~/modules/Shared/Infrastructure/FrontEnd/
 import {
   HtmlPageMetaContextService
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaContextService'
-import { Settings } from 'luxon'
-import { FilterOptions } from '~/modules/Shared/Infrastructure/FrontEnd/FilterOptions'
+import { i18nConfig } from '~/i18n.config'
 
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
-  const locale = context.locale ?? 'en'
-
-  Settings.defaultLocale = locale
-  Settings.defaultZone = 'Europe/Madrid'
+  const locale = context.locale ?? i18nConfig.defaultLocale
 
   const paginationQueryParams = new PostsQueryParamsParser(
     context.query,
     {
-      filters: { filtersToParse: [FilterOptions.PRODUCER_SLUG] },
       sortingOptionType: {
         defaultValue: PaginationSortingType.LATEST,
         parseableOptionTypes: [
@@ -56,7 +46,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     }
   }
 
-  const htmlPageMetaContextService = new HtmlPageMetaContextService(context)
+  const htmlPageMetaContextService = new HtmlPageMetaContextService(
+    context,
+    { includeLocale: true, includeQuery: false },
+    { index: true, follow: true }
+  )
   const { env } = process
 
   let baseUrl = ''
@@ -71,15 +65,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     order: paginationQueryParams.sortingOptionType ?? PaginationSortingType.LATEST,
     page: paginationQueryParams.page ?? 1,
     initialPosts: [],
-    producers: [],
     initialPostsNumber: 0,
-    activeProducer: null,
     baseUrl,
     htmlPageMetaContextProps: htmlPageMetaContextService.getProperties(),
   }
 
   const getPosts = container.resolve<GetPosts>('getPostsUseCase')
-  const getProducers = container.resolve<GetPopularProducers>('getPopularProducersUseCase')
 
   try {
     let sortCriteria: InfrastructureSortingCriteria = InfrastructureSortingCriteria.DESC
@@ -95,41 +86,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
       page = paginationQueryParams.page
     }
 
-    const producerFilter = paginationQueryParams.getFilter(FilterOptions.PRODUCER_SLUG)
-
-    const [posts, producers] = await Promise.all([
-      getPosts.get({
-        page,
-        filters: paginationQueryParams.filters,
-        sortCriteria,
-        sortOption,
-        postsPerPage: defaultPerPage,
-      }),
-      await getProducers.get(producerFilter ? producerFilter.value : null),
-    ])
-
-    const producerComponents = producers.map((producer) => {
-      return ProducerComponentDtoTranslator.fromApplication(producer)
+    const posts = await getPosts.get({
+      page,
+      filters: paginationQueryParams.filters,
+      sortCriteria,
+      sortOption,
+      postsPerPage: defaultPerPage,
     })
-
-    // Add default producer
-    producerComponents.unshift(allPostsProducerDto)
-
-    if (producerFilter) {
-      const selectedProducer = producers.find((producer) => producer.slug === producerFilter.value)
-
-      if (selectedProducer) {
-        props.activeProducer = selectedProducer
-      }
-    } else {
-      props.activeProducer = allPostsProducerDto
-    }
 
     props.initialPosts = posts.posts.map((post) => {
       return PostCardComponentDtoTranslator.fromApplication(post, locale)
     })
     props.initialPostsNumber = posts.postsNumber
-    props.producers = producerComponents
   } catch (exception: unknown) {
     console.error(exception)
   }

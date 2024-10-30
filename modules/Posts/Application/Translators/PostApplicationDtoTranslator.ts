@@ -7,6 +7,7 @@ import { PostTranslationsDtoTranslator } from '~/modules/Posts/Application/Trans
 import {
   PostMediaApplicationDtoTranslator
 } from '~/modules/Posts/Application/Translators/PostMedia/PostMediaApplicationDtoTranslator'
+import { Duration } from 'luxon'
 
 // NOTE: We are not testing this due to this class does not have logic to be tested
 export class PostApplicationDtoTranslator {
@@ -23,6 +24,7 @@ export class PostApplicationDtoTranslator {
       actors: post.actors.map((actor) => {
         return ActorApplicationDtoTranslator.fromDomain(actor)
       }),
+      parsedISO8601Duration: Duration.fromMillis(post.duration * 1000).toString(),
       resolution: post.resolution,
       description: post.description,
       duration: post.duration,
@@ -31,8 +33,8 @@ export class PostApplicationDtoTranslator {
       externalUrl: post.externalUrl,
       viewsCount: post.viewsCount,
       publishedAt: post.publishedAt?.toISO() ?? '',
-      tags: post.categories.map((tag) => {
-        return CategoryApplicationDtoTranslator.fromDomain(tag)
+      categories: post.categories.map((category) => {
+        return CategoryApplicationDtoTranslator.fromDomain(category)
       }),
       title: post.title,
       producer: post.producer !== null

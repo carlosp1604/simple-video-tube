@@ -1,0 +1,13 @@
+.videoPlayerSourceSelector {
+  &__container {
+    @apply flex flex-nowrap gap-x-2 -mx-5 pl-5 overflow-x-scroll
+    scrollbar-hide;
+  }
+
+  &__option-container {
+    @apply py-1 px-2 rounded-lg border border-brand-primary-light
+    w-fit font-semibold text-black bg-body-light transition-colors
+    leading-none cursor-default
+    dark:bg-body-dark dark:text-base-200;
+  }
+}

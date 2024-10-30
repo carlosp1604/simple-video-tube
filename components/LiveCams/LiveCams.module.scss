@@ -4,8 +4,8 @@
   }
 
   &__live-cams-title {
-    @apply flex flex-row flex-wrap gap-x-2 justify-between items-center
-    text-lg font-semibold cursor-default pb-1;
+    @apply flex flex-row flex-wrap gap-x-2 justify-between
+    items-center text-lg font-semibold cursor-default pb-1;
 
     @screen md {
       @apply text-xl;
@@ -21,20 +21,21 @@
   }
 
   &__live-cams-link {
-    @apply font-normal text-sm p-1 px-3 rounded-full bg-base-800 border
-    border-base-700 shadow-all shadow-brand-primary-bg;
+    @apply font-normal text-sm p-1 px-3 rounded-full shadow-all
+    bg-brand-primary-bg text-white shadow-brand-primary-bg
+    transition-colors;
 
     @screen md {
       @apply text-base;
     }
 
     &:hover {
-      @apply text-brand-primary-light transition-colors;
+      @apply bg-brand-primary-dark transition-colors;
     }
   }
 
   &__warning-message {
-    @apply text-xs border-t mt-2 pt-1 border-brand-primary-bg
-    text-base-400 leading-none;
+    @apply border-t mt-2 pt-1 border-brand-primary-light
+    text-base-500 leading-none;
   }
 }

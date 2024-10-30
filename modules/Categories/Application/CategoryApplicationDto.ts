@@ -6,6 +6,7 @@ export interface CategoryApplicationDto {
   readonly name: string
   readonly description: string | null
   readonly imageUrl: string | null
+  readonly viewsCount: number
   readonly translations: ModelTranslationsApplicationDto[]
   readonly createdAt: string
 }

@@ -19,6 +19,7 @@ export class ProducerApplicationDtoTranslator {
       imageUrl: producer.imageUrl,
       parentProducer,
       parentProducerId: producer.parentProducerId,
+      viewsCount: producer.viewsCount,
     }
   }
 }

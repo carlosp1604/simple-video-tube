@@ -1,0 +1,26 @@
+.categories {
+  &__container {
+    @apply container px-5 flex flex-col gap-y-8 pb-10 pt-5;
+  }
+
+  &__categories-gallery-container {
+    @apply grid gap-4;
+    grid-template-columns: repeat(2, 1fr);
+
+    @screen md {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    @screen lg {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+  }
+
+  &__search-bar {
+    @apply flex flex-row gap-x-2 self-center w-full -mt-3;
+
+    @screen lg {
+      @apply max-w-lg;
+    }
+  }
+}

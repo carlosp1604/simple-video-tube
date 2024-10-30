@@ -1,7 +1,8 @@
 .actor-card {
   &__container {
-    @apply flex flex-col shadow-base-950 shadow-lg rounded-md
-    overflow-hidden;
+    @apply flex flex-col shadow-base-300 shadow-lg
+    rounded-md overflow-hidden
+    dark:shadow-black/40 transition-colors dark:transition-colors;
   }
 
   &__image-wrapper {
@@ -17,8 +18,9 @@
   }
 
   &__actor-avatar {
-    @apply h-full w-full text-6xl font-normal text-body
-      transition-transform;
+    @apply h-full w-full text-6xl font-normal text-base-500
+    transition-transform
+    dark:text-base-700;
 
     &:hover, &:focus {
       @apply scale-110 transition-transform;
@@ -32,7 +34,7 @@
 
   &__actor-name {
     @apply text-sm font-semibold line-clamp-2 text-ellipsis
-      break-words;
+    break-words dark:text-base-300;
 
     @screen md {
       @apply text-base font-bold;
@@ -40,8 +42,8 @@
   }
 
   &__count-section {
-    @apply flex flex-row items-start gap-x-1 text-xs justify-between
-    font-normal text-brand-primary-light;
+    @apply flex flex-row items-start gap-x-1 text-xs
+    justify-between font-normal text-brand-primary-light;
 
     @screen md {
       @apply text-sm;
@@ -49,6 +51,6 @@
   }
 
   &__views-title {
-    @apply text-base-400;
+    @apply text-base-600 dark:text-base-400;
   }
 }

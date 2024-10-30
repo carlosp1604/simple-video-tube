@@ -32,8 +32,15 @@ const findOrCreateProvider = async (provider: any): Promise<void> => {
   const newProvider = new MediaProvider(
     provider.id,
     provider.name,
-    // TODO: Set a default image
-    provider.logo_url ?? '',
+    provider.logo_url,
+    provider.advertisingLevel,
+    provider.downloadSpeed,
+    provider.paymentRequired,
+    provider.freeDownloadsDay,
+    provider.delayBetweenDownloads,
+    provider.refUrl,
+    provider.multiQuality,
+    provider.maxResolution,
     nowDate,
     nowDate
   )
@@ -46,6 +53,14 @@ const findOrCreateProvider = async (provider: any): Promise<void> => {
         name: newProvider.name,
         logoUrl: newProvider.logoUrl,
         id: newProvider.id,
+        freeDownloadsDay: newProvider.freeDownloadsDay,
+        advertisingLevel: newProvider.advertisingLevel,
+        delayBetweenDownloads: newProvider.delayBetweenDownloads,
+        downloadSpeed: newProvider.downloadSpeed,
+        maxResolution: newProvider.maxResolution,
+        refUrl: newProvider.refUrl,
+        multiQuality: newProvider.multiQuality,
+        paymentRequired: newProvider.paymentRequired,
       },
     })
 

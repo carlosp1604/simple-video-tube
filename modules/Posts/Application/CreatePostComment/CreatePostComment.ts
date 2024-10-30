@@ -16,7 +16,7 @@ export class CreatePostComment {
   constructor (private readonly postRepository: PostRepositoryInterface) {}
 
   public async create (request: CreatePostCommentApplicationRequestDto): Promise<PostCommentApplicationDto> {
-    new UsernameValidator().validate(request.username)
+    new UsernameValidator().validate(request.userName)
 
     const post = await this.getPost(request.postId)
 
@@ -38,13 +38,14 @@ export class CreatePostComment {
   }
 
   private addCommentToPost (post: Post, request: CreatePostCommentApplicationRequestDto): PostComment {
-    return post.addComment(request.comment, request.userIp, request.username)
+    return post.addComment(request.comment, request.userIp, request.userName)
   }
 
   private async savePostComment (postComment: PostComment): Promise<void> {
     try {
       await this.postRepository.createComment(postComment)
     } catch (exception: unknown) {
+      console.log(exception)
       throw CreatePostCommentApplicationException.cannotAddComment(postComment.postId, postComment.userIp)
     }
   }

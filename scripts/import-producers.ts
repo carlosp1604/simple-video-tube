@@ -27,8 +27,8 @@ const findOrCreateProducer = async (producer: any): Promise<void> => {
     producer.name,
     producer.description ?? null,
     producer.img,
-    // TODO: Add support for producers hierarchy
     0,
+    // TODO: Add support for producers hierarchy
     null,
     nowDate,
     nowDate,

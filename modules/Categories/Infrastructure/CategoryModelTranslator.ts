@@ -18,9 +18,9 @@ export class CategoryModelTranslator {
 
     const translationsCollection: Collection<Translation, string> = Collection.initializeCollection()
 
-    const postTagWithTranslations = prismaCategoryModel as CategoryWithTranslations
+    const categoryWithTranslations = prismaCategoryModel as CategoryWithTranslations
 
-    postTagWithTranslations.translations.forEach((translation) => {
+    categoryWithTranslations.translations.forEach((translation) => {
       const domainTranslation = TranslationModelTranslator.toDomain(translation)
 
       translationsCollection.addItem(

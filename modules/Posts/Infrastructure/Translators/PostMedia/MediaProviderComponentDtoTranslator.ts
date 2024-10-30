@@ -7,6 +7,14 @@ export abstract class MediaProviderComponentDtoTranslator {
       id: applicationDto.id,
       logoUrl: applicationDto.logoUrl,
       name: applicationDto.name,
+      advertisingLevel: applicationDto.advertisingLevel,
+      delayBetweenDownloads: applicationDto.delayBetweenDownloads,
+      downloadSpeed: applicationDto.downloadSpeed,
+      freeDownloadsDay: applicationDto.freeDownloadsDay,
+      maxResolution: applicationDto.maxResolution,
+      refUrl: applicationDto.refUrl,
+      multiQuality: applicationDto.multiQuality,
+      paymentRequired: applicationDto.paymentRequired,
     }
   }
 }

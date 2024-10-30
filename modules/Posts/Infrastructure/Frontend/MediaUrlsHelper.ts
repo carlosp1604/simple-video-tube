@@ -45,20 +45,18 @@ export class MediaUrlsHelper {
   }
 
   public static getSelectableUrls (
-    embedPostMedia: PostMediaComponentDto | null,
-    videoPostMedia: PostMediaComponentDto | null
+    postMediaEmbedType: PostMediaComponentDto[],
+    postMediaVideoType: PostMediaComponentDto[]
   ):MediaUrlComponentDto[] {
-    const mediaUrls: MediaUrlComponentDto[] = []
+    let mediaUrls: MediaUrlComponentDto[] = []
 
-    if (videoPostMedia !== null) {
-      if (videoPostMedia.urls.length > 0) {
-        mediaUrls.push(videoPostMedia.urls[0])
-      }
+    if (postMediaEmbedType.length > 0) {
+      mediaUrls = [...mediaUrls, ...postMediaEmbedType[0].urls]
     }
 
-    if (embedPostMedia !== null) {
-      for (const embedPostMediaUrl of embedPostMedia.urls) {
-        mediaUrls.push(embedPostMediaUrl)
+    if (postMediaVideoType.length > 0) {
+      if (postMediaVideoType[0].urls.length > 0) {
+        mediaUrls = [...mediaUrls, postMediaVideoType[0].urls[0]]
       }
     }
 

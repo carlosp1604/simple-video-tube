@@ -1,0 +1,64 @@
+.reaction-button {
+  &__container {
+    @apply flex flex-row items-center gap-x-1.5 text-black
+    transition-colors cursor-default text-sm
+    dark:text-base-300 dark:transition-colors;
+
+    &_disabled {
+      @apply text-base-300 transition-colors
+      dark:text-base-600;
+    }
+
+    @screen lg {
+      @apply text-base;
+    }
+  }
+
+  &__reaction-button {
+    @apply text-base-800 transition-colors
+    dark:text-base-400 dark:transition-colors;
+
+    &:hover {
+      @apply text-brand-primary-bg transition-colors;
+    }
+
+    &:disabled {
+      @apply text-base-300 transition-colors
+      dark:text-base-600;
+    }
+  }
+
+  &__like-button-active {
+    @apply text-brand-primary-bg transition-colors outline-none
+    dark:text-brand-primary-bg dark:transition-colors;
+
+    &:hover {
+      @apply text-red transition-colors;
+    }
+  }
+
+  &__dislike-button-active {
+    @apply text-red transition-colors outline-none
+    dark:text-red;
+
+    &:hover {
+      @apply text-base-400 transition-colors;
+    }
+  }
+
+  &__reaction-icon {
+    @apply outline-none text-base;
+
+    &:hover {
+      @apply scale-110 transition-all outline-none;
+    }
+
+    &:focus {
+      @apply outline-none;
+    }
+  }
+
+  &__loading-icon {
+    @apply animate-spin;
+  }
+}

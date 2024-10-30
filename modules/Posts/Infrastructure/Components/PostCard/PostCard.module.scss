@@ -14,11 +14,8 @@
     }
 
     &:hover {
-      #{$parentBlock}__video-time,
-      #{$parentBlock}__external-icon,
-      #{$parentBlock}__video-resolution {
-        @apply opacity-0 transition-all
-          duration-500;
+      #{$parentBlock}__absolute-element {
+        @apply opacity-0 transition-all;
 
         &:hover, &:focus {
           @apply opacity-100;
@@ -45,41 +42,27 @@
   }
 
   &__video-title-link {
-    @apply line-clamp-2 text-sm font-medium;
+    @apply line-clamp-2 text-sm font-medium mb-1.5 text-black
+    transition-colors dark:text-base-100 dark:transition-colors;
   }
 
   &__extra-data {
-    @apply flex items-center font-normal text-base-400 text-xs gap-x-0.5
-    line-clamp-none truncate mt-0.5;
+    @apply flex items-center font-normal text-base-600 text-xs
+    gap-x-0.5 line-clamp-none truncate mt-0.5 transition-colors
+    dark:text-base-400 dark:transition-colors;
   }
 
-  &__icon {
-    @apply text-brand-primary-dark text-sm;
-  }
-
-  &__video-time {
+  &__absolute-element {
     @apply absolute top-1 right-1 text-sm font-medium
     py-0.5 px-1 rounded-lg z-post-card-video-time
-    cursor-default bg-base-700;
-    text-shadow: 0 0 4px #000000;
+    cursor-default text-white bg-black/70;
   }
 
   &__video-resolution {
-    @apply absolute top-8 right-1 text-sm font-medium
-    text-white py-0.5 px-1 rounded-lg z-post-card-video-time
-    cursor-default bg-brand-primary-bg uppercase leading-tight shadow-all-sm;
-    text-shadow: 0 0 4px #000000;
+    @apply top-8 right-1 uppercase;
   }
 
   &__external-icon {
-    @apply absolute top-14 right-1 text-xl font-normal
-    text-base-100 py-0.5 px-1 rounded-lg bg-brand-primary-bg
-    z-post-card-video-time cursor-default transition-colors
-    shadow-all shadow-brand-primary-bg;
-
-    &:hover {
-      @apply bg-brand-secondary-bg
-      shadow-brand-secondary-bg transition-colors;
-    }
+    @apply top-14 right-1 text-xl bg-brand-primary-bg/70;
   }
 }

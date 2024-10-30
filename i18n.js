@@ -1,6 +1,9 @@
-const i18nConfig = {
-  defaultLocale: 'en',
-  locales: ['en', 'es'],
+// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
+const { i18nConfig } = require('./i18n.config.js')
+
+const config = {
+  defaultLocale: i18nConfig.defaultLocale,
+  locales: i18nConfig.locales,
   loadLocaleFrom: (lang, ns) => {
     return new Promise((resolve, reject) => {
       import(`./public/locales/${lang}/${ns}.json`)
@@ -16,75 +19,53 @@ const i18nConfig = {
       'app_banner',
       'footer',
       'menu',
-      'user_menu',
-      'user_login',
-      'user_signup',
-      'user_retrieve_password',
       'error',
       'common',
-      'carousel',
-      'post_card_options',
-      'post_card_gallery',
-    ],
-    'rgx:/users/*': [
-      'sorting_menu_dropdown',
-      'post_card',
-      'pagination_bar',
-      'api_exceptions',
-      'user_profile',
     ],
     '/': [
       'sorting_menu_dropdown',
-      'post_card',
+      'post',
       'pagination_bar',
       'api_exceptions',
       'home_page',
     ],
     'rgx:/producers/*': [
       'sorting_menu_dropdown',
-      'post_card',
+      'post',
       'pagination_bar',
       'producers',
       'api_exceptions',
     ],
     'rgx:/categories/*': [
       'sorting_menu_dropdown',
-      'post_card',
+      'post',
       'pagination_bar',
-      'tags',
+      'categories',
       'api_exceptions',
     ],
     'rgx:/actors/*': [
       'sorting_menu_dropdown',
-      'post_card',
+      'post',
       'pagination_bar',
       'actors',
       'api_exceptions',
     ],
     'rgx:/posts/videos/*': [
       'sorting_menu_dropdown',
-      'post_card',
       'pagination_bar',
       'api_exceptions',
-      'post_card_options',
-      'post_card_gallery',
       'post_page',
       'post',
       'post_comments',
     ],
     'rgx:/posts/search/*': [
       'sorting_menu_dropdown',
-      'post_card',
+      'post',
       'pagination_bar',
       'search',
       'api_exceptions',
     ],
-    '/posts/top': [
-      'top',
-      'post_card',
-    ],
   },
-
 }
 
-module.exports = i18nConfig
+module.exports = config

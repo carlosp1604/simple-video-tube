@@ -68,7 +68,7 @@ export default async function handler (
   try {
     await useCase.create(applicationRequest)
 
-    return response.status(201)
+    return response.status(201).end()
   } catch (exception: unknown) {
     if (!(exception instanceof CreateReportApplicationException || exception instanceof ValidationException)) {
       console.error(exception)

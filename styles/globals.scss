@@ -3,3 +3,29 @@
 @tailwind utilities;
 
 @import 'styles/reset.scss';
+
+body {
+  @apply bg-body-light text-xs text-black
+  overflow-y-scroll overflow-x-hidden transition-colors
+  dark:text-white dark:bg-body-dark dark:transition-colors;
+
+  @screen tb {
+    @apply text-sm;
+  }
+
+  @screen md {
+    @apply text-base;
+  }
+}
+
+html {
+  @apply overscroll-auto scrollbar-hide;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+  @screen md {
+    @apply scroll-auto;
+  }
+}

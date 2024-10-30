@@ -3,16 +3,30 @@ import {
   InfrastructureSortingOptions
 } from '~/modules/Shared/Infrastructure/InfrastructureSorting'
 import { FetchFilter } from '~/modules/Shared/Infrastructure/FrontEnd/FetchFilter'
-import { GetPostsApplicationResponse } from '~/modules/Posts/Application/Dtos/GetPostsApplicationDto'
 import { ReactionType } from '~/modules/Reactions/Infrastructure/ReactionType'
 import { APIException } from '~/modules/Shared/Infrastructure/FrontEnd/ApiException'
 import {
   POST_REACTION_NOT_FOUND,
-  POST_REACTION_POST_NOT_FOUND, POST_REACTION_USER_NOT_FOUND
+  POST_REACTION_POST_NOT_FOUND
 } from '~/modules/Posts/Infrastructure/Api/PostApiExceptionCodes'
 import { ModelReactionApplicationDto } from '~/modules/Reactions/Application/ModelReactionApplicationDto'
 import { defaultPerPage } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
 import { PostFilterOptions } from '~/modules/Posts/Infrastructure/Frontend/PostFilterOptions'
+import { ReactionComponentDto } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDto'
+import {
+  ReactionComponentDtoTranslator
+} from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDtoTranslator'
+import { PostCardComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostCardComponentDto'
+import {
+  PostCardComponentDtoTranslator
+} from '~/modules/Posts/Infrastructure/Translators/PostCardComponentDtoTranslator'
+import { GetPostsApplicationResponse } from '~/modules/Posts/Application/Dtos/GetPostsApplicationDto'
+import { i18nConfig } from '~/i18n.config'
+
+interface GetPostsResponse {
+  posts: PostCardComponentDto[]
+  postsNumber: number
+}
 
 export class PostsApiService {
   public async getPosts (
@@ -20,8 +34,9 @@ export class PostsApiService {
     perPage: number = defaultPerPage,
     order: InfrastructureSortingCriteria,
     orderBy: InfrastructureSortingOptions,
-    filters: FetchFilter<PostFilterOptions>[]
-  ): Promise<GetPostsApplicationResponse> {
+    filters: FetchFilter<PostFilterOptions>[],
+    locale: string
+  ): Promise<GetPostsResponse> {
     const params = new URLSearchParams()
 
     params.append('page', pageNumber.toString())
@@ -35,55 +50,20 @@ export class PostsApiService {
       }
     }
 
-    return ((await fetch(`/api/posts?${params}`)).json())
-  }
+    const response = await fetch(`/api/posts?${params}`)
 
-  public async getSavedPosts (
-    userId: string,
-    pageNumber: number,
-    perPage: number = defaultPerPage,
-    order: InfrastructureSortingCriteria,
-    orderBy: InfrastructureSortingOptions,
-    filters: FetchFilter<PostFilterOptions>[]
-  ): Promise<GetPostsApplicationResponse> {
-    const params = new URLSearchParams()
+    const jsonResponse = await response.json()
 
-    params.append('page', pageNumber.toString())
-    params.append('perPage', perPage.toString())
-    params.append('orderBy', orderBy)
-    params.append('order', order)
-
-    for (const filter of filters) {
-      if (filter.value !== null) {
-        params.append(filter.type, filter.value)
+    if (response.ok) {
+      return {
+        posts: (jsonResponse as GetPostsApplicationResponse).posts.map((post) => {
+          return PostCardComponentDtoTranslator.fromApplication(post, locale ?? i18nConfig.defaultLocale)
+        }),
+        postsNumber: (jsonResponse as GetPostsApplicationResponse).postsNumber,
       }
     }
 
-    return ((await fetch(`/api/users/${userId}/saved-posts?${params}`)).json())
-  }
-
-  public async getUserHistory (
-    userId: string,
-    pageNumber: number,
-    perPage: number = defaultPerPage,
-    order: InfrastructureSortingCriteria,
-    orderBy: InfrastructureSortingOptions,
-    filters: FetchFilter<PostFilterOptions>[]
-  ): Promise<GetPostsApplicationResponse> {
-    const params = new URLSearchParams()
-
-    params.append('page', pageNumber.toString())
-    params.append('perPage', perPage.toString())
-    params.append('orderBy', orderBy)
-    params.append('order', order)
-
-    for (const filter of filters) {
-      if (filter.value !== null) {
-        params.append(filter.type, filter.value)
-      }
-    }
-
-    return ((await fetch(`/api/users/${userId}/history?${params}`)).json())
+    throw new APIException('a', 500, 'c')
   }
 
   public async addPostView (postId: string): Promise<Response> {
@@ -95,7 +75,7 @@ export class PostsApiService {
     })
   }
 
-  public async createPostReaction (postId: string, reactionType: ReactionType): Promise<ModelReactionApplicationDto> {
+  public async createPostReaction (postId: string, reactionType: ReactionType): Promise<ReactionComponentDto> {
     const response = await fetch(`/api/posts/${postId}/reactions`, {
       method: 'POST',
       headers: {
@@ -109,7 +89,7 @@ export class PostsApiService {
     const jsonResponse = await response.json()
 
     if (response.ok) {
-      return jsonResponse as ModelReactionApplicationDto
+      return ReactionComponentDtoTranslator.fromApplicationDto(jsonResponse as ModelReactionApplicationDto)
     }
 
     switch (response.status) {
@@ -119,38 +99,13 @@ export class PostsApiService {
           response.status,
           jsonResponse.code
         )
-        break
 
-      case 401:
+      case 404:
         throw new APIException(
-          'user_must_be_authenticated_error_message',
+          'post_not_found_error_message',
           response.status,
           jsonResponse.code
         )
-
-      case 404:
-        switch (jsonResponse.code) {
-          case POST_REACTION_USER_NOT_FOUND:
-            throw new APIException(
-              'user_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          case POST_REACTION_POST_NOT_FOUND:
-            throw new APIException(
-              'post_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          default:
-            throw new APIException(
-              'server_error_error_message',
-              response.status,
-              jsonResponse.code
-            )
-        }
 
       case 409:
         throw new APIException(
@@ -187,13 +142,6 @@ export class PostsApiService {
           jsonResponse.code
         )
 
-      case 401:
-        throw new APIException(
-          'user_must_be_authenticated_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
       case 404:
         switch (jsonResponse.code) {
           case POST_REACTION_POST_NOT_FOUND:
@@ -206,13 +154,6 @@ export class PostsApiService {
           case POST_REACTION_NOT_FOUND:
             throw new APIException(
               'post_reaction_does_not_exist_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          case POST_REACTION_USER_NOT_FOUND:
-            throw new APIException(
-              'user_not_found_error_message',
               response.status,
               jsonResponse.code
             )
@@ -234,9 +175,35 @@ export class PostsApiService {
     }
   }
 
-  public async getPostUserInteraction (postId: string): Promise<Response> {
+  public async getPostUserInteraction (postId: string): Promise<ReactionComponentDto | null> {
     const fetchRoute = `/api/posts/${postId}/user-interaction`
 
-    return fetch(fetchRoute)
+    const response = await fetch(fetchRoute)
+
+    const jsonResponse = await response.json()
+
+    if (response.ok) {
+      if (jsonResponse.userReaction === null) {
+        return null
+      }
+
+      return ReactionComponentDtoTranslator.fromApplicationDto(jsonResponse.userReaction)
+    }
+
+    switch (response.status) {
+      case 400:
+        throw new APIException(
+          'bad_request_error_message',
+          response.status,
+          jsonResponse.code
+        )
+
+      default:
+        throw new APIException(
+          'server_error_error_message',
+          response.status,
+          jsonResponse.code
+        )
+    }
   }
 }

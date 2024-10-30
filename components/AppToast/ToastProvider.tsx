@@ -3,6 +3,7 @@ import { toastReducer, ToastState } from '~/components/AppToast/ToastReducer'
 import { ToastType } from '~/components/AppToast/Toast'
 import ToastsContainer, { ToastWithNodeRef } from '~/components/AppToast/ToastsContainer/ToastsContainer'
 import { ToastContext } from '~/components/AppToast/ToastContext'
+import { nanoid } from 'nanoid'
 
 export interface ToastContextProps {
   children: ReactElement
@@ -27,7 +28,7 @@ export const ToastProvider: FC<ToastContextProps> = ({ children }) => {
     if (id) {
       toastId = id
     } else {
-      toastId = String(Math.floor(Math.random() * 10000000))
+      toastId = nanoid()
     }
 
     dispatch({
@@ -38,7 +39,7 @@ export const ToastProvider: FC<ToastContextProps> = ({ children }) => {
         type,
         duration,
         dismissible,
-        onRemove: () => dispatch({ type: 'delete', toastId: String(id) }),
+        onRemove: () => dispatch({ type: 'delete', toastId }),
       },
     })
   }

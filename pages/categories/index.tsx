@@ -1,20 +1,17 @@
 import { GetStaticProps } from 'next'
 import { container } from '~/awilix.container'
-import { Settings } from 'luxon'
-import { CategoriesPageProps, TagsPage } from '~/components/pages/TagsPage/TagsPage'
+import { CategoriesPageProps, CategoriesPage } from '~/components/pages/CategoriesPage/CategoriesPage'
 import { GetAllCategories } from '~/modules/Categories/Application/GetAllCategories/GetAllCategories'
 import {
-  TagCardComponentDtoTranslator
-} from '~/modules/Categories/Infrastructure/Translators/TagCardComponentDtoTranslator'
+  CategoryCardComponentDtoTranslator
+} from '~/modules/Categories/Infrastructure/Translators/CategoryCardComponentDtoTranslator'
 import {
   HtmlPageMetaContextService
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaContextService'
+import { i18nConfig } from '~/i18n.config'
 
 export const getStaticProps: GetStaticProps<CategoriesPageProps> = async (context) => {
-  const locale = context.locale ?? 'en'
-
-  Settings.defaultLocale = locale
-  Settings.defaultZone = 'Europe/Madrid'
+  const locale = context.locale ?? i18nConfig.defaultLocale
 
   const { env } = process
   let baseUrl = ''
@@ -38,11 +35,10 @@ export const getStaticProps: GetStaticProps<CategoriesPageProps> = async (contex
     req: {
       url,
     },
-  })
+  }, { includeQuery: false, includeLocale: true }, { follow: true, index: true })
 
   const props: CategoriesPageProps = {
     categoriesCards: [],
-    baseUrl,
     htmlPageMetaContextProps: htmlPageMetaContextService.getProperties(),
   }
 
@@ -51,8 +47,10 @@ export const getStaticProps: GetStaticProps<CategoriesPageProps> = async (contex
   try {
     const categories = await getCategories.get()
 
-    props.categoriesCards =
-      categories.map((tagApplicationDto) => TagCardComponentDtoTranslator.fromApplicationDto(tagApplicationDto, locale))
+    props.categoriesCards = categories.map(
+      (categoryApplicationDto) =>
+        CategoryCardComponentDtoTranslator.fromApplicationDto(categoryApplicationDto, locale)
+    )
 
     return {
       props,
@@ -66,4 +64,4 @@ export const getStaticProps: GetStaticProps<CategoriesPageProps> = async (contex
   }
 }
 
-export default TagsPage
+export default CategoriesPage

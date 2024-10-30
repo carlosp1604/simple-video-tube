@@ -20,7 +20,7 @@ export class ReportModelTranslator {
   public static toDatabase (report: Report): ReportPrismaModel {
     return {
       id: report.id,
-      postId: report.id,
+      postId: report.postId,
       type: report.type,
       userIp: report.userIp,
       userEmail: report.userEmail,

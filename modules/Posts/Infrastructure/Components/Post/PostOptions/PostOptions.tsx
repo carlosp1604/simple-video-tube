@@ -1,6 +1,6 @@
 import styles from './PostOptions.module.scss'
 import { FC, ReactElement, useState } from 'react'
-import { BsChatSquareText, BsDownload, BsMegaphone } from 'react-icons/bs'
+import { BsGearWide } from 'react-icons/bs'
 import { ReactionType } from '~/modules/Reactions/Infrastructure/ReactionType'
 import { RxDividerVertical } from 'react-icons/rx'
 import { ReactionComponentDto } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDto'
@@ -9,41 +9,53 @@ import { LikeButton } from '~/components/ReactionButton/LikeButton'
 import { DislikeButton } from '~/components/ReactionButton/DislikeButton'
 import { MediaUrlComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostMedia/MediaUrlComponentDto'
 import { MediaUrlsHelper } from '~/modules/Posts/Infrastructure/Frontend/MediaUrlsHelper'
-import ReactGA from 'react-ga4'
+import { sendGAEvent } from '@next/third-parties/google'
 import {
   ClickDownloadButtonAction,
   VideoPostCategory, DownloadVideoCompletedAction
 } from '~/modules/Shared/Infrastructure/FrontEnd/AnalyticsEvents/PostPage'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
-import { ReportModal } from '~/modules/Reports/Infrastructure/Components/ReportModal/ReportModal'
 import { useToast } from '~/components/AppToast/ToastContext'
+import { MdFileDownload, MdOutlineFlag } from 'react-icons/md'
+import { PiChatsDuotone } from 'react-icons/pi'
 
 const DownloadMenu = dynamic(() => import(
   '~/modules/Posts/Infrastructure/Components/Post/DownloadMenu/DownloadMenu'
-).then((module) => module.DownloadMenu), { ssr: false }
-)
+).then((module) => module.DownloadMenu), { ssr: false })
+
+const ReportModal = dynamic(() => import(
+  '~/modules/Reports/Infrastructure/Components/ReportModal/ReportModal'
+).then((module) => module.ReportModal), { ssr: false })
 
 export interface Props {
+  postId: string
   userReaction: ReactionComponentDto | null
-  savedPost: boolean
   onClickReactButton: (type: ReactionType) => Promise<void>
   onClickCommentsButton: () => void
+  onClickSourcesButton: () => void
   likesNumber: number
+  dislikesNumber: number
   optionsDisabled: boolean
   downloadUrls: MediaUrlComponentDto[]
   enableDownloads: boolean
+  sourcesNumber: number
+  postCommentsNumber: number
 }
 
 export const PostOptions: FC<Props> = ({
+  postId,
   userReaction,
-  savedPost,
   onClickReactButton,
   onClickCommentsButton,
+  onClickSourcesButton,
   likesNumber,
+  dislikesNumber,
   optionsDisabled,
   downloadUrls,
   enableDownloads,
+  sourcesNumber,
+  postCommentsNumber,
 }) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [downloadMenuOpen, setDownloadMenuOpen] = useState<boolean>(false)
@@ -77,6 +89,7 @@ export const PostOptions: FC<Props> = ({
 
   let downloadMenu: ReactElement | null = null
   let downloadButton: ReactElement | null = null
+  let sourcesButton: ReactElement | null = null
 
   if (enableDownloads) {
     downloadMenu = (
@@ -85,9 +98,8 @@ export const PostOptions: FC<Props> = ({
         setIsOpen={ setDownloadMenuOpen }
         isOpen={ downloadMenuOpen }
         onClickOption={ (mediaUrl: MediaUrlComponentDto) => {
-          ReactGA.event({
+          sendGAEvent('event', DownloadVideoCompletedAction, {
             category: VideoPostCategory,
-            action: DownloadVideoCompletedAction,
             label: mediaUrl.provider.name,
           })
         } }
@@ -98,28 +110,45 @@ export const PostOptions: FC<Props> = ({
       <span
         className={ styles.postOptions__optionItem }
         onClick={ async () => {
-          ReactGA.event({
+          sendGAEvent('event', ClickDownloadButtonAction, {
             category: VideoPostCategory,
-            action: ClickDownloadButtonAction,
             label: pathname,
           })
           await onClickDownloadButton()
         } }
       >
-        <BsDownload className={ styles.postOptions__optionItemIcon }/>
-        { t('post_download_button_title', { sourcesNumber: downloadUrls.length }) }
+        <MdFileDownload className={ styles.postOptions__optionItemIcon }/>
+        { t('post_download_button_title') }
+        <span className={ styles.postOptions__optionItemQuantity }>
+          { downloadUrls.length }
+        </span>
       </span>
     )
   }
 
-  const reportMenu = (
-    <ReportModal isOpen={ reportMenuOpen } onClose={ () => setReportMenuOpen(false) } />
-  )
+  if (sourcesNumber > 1) {
+    sourcesButton = (
+      <button
+        className={ styles.postOptions__optionItem }
+        onClick={ onClickSourcesButton }
+      >
+        <BsGearWide className={ styles.postOptions__optionItemIcon }/>
+        { t('post_sources_button_title') }
+        <span className={ styles.postOptions__optionItemQuantity }>
+          { sourcesNumber }
+        </span>
+      </button>
+    )
+  }
 
   return (
     <div className={ styles.postOptions__container }>
       { downloadMenu }
-      { reportMenu }
+      <ReportModal
+        postId={ postId }
+        isOpen={ reportMenuOpen }
+        onClose={ () => setReportMenuOpen(false) }
+      />
 
       <span className={ `
         ${styles.postOptions__likeDislikeSection}
@@ -138,18 +167,25 @@ export const PostOptions: FC<Props> = ({
           onDislike={ () => onClickLikeDislike(ReactionType.DISLIKE) }
           onDeleteDislike={ () => onClickLikeDislike(ReactionType.DISLIKE) }
           disabled={ loading || optionsDisabled }
+          reactionsNumber={ dislikesNumber }
         />
       </span>
-      <span
+      { sourcesButton }
+      <button
         className={ styles.postOptions__optionItem }
         onClick={ onClickCommentsButton }
       >
-        <BsChatSquareText className={ styles.postOptions__optionItemIcon }/>
+        <PiChatsDuotone className={ styles.postOptions__optionItemIcon }/>
         { t('post_comments_button_title') }
-      </span>
+        <span className={ styles.postOptions__optionItemQuantity }>
+          { postCommentsNumber }
+        </span>
+      </button>
       { downloadButton }
-      <button onClick={ () => setReportMenuOpen(true) }>
-        <BsMegaphone className={ styles.postOptions__optionItemIcon }/>
+      <button
+        className={ styles.postOptions__optionItem }
+        onClick={ () => setReportMenuOpen(true) }>
+        <MdOutlineFlag className={ styles.postOptions__optionItemIcon }/>
         { t('post_report_button_title') }
       </button>
     </div>

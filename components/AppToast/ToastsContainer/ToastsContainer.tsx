@@ -15,7 +15,9 @@ export interface ToastsContainerProps {
 
 const ToastsContainer: FC<ToastsContainerProps> = ({ toasts }) => {
   return (
-    <TransitionGroup className={ styles.toastsContainer__container }>
+    <TransitionGroup className={
+      `${styles.toastsContainer__container} ${toasts.length ? styles.toastsContainer__container_visible : ''}`
+    }>
       { toasts.map((toast) => (
         <CSSTransition
           classNames={ {

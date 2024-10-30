@@ -1,7 +1,8 @@
 .video-loading-state {
   &__container {
     @apply flex items-center justify-center
-      w-full h-full bg-body/40 transition-colors;
+    w-full h-full bg-body-light/40 transition-colors
+    dark:bg-body-dark/40;
   }
 
   &__loading-icon {

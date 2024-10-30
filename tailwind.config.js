@@ -12,6 +12,7 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
   ],
   important: true,
+  darkMode: ['class', '[data-mode="dark"]'],
   corePlugins: {
     aspectRatio: false,
   },
@@ -49,7 +50,7 @@ module.exports = {
       },
       animation: {
         'bounce-short': 'bounce 0.3s ease-in-out 2',
-        'click-ripple': 'ripple 1s linear forwards',
+        'click-ripple': 'ripple 0.5s linear forwards',
       },
       boxShadow: {
         all: '0px 0px 10px 2px rgba(0, 0, 0, 0.3)',
@@ -60,7 +61,10 @@ module.exports = {
           item: '#a06c3f',
           active: '#007880',
         },
-        body: '#1d1d1d',
+        body: {
+          dark: '#1d1d1d',
+          light: '#f1f1f1',
+        },
         base: {
           950: '#0c0a09',
           900: '#1C1917',
@@ -136,9 +140,9 @@ module.exports = {
         'top-mobile',
         'app-menu',
         'mobile-menu',
-        'toast',
         'tooltip',
         'modal-backdrop',
+        'toast',
       ]),
     },
   },

@@ -11,7 +11,7 @@ export class CreatePostCommentApiRequestValidator {
       .trim()
       .min(1, { message: 'Comment cannot be empty' }),
     postId: z.string({}).uuid(),
-    username: z.string().min(1),
+    userName: z.string().min(1),
   })
 
   public static validate (request: CreatePostCommentApiRequestDto): PostCommentApiRequestValidatorError | void {

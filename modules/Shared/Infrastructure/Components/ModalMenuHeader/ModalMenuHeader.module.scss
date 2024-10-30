@@ -1,11 +1,12 @@
 .modal-menu-header {
   &__container {
-    @apply flex gap-x-2 items-center justify-center px-5;
+    @apply flex gap-x-2 items-center justify-center px-5
+    cursor-default transition-colors
+    dark:text-white dark:transition-colors;
   }
 
   &__title {
-    @apply flex flex-col text-base font-semibold
-      leading-none;
+    @apply flex flex-col text-base font-semibold leading-none;
 
     @screen md {
       @apply text-lg;
@@ -17,7 +18,8 @@
   }
 
   &__subtitle {
-    @apply text-xs font-light whitespace-pre-line mt-0.5 leading-tight;
+    @apply text-xs font-light whitespace-pre-line mt-0.5
+    leading-tight;
 
     @screen md {
       @apply text-sm mt-0;
@@ -30,7 +32,9 @@
 
   &__icon-wrapper {
     @apply flex items-center justify-center h-8 w-8 rounded-md
-      bg-brand-primary-dark text-xl flex-shrink-0;
+    bg-brand-primary-light text-xl flex-shrink-0 text-base-50
+    transition-colors
+    dark:bg-brand-primary-dark dark:transition-colors;
 
     @screen md {
       @apply h-10 w-10 text-2xl;

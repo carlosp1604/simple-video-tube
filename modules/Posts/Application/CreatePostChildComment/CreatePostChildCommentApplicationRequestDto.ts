@@ -3,5 +3,5 @@ export interface CreatePostChildCommentApplicationRequestDto {
   readonly postId: string
   readonly parentCommentId: string
   readonly userIp: string
-  readonly username: string
+  readonly userName: string
 }

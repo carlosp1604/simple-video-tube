@@ -5,6 +5,7 @@ export interface GetProducersProducerWithPostsCountDto {
   postsNumber: number
   producerViews: number
 }
+
 export interface GetProducersApplicationResponseDto {
   producers: GetProducersProducerWithPostsCountDto[]
   producersNumber: number

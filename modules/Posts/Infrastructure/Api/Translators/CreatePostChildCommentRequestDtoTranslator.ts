@@ -13,7 +13,7 @@ export class CreatePostChildCommentRequestDtoTranslator {
     return {
       postId: request.postId,
       userIp,
-      username: request.username,
+      userName: request.userName,
       comment: request.comment,
       parentCommentId: request.parentCommentId,
     }

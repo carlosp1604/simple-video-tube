@@ -10,7 +10,7 @@ export class PostCommentApplicationDtoTranslator {
       updatedAt: comment.updatedAt.toISO(),
       postId: comment.postId,
       userIp: comment.userIp,
-      username: comment.username,
+      userName: comment.userName,
     }
   }
 }

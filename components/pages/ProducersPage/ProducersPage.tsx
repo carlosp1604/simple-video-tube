@@ -14,7 +14,6 @@ import {
 import { Producers } from '~/modules/Producers/Infrastructure/Components/Producers/Producers'
 import { HtmlPageMeta } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMeta'
 import { MobileBanner } from '~/modules/Shared/Infrastructure/Components/Banner/MobileBanner'
-import { useRouter } from 'next/router'
 
 export interface ProducersPageProps {
   initialSearchTerm: string
@@ -23,7 +22,6 @@ export interface ProducersPageProps {
   initialProducers: ProducerCardDto[]
   initialProducersNumber: number
   htmlPageMetaContextProps: HtmlPageMetaContextProps
-  baseUrl: string
 }
 
 export const ProducersPage: NextPage<ProducersPageProps> = ({
@@ -33,23 +31,15 @@ export const ProducersPage: NextPage<ProducersPageProps> = ({
   initialPage,
   initialOrder,
   htmlPageMetaContextProps,
-  baseUrl,
 }) => {
   const { t } = useTranslation('producers')
-  const locale = useRouter().locale ?? 'en'
-
-  let canonicalUrl = `${baseUrl}/producers`
-
-  if (locale !== 'en') {
-    canonicalUrl = `${baseUrl}/${locale}/producers`
-  }
 
   const htmlPageMetaUrlProps = (
     new HtmlPageMetaResourceService(
       t('producers_page_title'),
       t('producers_page_description'),
       HtmlPageMetaContextResourceType.ARTICLE,
-      canonicalUrl
+      htmlPageMetaContextProps.canonicalUrl
     )
   ).getProperties()
 

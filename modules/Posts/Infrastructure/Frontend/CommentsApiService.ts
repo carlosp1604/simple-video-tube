@@ -2,11 +2,10 @@ import { GetPostPostCommentsResponseDto } from '~/modules/Posts/Application/Dtos
 import { ModelReactionApplicationDto } from '~/modules/Reactions/Application/ModelReactionApplicationDto'
 import { APIException } from '~/modules/Shared/Infrastructure/FrontEnd/ApiException'
 import {
-  POST_COMMENT_COMMENT_NOT_FOUND, POST_COMMENT_PARENT_COMMENT_NOT_FOUND,
+  POST_COMMENT_PARENT_COMMENT_NOT_FOUND,
   POST_COMMENT_POST_NOT_FOUND,
   POST_COMMENT_REACTION_NOT_FOUND,
   POST_COMMENT_REACTION_POST_COMMENT_NOT_FOUND,
-  POST_COMMENT_REACTION_USER_NOT_FOUND,
   POST_COMMENT_USER_NOT_FOUND
 } from '~/modules/Posts/Infrastructure/Api/PostApiExceptionCodes'
 import { PostCommentApplicationDto } from '~/modules/Posts/Application/Dtos/PostCommentApplicationDto'
@@ -15,13 +14,37 @@ import {
   GetPostPostChildCommentsResponseDto
 } from '~/modules/Posts/Application/GetPostPostChildComments/GetPostPostChildCommentsResponseDto'
 import { defaultPerPage } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
+import { ReactionComponentDto } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDto'
+import {
+  ReactionComponentDtoTranslator
+} from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDtoTranslator'
+import { PostChildCommentComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostChildCommentComponentDto'
+import {
+  PostChildCommentComponentDtoTranslator
+} from '~/modules/Posts/Infrastructure/Translators/PostChildCommentComponentTranslator'
+import {
+  PostCommentComponentDtoTranslator
+} from '~/modules/Posts/Infrastructure/Translators/PostCommentComponentDtoTranslator'
+import { PostCommentComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostCommentComponentDto'
+
+interface GetCommentsResponse {
+  comments: PostCommentComponentDto[]
+  commentsNumber: number
+}
+
+interface GetChildCommentsResponse {
+  comments: PostChildCommentComponentDto[]
+  commentsNumber: number
+}
 
 export class CommentsApiService {
   public async create (
     postId: string,
     comment: string,
-    parentCommentId: string | null
-  ): Promise<PostCommentApplicationDto> {
+    userName: string,
+    parentCommentId: string | null,
+    locale:string
+  ): Promise<PostCommentComponentDto> {
     const response = await fetch(`/api/posts/${postId}/comments`, {
       method: 'POST',
       headers: {
@@ -29,6 +52,7 @@ export class CommentsApiService {
       },
       body: JSON.stringify({
         comment,
+        userName,
         parentCommentId,
       }),
     })
@@ -36,20 +60,14 @@ export class CommentsApiService {
     const jsonResponse = await response.json()
 
     if (response.ok) {
-      return jsonResponse as PostCommentApplicationDto
+      return PostCommentComponentDtoTranslator
+        .fromApplication(jsonResponse as PostCommentApplicationDto, 0, 0, null, locale)
     }
 
     switch (response.status) {
       case 400:
         throw new APIException(
           'bad_request_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
-      case 401:
-        throw new APIException(
-          'user_must_be_authenticated_error_message',
           response.status,
           jsonResponse.code
         )
@@ -90,33 +108,29 @@ export class CommentsApiService {
   public async createReply (
     postId: string,
     comment: string,
-    parentCommentId: string
-  ): Promise<PostChildCommentApplicationDto> {
+    userName: string,
+    parentCommentId: string,
+    locale: string
+  ): Promise<PostChildCommentComponentDto> {
     const response = await fetch(`/api/posts/${postId}/comments/${parentCommentId}/children`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ comment }),
+      body: JSON.stringify({ comment, userName }),
     })
 
     const jsonResponse = await response.json()
 
     if (response.ok) {
-      return jsonResponse as PostChildCommentApplicationDto
+      return PostChildCommentComponentDtoTranslator
+        .fromApplication(jsonResponse as PostChildCommentApplicationDto, 0, null, locale)
     }
 
     switch (response.status) {
       case 400:
         throw new APIException(
           'bad_request_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
-      case 401:
-        throw new APIException(
-          'user_must_be_authenticated_error_message',
           response.status,
           jsonResponse.code
         )
@@ -161,108 +175,12 @@ export class CommentsApiService {
     }
   }
 
-  public async delete (
-    postId: string,
-    postCommentId: string,
-    parentCommentId: string | null
-  ): Promise<void> {
-    let fetchRoute = `/api/posts/${postId}/comments/${postCommentId}`
-
-    if (parentCommentId !== null) {
-      fetchRoute = `/api/posts/${postId}/comments/${parentCommentId}/children/${postCommentId}`
-    }
-
-    const response = await fetch(fetchRoute, {
-      method: 'DELETE',
-    })
-
-    if (response.ok) {
-      return
-    }
-
-    const jsonResponse = await response.json()
-
-    switch (response.status) {
-      case 400:
-        throw new APIException(
-          'bad_request_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
-      case 401:
-        throw new APIException(
-          'user_must_be_authenticated_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
-      case 403:
-        throw new APIException(
-          'delete_post_comment_does_not_belong_to_user_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
-      case 404:
-        switch (jsonResponse.code) {
-          case POST_COMMENT_POST_NOT_FOUND:
-            throw new APIException(
-              'delete_post_comment_post_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          case POST_COMMENT_PARENT_COMMENT_NOT_FOUND:
-            throw new APIException(
-              'delete_post_comment_parent_comment_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          case POST_COMMENT_COMMENT_NOT_FOUND:
-            throw new APIException(
-              'delete_post_comment_post_comment_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          case POST_COMMENT_USER_NOT_FOUND:
-            throw new APIException(
-              'user_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          default:
-            throw new APIException(
-              'server_error_error_message',
-              response.status,
-              jsonResponse.code
-            )
-        }
-
-      case 409:
-        throw new APIException(
-          'delete_post_comment_post_comment_cannot_be_deleted_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
-      default:
-        throw new APIException(
-          'server_error_error_message',
-          response.status,
-          jsonResponse.code
-        )
-    }
-  }
-
   public async getComments (
     postId: string,
     pageNumber: number,
-    perPage: number = defaultPerPage
-  ): Promise<GetPostPostCommentsResponseDto> {
+    perPage: number = defaultPerPage,
+    locale: string
+  ): Promise<GetCommentsResponse> {
     const params = new URLSearchParams()
 
     params.append('page', pageNumber.toString())
@@ -273,7 +191,19 @@ export class CommentsApiService {
     const jsonResponse = await response.json()
 
     if (response.ok) {
-      return jsonResponse as GetPostPostCommentsResponseDto
+      return {
+        comments: (jsonResponse as GetPostPostCommentsResponseDto)
+          .postCommentsWithChildrenCount.map((applicationDto) => {
+            return PostCommentComponentDtoTranslator.fromApplication(
+              applicationDto.postComment,
+              applicationDto.childrenNumber,
+              applicationDto.reactionsNumber,
+              applicationDto.userReaction,
+              locale
+            )
+          }),
+        commentsNumber: (jsonResponse as GetPostPostCommentsResponseDto).postPostCommentsCount,
+      }
     }
 
     /**
@@ -292,8 +222,9 @@ export class CommentsApiService {
     postId: string,
     parentCommentId: string,
     pageNumber: number,
-    perPage: number = defaultPerPage
-  ): Promise<GetPostPostChildCommentsResponseDto> {
+    perPage: number = defaultPerPage,
+    locale: string
+  ): Promise<GetChildCommentsResponse> {
     const params = new URLSearchParams()
 
     params.append('page', pageNumber.toString())
@@ -304,7 +235,15 @@ export class CommentsApiService {
     const jsonResponse = await response.json()
 
     if (response.ok) {
-      return jsonResponse as GetPostPostChildCommentsResponseDto
+      return {
+        comments: (jsonResponse as GetPostPostChildCommentsResponseDto)
+          .childCommentsWithReactions.map((applicationDto) => {
+            return PostChildCommentComponentDtoTranslator.fromApplication(
+              applicationDto.postChildComment, applicationDto.reactionsNumber, applicationDto.userReaction, locale
+            )
+          }),
+        commentsNumber: (jsonResponse as GetPostPostChildCommentsResponseDto).childCommentsCount,
+      }
     }
 
     /**
@@ -319,15 +258,13 @@ export class CommentsApiService {
     )
   }
 
-  public async createPostCommentReaction (postCommentId: string): Promise<ModelReactionApplicationDto> {
-    const response = await fetch(`/api/comments/${postCommentId}/reactions`, {
-      method: 'POST',
-    })
+  public async createPostCommentReaction (postCommentId: string): Promise<ReactionComponentDto> {
+    const response = await fetch(`/api/comments/${postCommentId}/reactions`, { method: 'POST' })
 
     const jsonResponse = await response.json()
 
     if (response.ok) {
-      return jsonResponse as ModelReactionApplicationDto
+      return ReactionComponentDtoTranslator.fromApplicationDto(jsonResponse as ModelReactionApplicationDto)
     }
 
     switch (response.status) {
@@ -338,36 +275,12 @@ export class CommentsApiService {
           jsonResponse.code
         )
 
-      case 401:
+      case 404:
         throw new APIException(
-          'user_must_be_authenticated_error_message',
+          'create_post_comment_reaction_post_comment_not_found_error_message',
           response.status,
           jsonResponse.code
         )
-
-      case 404:
-        switch (jsonResponse.code) {
-          case POST_COMMENT_REACTION_USER_NOT_FOUND:
-            throw new APIException(
-              'user_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          case POST_COMMENT_REACTION_POST_COMMENT_NOT_FOUND:
-            throw new APIException(
-              'create_post_comment_reaction_post_comment_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          default:
-            throw new APIException(
-              'server_error_error_message',
-              response.status,
-              jsonResponse.code
-            )
-        }
 
       case 409:
         throw new APIException(
@@ -386,9 +299,7 @@ export class CommentsApiService {
   }
 
   public async deletePostCommentReaction (postCommentId: string): Promise<void> {
-    const response = await fetch(`/api/comments/${postCommentId}/reactions`, {
-      method: 'DELETE',
-    })
+    const response = await fetch(`/api/comments/${postCommentId}/reactions`, { method: 'DELETE' })
 
     if (response.ok) {
       return
@@ -404,25 +315,11 @@ export class CommentsApiService {
           jsonResponse.code
         )
 
-      case 401:
-        throw new APIException(
-          'user_must_be_authenticated_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
       case 404:
         switch (jsonResponse.code) {
           case POST_COMMENT_REACTION_POST_COMMENT_NOT_FOUND:
             throw new APIException(
               'delete_post_comment_reaction_post_comment_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          case POST_COMMENT_REACTION_USER_NOT_FOUND:
-            throw new APIException(
-              'user_not_found_error_message',
               response.status,
               jsonResponse.code
             )
@@ -454,15 +351,14 @@ export class CommentsApiService {
   public async createPostChildCommentReaction (
     postCommentId: string,
     parentCommentId: string
-  ): Promise<ModelReactionApplicationDto> {
-    const response = await fetch(`/api/comments/${parentCommentId}/children/${postCommentId}/reactions`, {
-      method: 'POST',
-    })
+  ): Promise<ReactionComponentDto> {
+    const response =
+      await fetch(`/api/comments/${parentCommentId}/children/${postCommentId}/reactions`, { method: 'POST' })
 
     const jsonResponse = await response.json()
 
     if (response.ok) {
-      return jsonResponse as ModelReactionApplicationDto
+      return ReactionComponentDtoTranslator.fromApplicationDto(jsonResponse as ModelReactionApplicationDto)
     }
 
     switch (response.status) {
@@ -472,38 +368,13 @@ export class CommentsApiService {
           response.status,
           jsonResponse.code
         )
-        break
 
-      case 401:
+      case 404:
         throw new APIException(
-          'user_must_be_authenticated_error_message',
+          'create_post_comment_reaction_post_comment_not_found_error_message',
           response.status,
           jsonResponse.code
         )
-
-      case 404:
-        switch (jsonResponse.code) {
-          case POST_COMMENT_REACTION_USER_NOT_FOUND:
-            throw new APIException(
-              'user_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          case POST_COMMENT_REACTION_POST_COMMENT_NOT_FOUND:
-            throw new APIException(
-              'create_post_comment_reaction_post_comment_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
-          default:
-            throw new APIException(
-              'server_error_error_message',
-              response.status,
-              jsonResponse.code
-            )
-        }
 
       case 409:
         throw new APIException(
@@ -525,9 +396,8 @@ export class CommentsApiService {
     postCommentId: string,
     parentCommentId: string
   ): Promise<void> {
-    const response = await fetch(`/api/comments/${parentCommentId}/children/${postCommentId}/reactions`, {
-      method: 'DELETE',
-    })
+    const response =
+      await fetch(`/api/comments/${parentCommentId}/children/${postCommentId}/reactions`, { method: 'DELETE' })
 
     if (response.ok) {
       return
@@ -543,22 +413,8 @@ export class CommentsApiService {
           jsonResponse.code
         )
 
-      case 401:
-        throw new APIException(
-          'user_must_be_authenticated_error_message',
-          response.status,
-          jsonResponse.code
-        )
-
       case 404:
         switch (jsonResponse.code) {
-          case POST_COMMENT_REACTION_USER_NOT_FOUND:
-            throw new APIException(
-              'user_not_found_error_message',
-              response.status,
-              jsonResponse.code
-            )
-
           case POST_COMMENT_REACTION_POST_COMMENT_NOT_FOUND:
             throw new APIException(
               'delete_post_comment_reaction_post_comment_not_found_error_message',

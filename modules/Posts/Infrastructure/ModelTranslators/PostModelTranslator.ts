@@ -193,7 +193,8 @@ export class PostModelTranslator {
       producerRelationship,
       translationsCollection,
       actorRelationship,
-      postMediaCollection
+      postMediaCollection,
+      reportsCollection
     )
   }
 

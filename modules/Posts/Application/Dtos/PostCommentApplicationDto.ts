@@ -5,5 +5,5 @@ export interface PostCommentApplicationDto {
   readonly userIp: string
   readonly createdAt: string
   readonly updatedAt: string
-  readonly username: string
+  readonly userName: string
 }

@@ -1,24 +1,27 @@
 .app-footer {
   &__layout {
-    @apply container p-0 pt-0.5 bg-gradient-to-r border-none
-      from-body via-brand-secondary-light to-body;
+    @apply container p-0 pt-0.5 border-none
+    bg-brand-primary-light dark:bg-brand-primary-bg;
   }
 
   &__container {
-    @apply grid place-items-start items-center px-5 pt-10 pb-8
-      justify-between bg-base-900;
+    @apply grid place-items-start items-center px-5 pt-10
+    pb-8 justify-between text-black bg-base-200
+    transition-colors
+    dark:bg-base-900 dark:transition-colors
+    dark:text-base-300;
+
+    @screen lg {
+      @apply bg-body-light text-black
+      dark:bg-body-dark dark:text-base-300;
+    }
 
     grid-template-areas:
       "social-networks    social-networks   app-logo"
-      "contact            contact           languages"
-      "copyright          copyright         languages";
-    grid-auto-columns: auto auto;
+      "contact            contact           theme-switcher"
+      "copyright          copyright         copyright";
+    grid-auto-columns: auto auto auto;
     grid-column-gap: 10px;
-
-    @screen lg {
-      @apply bg-base-950 bg-gradient-to-r
-      from-body via-base-950 to-body;
-    }
   }
 
   &__logo-image-link {
@@ -42,13 +45,14 @@
     }
 
     &:hover {
-      @apply invert transition-all;
+      @apply grayscale transition-all;
     }
   }
 
   &__copyright {
-    @apply flex flex-row flex-wrap font-thin items-center gap-x-1
-      text-xs mt-4 text-base-500 ;
+    @apply flex flex-row flex-wrap font-light items-center gap-x-1
+    text-xs mt-4 text-black cursor-default
+    dark:text-base-500;
     grid-area: copyright;
 
     @screen md {
@@ -57,7 +61,7 @@
   }
 
   &__copyright-brand-name {
-    @apply text-xs font-black uppercase text-base-50;
+    @apply text-xs font-black uppercase text-brand-primary-light;
 
     @screen md {
       @apply text-base;
@@ -65,8 +69,8 @@
   }
 
   &__social-networks {
-    @apply flex flex-row flex-wrap gap-x-2 gap-y-2
-      text-base uppercase items-center justify-center mt-1;
+    @apply flex flex-row flex-wrap gap-x-2 gap-y-2 text-white
+    text-base uppercase items-center justify-center mt-1;
     grid-area: social-networks;
 
     @screen md {
@@ -79,28 +83,12 @@
   }
 
   &__social-network {
-    @apply relative p-1.5 rounded-full bg-brand-primary-bg transition-colors;
+    @apply relative p-1.5 rounded-lg bg-brand-primary-bg
+    transition-colors;
 
     &:hover {
-      @apply bg-brand-secondary-dark transition-colors;
-    }
-  }
-
-  &__languages {
-    @apply flex w-full flex-wrap gap-x-3 gap-y-1 mt-2
-      items-center justify-center self-start;
-    grid-area: languages;
-  }
-
-  &__language-item {
-    @apply text-base-400 font-normal uppercase text-xs;
-
-    &__active {
-      @apply text-base-100 font-black pointer-events-none;
-    }
-
-    @screen md {
-      @apply text-sm;
+      @apply bg-brand-primary-dark transition-colors text-white
+      dark:text-white;
     }
   }
 
@@ -112,5 +100,12 @@
     @screen md {
       @apply text-sm;
     }
+  }
+
+  &__theme-switcher {
+    @apply place-self-center border border-base-300
+    rounded-lg my-2 transition-colors
+    dark:border-base-800 dark:transition-colors;
+    grid-area: theme-switcher;
   }
 }

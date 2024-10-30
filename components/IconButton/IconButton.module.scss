@@ -1,18 +1,30 @@
 .icon-button {
   &__button {
-    @apply p-3 rounded-full transition-colors text-base-400
-      text-2xl outline-none;
+    @apply p-3 rounded-full text-sm outline-none
+    dark:text-base-500;
 
     &:hover {
-      @apply bg-base-800/60 transition-colors text-base-100;
+      @apply bg-base-300/60 text-base-500 transition-colors
+      dark:bg-base-800/60 dark:transition-colors dark:text-base-100;
     }
 
     &:active {
-      @apply bg-base-700/60 text-brand-primary-dark transition-colors;
+      @apply text-brand-primary-light
+      dark:text-brand-primary-dark;
     }
 
     &:disabled {
-      @apply text-base-700;
+      @apply text-base-300 transition-colors
+      dark:text-base-700;
+    }
+
+    @screen md {
+      @apply text-base;
+    }
+
+    @screen lg {
+      @apply text-2xl;
     }
   }
 }
+

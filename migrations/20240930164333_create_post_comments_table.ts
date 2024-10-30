@@ -6,7 +6,7 @@ export async function up (knex: Knex): Promise<void> {
       table.string('id', 36).primary().notNullable()
       table.string('comment', 512).notNullable()
       table.string('user_ip', 40).index().notNullable()
-      table.string('username', 128).index().notNullable()
+      table.string('user_name', 128).index().notNullable()
       table.string('post_id', 36)
         .references('id')
         .inTable('posts')

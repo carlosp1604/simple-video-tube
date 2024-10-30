@@ -3,8 +3,8 @@
   "games_advertising_title": "Juegos porno",
   "ia_advertising_title": "IA",
   "language_menu_already_on_language_error_message": "La aplicacion ya está en este lenguaje",
-  "language_menu_english_option_title": "Inglés",
-  "language_menu_spanish_option_title": "Español",
+  "language_menu_en_option_title": "Inglés",
+  "language_menu_es_option_title": "Español",
   "language_menu_subtitle": "Elige el idioma en el que quieres que se muestre la aplicación",
   "language_menu_title": "Idioma de la aplicación",
   "live_cams_advertising_title": "Webcams",
@@ -19,12 +19,11 @@
   "menu_reacted_button_title": "Reaccionados",
   "menu_saved_button_title": "Guardados",
   "menu_stars_button_title": "Estrellas",
-  "menu_tags_button_title": "Etiquetas",
+  "menu_categories_button_title": "Categories",
+  "menu_theme_button_title": "Tema",
   "menu_trending_button_title": "Tendencias",
   "menu_user_history_button_title": "Historial",
   "the_porn_dude_link_title": "ThePornDude",
   "user_already_on_path": "Ya estás aquí",
-  "user_menu_option_not_available_message": "Esta característica estará disponible pronto. ¡Mantente atento!",
-  "user_menu_profile_button": "Mi Perfil",
-  "user_must_be_authenticated_error_message": "Inicia sesión para acceder a esta característica"
+  "user_menu_profile_button": "Mi Perfil"
 }

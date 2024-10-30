@@ -1,0 +1,25 @@
+.text-area {
+  &__comment-input {
+    @apply h-20 p-2 text-black bg-body-light w-full
+    scrollbar-hide caret-brand-primary-bg resize-none
+    border border-base-300 rounded-lg placeholder-base-500
+    dark:bg-body-dark dark:text-base-300 dark:border-base-800
+    dark:placeholder-base-400 dark:transition-colors;
+
+    &:active, &:focus, &:hover {
+      @apply outline-none border-brand-primary-light
+      transition-colors dark:bg-base-950 dark:border-brand-primary-bg
+      dark:transition-colors;
+    }
+
+    &:disabled {
+      @apply bg-base-200 text-base-400 placeholder-base-400
+      transition-colors border dark:bg-body-dark dark:text-base-700
+      dark:placeholder-base-700 dark:transition-colors;
+
+      &:hover {
+        @apply border-base-300 dark:border-base-800;
+      }
+    }
+  }
+}

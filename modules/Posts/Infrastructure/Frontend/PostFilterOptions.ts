@@ -6,7 +6,7 @@ export const AvailablePostFilters:
     FilterOptions.SEARCH |
     FilterOptions.PRODUCER_SLUG |
     FilterOptions.ACTOR_SLUG |
-    FilterOptions.TAG_SLUG |
+    FilterOptions.CATEGORY_SLUG |
     FilterOptions.SAVED_BY |
     FilterOptions.VIEWED_BY
   >[] = [
@@ -14,7 +14,7 @@ export const AvailablePostFilters:
     FilterOptions.SEARCH,
     FilterOptions.PRODUCER_SLUG,
     FilterOptions.ACTOR_SLUG,
-    FilterOptions.TAG_SLUG,
+    FilterOptions.CATEGORY_SLUG,
     FilterOptions.SAVED_BY,
     FilterOptions.VIEWED_BY,
   ]

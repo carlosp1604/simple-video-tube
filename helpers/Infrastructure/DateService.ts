@@ -1,18 +1,6 @@
 import { DateServiceInterface } from '~/helpers/Domain/DateServiceInterface'
-import { DateTime } from 'luxon'
 
 export class DateService implements DateServiceInterface {
-  public formatAgoLike (isoDate: string, locale: string): string {
-    if (DateTime.now() < DateTime.fromISO(isoDate)) {
-      throw Error('Date to format must be less or equal to current date')
-    }
-
-    return DateTime.fromISO(isoDate).toRelativeCalendar(
-      {
-        locale,
-      }) ?? ''
-  }
-
   public formatDate (isoDate: string, locale: string): string {
     return new Date(isoDate).toLocaleString([locale], {
       day: 'numeric',
@@ -27,14 +15,6 @@ export class DateService implements DateServiceInterface {
     }
 
     return new Date(seconds * 1000).toISOString().substring(11, 19)
-  }
-
-  public formatDateToDateMedFromIso (isoDate: string, locale: string): string {
-    return DateTime.fromISO(isoDate).setLocale(locale).toLocaleString(DateTime.DATE_MED)
-  }
-
-  public formatDateToDatetimeMedFromIso (isoDate: string, locale: string): string {
-    return DateTime.fromISO(isoDate).setLocale(locale).toLocaleString(DateTime.DATETIME_MED)
   }
 
   public getCurrentDayWithoutTime (): Date {
@@ -61,5 +41,16 @@ export class DateService implements DateServiceInterface {
     const year = nowDate.getFullYear()
 
     return new Date(Date.UTC(year, month, diff))
+  }
+
+  public formatDateToDateMedFromIso (isoDate: string, locale: string): string {
+    return new Date(isoDate).toLocaleString([locale], {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    })
   }
 }

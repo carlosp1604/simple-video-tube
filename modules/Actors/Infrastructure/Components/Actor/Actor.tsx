@@ -10,11 +10,13 @@ import {
 import { PostsPaginationSortingType } from '~/modules/Posts/Infrastructure/Frontend/PostsPaginationSortingType'
 import { ActorsApiService } from '~/modules/Actors/Infrastructure/Frontend/ActorsApiService'
 import { FilterOptions } from '~/modules/Shared/Infrastructure/FrontEnd/FilterOptions'
+import { i18nConfig } from '~/i18n.config'
 
 export interface Props {
   actorName: string
   actorId: string
   actorSlug: string
+  actorViews: number
   initialPosts: PostCardComponentDto[]
   initialPostsNumber: number
 }
@@ -29,16 +31,15 @@ export const Actor: FC<Props> = ({
   const [postsNumber, setPostsNumber] = useState<number>(initialPostsNumber)
 
   const router = useRouter()
-  const locale = router.locale ?? 'en'
+  const locale = router.locale ?? i18nConfig.defaultLocale
 
   const { t } = useTranslation('actors')
 
   useEffect(() => {
-    try {
-      (new ActorsApiService()).addActorView(actorId).then()
-    } catch (exception: unknown) {
-      console.error(exception)
-    }
+    (new ActorsApiService()).addActorView(actorId)
+      .then()
+      .catch((exception) => console.error(exception))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const sortingOptions: PostsPaginationSortingType[] = [
@@ -55,24 +56,22 @@ export const Actor: FC<Props> = ({
   )
 
   return (
-    <>
-      <PaginatedPostCardGallery
-        key={ locale }
-        headerTag={ 'h1' }
-        initialPosts={ initialPosts }
-        initialPostsNumber={ initialPostsNumber }
-        title={ 'actors:actor_posts_gallery_title' }
-        subtitle={ t('actor_posts_gallery_posts_quantity', { postsNumber }) }
-        term={ { title: 'actorName', value: actorName } }
-        page={ 1 }
-        order={ PaginationSortingType.LATEST }
-        filters={ [{ type: FilterOptions.ACTOR_SLUG, value: actorSlug }] }
-        filtersToParse={ [FilterOptions.ACTOR_SLUG] }
-        sortingOptions={ sortingOptions }
-        defaultSortingOption={ PaginationSortingType.LATEST }
-        onPostsFetched={ (postsNumber, _posts) => setPostsNumber(postsNumber) }
-        emptyState={ emptyState }
-      />
-    </>
+    <PaginatedPostCardGallery
+      key={ locale }
+      headerTag={ 'h1' }
+      initialPosts={ initialPosts }
+      initialPostsNumber={ initialPostsNumber }
+      title={ 'actors:actor_posts_gallery_title' }
+      subtitle={ t('actor_posts_gallery_posts_quantity', { postsNumber }) }
+      term={ { title: 'actorName', value: actorName } }
+      page={ 1 }
+      order={ PaginationSortingType.LATEST }
+      filters={ [{ type: FilterOptions.ACTOR_SLUG, value: actorSlug }] }
+      filtersToParse={ [FilterOptions.ACTOR_SLUG] }
+      sortingOptions={ sortingOptions }
+      defaultSortingOption={ PaginationSortingType.LATEST }
+      onPostsFetched={ (postsNumber, _posts) => setPostsNumber(postsNumber) }
+      emptyState={ emptyState }
+    />
   )
 }

@@ -58,7 +58,7 @@ export class PostCommentModelTranslator {
       // if it's a PostComment we are sure the postId is not null
       prismaPostCommentModel.postId as string,
       prismaPostCommentModel.userIp,
-      prismaPostCommentModel.username,
+      prismaPostCommentModel.userName,
       DateTime.fromJSDate(prismaPostCommentModel.createdAt),
       DateTime.fromJSDate(prismaPostCommentModel.updatedAt),
       deletedAt,
@@ -77,7 +77,7 @@ export class PostCommentModelTranslator {
       deletedAt: postComment.deletedAt?.toJSDate() ?? null,
       updatedAt: postComment.updatedAt.toJSDate(),
       postId: postComment.postId,
-      username: postComment.username,
+      userName: postComment.userName,
     }
   }
 }

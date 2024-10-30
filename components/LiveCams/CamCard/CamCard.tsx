@@ -12,6 +12,7 @@ import { DateService } from '~/helpers/Infrastructure/DateService'
 import Image from 'next/image'
 import { rgbDataURL } from '~/modules/Shared/Infrastructure/FrontEnd/BlurDataUrlHelper'
 import { useIsHovered } from '~/hooks/HoverComponent'
+import { i18nConfig } from '~/i18n.config'
 
 interface Props {
   username: string
@@ -129,7 +130,7 @@ export const CamCard: FC<Props> = ({
 }) => {
   const { t } = useTranslation('common')
 
-  const locale = useRouter().locale ?? 'en'
+  const locale = useRouter().locale ?? i18nConfig.defaultLocale
 
   const transCamTitle = (
     <span
@@ -146,15 +147,15 @@ export const CamCard: FC<Props> = ({
 
   return (
     <div className={ styles.camCard__container }>
-        <Media
-          username={ username }
-          usersOnline={ usersOnline }
-          camGoal={ camGoal }
-          slug={ slug }
-          camRoomLink={ camRoomLink }
-          secondsOnline={ secondsOnline }
-          imageUrl={ imageUrl }
-        />
+      <Media
+        username={ username }
+        usersOnline={ usersOnline }
+        camGoal={ camGoal }
+        slug={ slug }
+        camRoomLink={ camRoomLink }
+        secondsOnline={ secondsOnline }
+        imageUrl={ imageUrl }
+      />
       <div className={ styles.camCard__liveSection }>
         { t('cam_card_live_title') }
         <span className={ styles.camCard__liveUsersViewers }>

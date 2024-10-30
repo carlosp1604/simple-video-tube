@@ -15,7 +15,6 @@ interface Props {
   hideDirection: HideDirectionOnDisable | null
   linkMode: ElementLinkMode | undefined
   onClickButton: () => void
-
 }
 
 export const PaginationBarButton: FC<Partial<Props> & Omit<Props, 'disabled' | 'hideDirection' >> = ({

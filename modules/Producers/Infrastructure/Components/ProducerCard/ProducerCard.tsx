@@ -6,6 +6,7 @@ import { ProducerCardDto } from '~/modules/Producers/Infrastructure/ProducerCard
 import useTranslation from 'next-translate/useTranslation'
 import { NumberFormatter } from '~/modules/Shared/Infrastructure/FrontEnd/NumberFormatter'
 import { useRouter } from 'next/router'
+import { i18nConfig } from '~/i18n.config'
 
 export interface Props {
   producer: ProducerCardDto
@@ -14,12 +15,15 @@ export interface Props {
 export const ProducerCard: FC<Props> = ({ producer }) => {
   const { t } = useTranslation('producers')
 
-  const locale = useRouter().locale ?? 'en'
+  const locale = useRouter().locale ?? i18nConfig.defaultLocale
 
   return (
     <div className={ styles.producerCard__container }>
       <div className={ styles.producerCard__imageWrapper }>
-        <Link href={ `/producers/${producer.slug}` }>
+        <Link
+          href={ `/producers/${producer.slug}` }
+          title={ producer.name }
+        >
           <AvatarImage
             imageUrl={ producer.imageUrl }
             avatarClassName={ styles.producerCard__producerAvatar }
@@ -34,6 +38,7 @@ export const ProducerCard: FC<Props> = ({ producer }) => {
         <Link
           className={ styles.producerCard__producerName }
           href={ `/producers/${producer.slug}` }
+          title={ producer.name }
         >
           { producer.name }
         </Link>
