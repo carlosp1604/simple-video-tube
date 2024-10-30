@@ -34,18 +34,6 @@ export const MenuSideBar: FC<Props> = ({ menuOpen }) => {
       onClick: undefined,
       onClickInfoButton: undefined,
     },
-    /**
-     {
-      translationKey: 'menu_following_button_title',
-      isActive: false,
-      action: {
-        url: '/',
-        blank: false,
-      },
-      picture: <TbClipboardCheck />,
-      onClick: undefined,
-    },
-     **/
     {
       title: t('menu_stars_button_title'),
       isActive: pathname === '/actors',

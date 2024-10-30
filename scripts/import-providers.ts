@@ -32,7 +32,7 @@ const findOrCreateProvider = async (provider: any): Promise<void> => {
   const newProvider = new MediaProvider(
     provider.id,
     provider.name,
-    provider.logo_url,
+    provider.logoUrl,
     provider.advertisingLevel,
     provider.downloadSpeed,
     provider.paymentRequired,

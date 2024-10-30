@@ -49,7 +49,7 @@ async function run () {
   const producers = fs.readFileSync('data/producers-to-import.json', 'utf-8')
   const producersToImport = JSON.parse(producers)
 
-  console.log(`- Processing [${producersToImport.length}] tags`)
+  console.log(`- Processing [${producersToImport.length}] producers`)
 
   let index = 1
 

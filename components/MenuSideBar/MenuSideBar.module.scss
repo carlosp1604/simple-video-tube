@@ -7,17 +7,13 @@
       scrollbar-hide h-screen w-[74px];
 
       &_open {
-        @apply block w-40 pr-1 transition-width;
+        @apply block w-40 pr-1;
       }
     }
   }
 
   &__menu-section-container {
     @apply flex flex-col gap-y-2 scrollbar-hide;
-  }
-
-  &__menu-icon-container {
-    @apply sticky top-0 w-full pl-3.5 pb-2;
   }
 
   &__menu-container {

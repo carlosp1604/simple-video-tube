@@ -1,5 +1,5 @@
 import { MenuOptionComponentInterface } from '~/components/MenuOptions/MenuOptions'
-import { FC, ReactElement, useEffect, useState } from 'react'
+import {FC, ReactElement, useEffect, useMemo, useState} from 'react'
 import ReactDOM from 'react-dom'
 import Link from 'next/link'
 import styles from './MenuSideBarOption.module.scss'
@@ -24,6 +24,27 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
     setTooltipId(nanoid())
   }, [])
 
+  const content = useMemo(() => {
+    return [
+      !menuOpen && mounted
+        ? buildPortal(<Tooltip
+          tooltipId={ tooltipId }
+          place={ 'right' }
+          content={ menuOption.title }
+        />)
+        : null,
+      (<span className={ styles.menuSidebarOption__menuItemIcon }>
+        { menuOption.picture }
+      </span>),
+      (<span className={ `
+        ${styles.menuSidebarOption__menuItemText}
+        ${menuOpen ? styles.menuSidebarOption__menuItemText__open : ''}
+      ` }>
+        { menuOption.title }
+      </span>)
+    ]
+  }, [menuOption])
+
   if (menuOption.action) {
     return (
       <Link
@@ -36,23 +57,7 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
         target={ menuOption.action.blank ? '_blank' : '_self' }
         data-tooltip-id={ tooltipId }
       >
-        { !menuOpen && mounted
-          ? buildPortal(<Tooltip
-            tooltipId={ tooltipId }
-            place={ 'right' }
-            content={ menuOption.title }
-          />)
-          : null
-        }
-        <span className={ styles.menuSidebarOption__menuItemIcon }>
-          { menuOption.picture }
-        </span>
-        <span className={ `
-          ${styles.menuSidebarOption__menuItemText}
-          ${menuOpen ? styles.menuSidebarOption__menuItemText__open : ''}
-        ` }>
-          { menuOption.title }
-        </span>
+        {content}
       </Link>
     )
   }
@@ -68,23 +73,7 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
         onClick={ menuOption.onClick }
         data-tooltip-id={ tooltipId }
       >
-        { mounted && !menuOpen
-          ? buildPortal(<Tooltip
-            tooltipId={ tooltipId }
-            place={ 'right' }
-            content={ menuOption.title }
-          />)
-          : null
-        }
-        <span className={ styles.menuSidebarOption__menuItemIcon }>
-          { menuOption.picture }
-        </span>
-        <span className={ `
-          ${styles.menuSidebarOption__menuItemText}
-          ${menuOpen ? styles.menuSidebarOption__menuItemText__open : ''}
-        ` }>
-          { menuOption.title }
-        </span>
+        { content }
       </div>
     )
   }

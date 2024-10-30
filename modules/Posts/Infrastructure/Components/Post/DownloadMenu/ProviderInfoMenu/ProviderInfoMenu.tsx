@@ -73,7 +73,10 @@ export const ProviderInfoMenu: FC<Props> = ({ provider }) => {
         <div className={ styles.providerInfoMenu__itemContainer }>
           { t('post_provider_modal_free_downloads_delay_title') }
           <span className={ styles.providerInfoMenu__itemValue }>
-            { provider.freeDownloadsDay }
+            { provider.freeDownloadsDay === 65635 ?
+              t('post_provider_modal_unlimited_response_title')
+              : provider.freeDownloadsDay
+            }
           </span>
         </div>
 
