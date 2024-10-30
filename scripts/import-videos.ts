@@ -447,11 +447,11 @@ async function run (
     const post = new Post(
       postUuid,
       video.title,
-      video.type,
       video.description,
       video.slug,
-      video.duration,
+      parseInt(video.duration ?? '0'),
       video.trailerUrl ?? null,
+      video.thumb,
       video.externalUrl ?? null,
       0,
       video.resolution,
