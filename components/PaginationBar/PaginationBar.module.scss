@@ -27,18 +27,4 @@
   &__error-button {
     @apply mx-auto;
   }
-
-  &__error-link {
-    @apply bg-brand-primary-light text-white p-2 rounded-lg
-    transition-colors text-sm mx-auto;
-
-    &:hover {
-      @apply text-base-100 bg-brand-primary-dark
-      transition-colors;
-    }
-
-    &:active {
-      @apply text-base-100 transition-colors;
-    }
-  }
 }

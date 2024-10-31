@@ -1,5 +1,5 @@
 import styles from './ReportModal.module.scss'
-import { FC, useState } from 'react'
+import { FC, useCallback, useState } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { ModalMenuHeader } from '~/modules/Shared/Infrastructure/Components/ModalMenuHeader/ModalMenuHeader'
 import { MdOutlineFlag } from 'react-icons/md'
@@ -28,7 +28,9 @@ export const ReportModal: FC<Props> = ({ postId, isOpen, onClose }) => {
   const { t } = useTranslation('post')
 
   const [userName, setUserName] = useState<string>('')
+  const [validName, setValidName] = useState<boolean>(false)
   const [userEmail, setUserEmail] = useState<string>('')
+  const [validEmail, setValidEmail] = useState<boolean>(false)
   const [content, setContent] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -37,13 +39,19 @@ export const ReportModal: FC<Props> = ({ postId, isOpen, onClose }) => {
 
   const { error } = useToast()
 
-  const onUserNameChange = (value: string) => {
-    setUserName(value)
-  }
+  const onUserNameChange = useCallback((value: string) => {
+    const isValidInput = new NameValidator().validate(value)
 
-  const onUserEmailChange = (value: string) => {
+    setUserName(value)
+    setValidName(isValidInput)
+  }, [])
+
+  const onUserEmailChange = useCallback((value: string) => {
+    const isValidInput = new EmailValidator().validate(value)
+
     setUserEmail(value)
-  }
+    setValidEmail(isValidInput)
+  }, [])
 
   const onContentChange = (value: string) => {
     setContent(value)
@@ -102,8 +110,9 @@ export const ReportModal: FC<Props> = ({ postId, isOpen, onClose }) => {
         errorLabel={ t('post_report_section_invalid_name_message_title') }
         type={ 'text' }
         placeholder={ t('post_report_section_name_placeholder') }
-        validator={ new NameValidator() }
+        invalidInput={ !validName }
         onChange={ onUserNameChange }
+        value={ userName }
       />
 
       <FormInputSection
@@ -111,8 +120,9 @@ export const ReportModal: FC<Props> = ({ postId, isOpen, onClose }) => {
         errorLabel={ t('post_report_section_invalid_email_message_title') }
         type={ 'email' }
         placeholder={ t('post_report_section_email_placeholder') }
-        validator={ new EmailValidator() }
+        invalidInput={ !validEmail }
         onChange={ onUserEmailChange }
+        value={ userEmail }
       />
 
       <span className={ styles.reportModal__infoSectionTitle }>

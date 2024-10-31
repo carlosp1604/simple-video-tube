@@ -22,7 +22,7 @@
   &__comments {
     @apply flex-grow overflow-y-scroll px-5 scrollbar-hide
     min-h-96 max-h-screen border border-t-0 border-base-300 rounded-b-lg
-    dark:border-base-800 transition-colors dark:transition-colors;
+    dark:border-base-800 transition-colors dark:transition-colors scroll-mt-20;
   }
 
   &__load-more {

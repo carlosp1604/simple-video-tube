@@ -13,7 +13,6 @@ import {
   PaginationSortingType
 } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationSortingType'
 import { SortingMenuDropdown } from '~/components/SortingMenuDropdown/SortingMenuDropdown'
-import { ActorCardGallery } from '~/modules/Actors/Infrastructure/Components/ActorCardGallery/ActorCardGallery'
 import { PaginationBar } from '~/components/PaginationBar/PaginationBar'
 import useTranslation from 'next-translate/useTranslation'
 import { CommonGalleryHeader } from '~/modules/Shared/Infrastructure/Components/CommonGalleryHeader/CommonGalleryHeader'
@@ -25,6 +24,7 @@ import { ActorQueryParamsParser } from '~/modules/Actors/Infrastructure/Frontend
 import { FilterOptions } from '~/modules/Shared/Infrastructure/FrontEnd/FilterOptions'
 import { CommonButton } from '~/modules/Shared/Infrastructure/Components/CommonButton/CommonButton'
 import { useToast } from '~/components/AppToast/ToastContext'
+import { ProfileCardGallery } from '~/modules/Shared/Infrastructure/Components/ProfileCardGallery/ProfileCardGallery'
 
 export interface ActorsPagePaginationState {
   page: number
@@ -239,8 +239,8 @@ export const Actors: FC<Props> = ({
         />
       </div>
 
-      <ActorCardGallery
-        actors={ actors }
+      <ProfileCardGallery
+        profiles={ actors }
         loading={ loading }
         emptyState={ emptyState }
       />

@@ -46,7 +46,7 @@ export const VideoPostPlayer: FC<Props> = ({
   let playerElement: ReactElement | null = null
 
   if (selectedMediaUrl.mediaType === 'Embed') {
-    const sandbox = MediaUrlsHelper.shouldBeSanboxed(selectedMediaUrl.provider.id, true)
+    const sandbox = MediaUrlsHelper.shouldBeSanboxed(selectedMediaUrl.provider.id)
 
     playerElement = (
       <iframe
@@ -101,38 +101,36 @@ export const VideoPostPlayer: FC<Props> = ({
           icon={ <BsGearWide/> }
         />
         <div className={ styles.videoPostPlayer__sourcesMenuList }>
-          { selectableUrls.map((selectableUrl) => {
-            return (
-              <button
-                key={ selectableUrl.url }
-                className={ `
-                ${styles.videoPostPlayer__sourceOption} 
-                ${selectedMediaUrl.url === selectableUrl.url ? styles.videoPostPlayer__sourceOption__selected : ''}
-              ` }
-                onClick={ () => {
-                  sendGAEvent('event', ChangeVideoPlayerSourceAction, {
-                    category: VideoPostCategory,
-                    label: selectableUrl.provider.name,
-                  })
-                  setSelectedMediaUrl(selectableUrl)
-                } }
-              >
-                <div className={ styles.videoPostPlayer__sourceOptionImageWrapper }>
-                  <Image
-                    src={ selectableUrl.provider.logoUrl }
-                    alt={ selectableUrl.provider.name }
-                    className={ styles.videoPostPlayer__sourceOptionImage }
-                    width={ '100' }
-                    height={ 200 }
-                    sizes={ '100vw' }
-                    placeholder={ 'blur' }
-                    blurDataURL={ rgbDataURL(81, 80, 80) }
-                  />
-                </div>
-                { selectableUrl.title }
-              </button>
-            )
-          }) }
+          { selectableUrls.map((selectableUrl) => (
+            <button
+              key={ selectableUrl.url }
+              className={ `
+              ${styles.videoPostPlayer__sourceOption} 
+              ${selectedMediaUrl.url === selectableUrl.url ? styles.videoPostPlayer__sourceOption__selected : ''}
+            ` }
+              onClick={ () => {
+                sendGAEvent('event', ChangeVideoPlayerSourceAction, {
+                  category: VideoPostCategory,
+                  label: selectableUrl.provider.name,
+                })
+                setSelectedMediaUrl(selectableUrl)
+              } }
+            >
+              <div className={ styles.videoPostPlayer__sourceOptionImageWrapper }>
+                <Image
+                  src={ selectableUrl.provider.logoUrl }
+                  alt={ selectableUrl.provider.name }
+                  className={ styles.videoPostPlayer__sourceOptionImage }
+                  width={ '100' }
+                  height={ 200 }
+                  sizes={ '100vw' }
+                  placeholder={ 'blur' }
+                  blurDataURL={ rgbDataURL(81, 80, 80) }
+                />
+              </div>
+              { selectableUrl.title }
+            </button>
+          )) }
         </div>
       </div>
       { sourcesMenuOpen ? closeVideoSourceMenuButton : null }

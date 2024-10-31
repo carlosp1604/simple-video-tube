@@ -7,7 +7,7 @@ import {
   PostCommentApplicationDtoTranslator
 } from '~/modules/Posts/Application/Translators/PostCommentApplicationDtoTranslator'
 import { PostCommentApplicationDto } from '~/modules/Posts/Application/Dtos/PostCommentApplicationDto'
-import { UsernameValidator } from '~/modules/Shared/Domain/UsernameValidator'
+import { NameValidator } from '~/modules/Shared/Domain/NameValidator'
 
 export class CreatePostComment {
   private options: RepositoryOptions[] = ['comments']
@@ -16,7 +16,7 @@ export class CreatePostComment {
   constructor (private readonly postRepository: PostRepositoryInterface) {}
 
   public async create (request: CreatePostCommentApplicationRequestDto): Promise<PostCommentApplicationDto> {
-    new UsernameValidator().validate(request.userName)
+    new NameValidator().validate(request.userName)
 
     const post = await this.getPost(request.postId)
 

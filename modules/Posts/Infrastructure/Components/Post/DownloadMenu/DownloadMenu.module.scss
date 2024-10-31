@@ -13,6 +13,7 @@
 
   &__backContainer {
     @apply flex flex-row gap-x-2 p-5 pr-10 items-center
-    justify-start font-bold text-base-600 dark:text-base-400;
+    justify-start font-bold text-base-600 dark:text-base-400
+    cursor-default;
   }
 }

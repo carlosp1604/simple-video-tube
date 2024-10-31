@@ -2,9 +2,10 @@ import { FC, ReactElement } from 'react'
 import styles from './TopMobileMenu.module.scss'
 import useTranslation from 'next-translate/useTranslation'
 import { handleClick } from '~/modules/Shared/Infrastructure/FrontEnd/AntiAdBlockHelper'
-import Link from 'next/link'
-import { BsCameraVideo, BsCardImage, BsController } from 'react-icons/bs'
-import { SiTinder } from 'react-icons/si'
+import { RiLiveLine } from 'react-icons/ri'
+import { TbBrandTinder } from 'react-icons/tb'
+import { SlGameController } from 'react-icons/sl'
+import { MdOutlinePhotoSizeSelectActual } from 'react-icons/md'
 
 export const TopMobileMenu: FC = () => {
   const { t } = useTranslation('menu')
@@ -14,16 +15,13 @@ export const TopMobileMenu: FC = () => {
   if (process.env.NEXT_PUBLIC_CAMS_AD_URL) {
     links.push(
       <div
-        className={ styles.topMobileMenu__offerContainer }
+        className={ styles.topMobileMenu__offer }
         onClick={ () => handleClick(process.env.NEXT_PUBLIC_CAMS_AD_URL) }
         title={ t('live_cams_advertising_title') }
         key={ t('live_cams_advertising_title') }
       >
-        <span className={ styles.topMobileMenu__offer }>
-          <BsCameraVideo className={ styles.topMobileMenu__offerIcon }/>
-          { t('live_cams_advertising_title') }
-        </span>
-
+        <RiLiveLine className={ styles.topMobileMenu__offerIcon }/>
+        { t('live_cams_advertising_title') }
       </div>
     )
   }
@@ -31,15 +29,13 @@ export const TopMobileMenu: FC = () => {
   if (process.env.NEXT_PUBLIC_DATING_AD_URL) {
     links.push(
       <div
-        className={ styles.topMobileMenu__offerContainer }
+        className={ styles.topMobileMenu__offer }
         onClick={ () => handleClick(process.env.NEXT_PUBLIC_DATING_AD_URL) }
         title={ t('dating_advertising_title') }
         key={ t('dating_advertising_title') }
       >
-        <span className={ styles.topMobileMenu__offer }>
-          <SiTinder className={ styles.topMobileMenu__offerIcon } />
-          { t('dating_advertising_title') }
-        </span>
+        <TbBrandTinder className={ styles.topMobileMenu__offerIcon } />
+        { t('dating_advertising_title') }
       </div>
     )
   }
@@ -47,15 +43,13 @@ export const TopMobileMenu: FC = () => {
   if (process.env.NEXT_PUBLIC_GAMES_AD_URL) {
     links.push(
       <div
-        className={ styles.topMobileMenu__offerContainer }
+        className={ styles.topMobileMenu__offer }
         onClick={ () => handleClick(process.env.NEXT_PUBLIC_GAMES_AD_URL) }
         title={ t('games_advertising_title') }
         key={ t('games_advertising_title') }
       >
-        <span className={ styles.topMobileMenu__offer }>
-          <BsController className={ styles.topMobileMenu__offerIcon }/>
-          { t('games_advertising_title') }
-        </span>
+        <SlGameController className={ styles.topMobileMenu__offerIcon }/>
+        { t('games_advertising_title') }
       </div>
     )
   }
@@ -63,15 +57,13 @@ export const TopMobileMenu: FC = () => {
   if (process.env.NEXT_PUBLIC_IA_AD_URL) {
     links.push(
       <div
-        className={ styles.topMobileMenu__offerContainer }
+        className={ styles.topMobileMenu__offer }
         onClick={ () => handleClick(process.env.NEXT_PUBLIC_IA_AD_URL) }
         title={ t('ia_advertising_title') }
         key={ t('ia_advertising_title') }
       >
-        <span className={ styles.topMobileMenu__offer }>
-          <BsCardImage className={ styles.topMobileMenu__offerIcon }/>
-          { t('ia_advertising_title') }
-        </span>
+        <MdOutlinePhotoSizeSelectActual className={ styles.topMobileMenu__offerIcon }/>
+        { t('ia_advertising_title') }
       </div>
     )
   }
@@ -82,15 +74,6 @@ export const TopMobileMenu: FC = () => {
 
   return (
     <div className={ styles.topMobileMenu__container }>
-      <Link
-        className={ styles.topMobileMenu__offerContainer }
-        href={ 'https://theporndude.com/' }
-        title={ t('the_porn_dude_link_title') }
-        key={ t('the_porn_dude_link_title') }
-        rel={ 'nofollow' }
-      >
-        { t('the_porn_dude_link_title') }
-      </Link>
       { links }
     </div>
   )

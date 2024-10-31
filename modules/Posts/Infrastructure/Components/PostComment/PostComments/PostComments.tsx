@@ -56,8 +56,6 @@ export const PostComments: FC<Props> = ({ postId, setIsOpen, setCommentsNumber, 
       return
     }
 
-    commentsAreaRef.current?.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-
     try {
       const CommentsApiService =
         (await import('~/modules/Posts/Infrastructure/Frontend/CommentsApiService')).CommentsApiService
@@ -178,6 +176,8 @@ export const PostComments: FC<Props> = ({ postId, setIsOpen, setCommentsNumber, 
   }
 
   const onAddComment = async (userName: string, comment: string) => {
+    // TODO: Scroll to new comment
+    scrollTo()
     setLoading(true)
     setCreatingComment(true)
     await createComment(userName, comment)

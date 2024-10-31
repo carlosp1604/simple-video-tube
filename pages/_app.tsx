@@ -9,7 +9,6 @@ import { AppMenu } from '~/components/AppMenu/AppMenu'
 import { ReactElement, useState } from 'react'
 import { MenuSideBar } from '~/components/MenuSideBar/MenuSideBar'
 import { ToastProvider } from '~/components/AppToast/ToastProvider'
-import { TopMobileMenu } from '~/components/TopMobileMenu/TopMobileMenu'
 import { AppProgressBar } from '~/components/AppProgressBar/AppProgressBar'
 import {
   TrafficstarsVideoSlider
@@ -93,8 +92,6 @@ function App ({
                   { /** Workaround to show tooltip in the sidebar menú **/ }
                   <div id="tooltip-container" className={ 'z-tooltip fixed' }></div>
                   <main className={ styles.app__container }>
-                    <TopMobileMenu />
-
                     <Component { ...pageProps }/>
                     { googleAnalytics }
 

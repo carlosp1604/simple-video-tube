@@ -56,8 +56,6 @@ export const PostChildComments: FC<Props> = ({
       return
     }
 
-    repliesAreaRef.current?.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-
     try {
       const CommentsApiService =
         (await import('~/modules/Posts/Infrastructure/Frontend/CommentsApiService')).CommentsApiService
@@ -130,6 +128,7 @@ export const PostChildComments: FC<Props> = ({
   }
 
   const onAddComment = async (userName: string, comment: string) => {
+    // TODO: Scroll to new comment
     setLoading(true)
     setCreatingChildComment(true)
     await createReply(userName, comment)

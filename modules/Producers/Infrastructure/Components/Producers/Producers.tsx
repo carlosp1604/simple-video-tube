@@ -10,9 +10,6 @@ import {
 } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationSortingType'
 import useTranslation from 'next-translate/useTranslation'
 import { ProducerCardDto } from '~/modules/Producers/Infrastructure/ProducerCardDto'
-import {
-  ProducerCardGallery
-} from '~/modules/Producers/Infrastructure/Components/ProducerCard/ProducerCardGallery/ProducerCardGallery'
 import { CommonGalleryHeader } from '~/modules/Shared/Infrastructure/Components/CommonGalleryHeader/CommonGalleryHeader'
 import { SortingMenuDropdown } from '~/components/SortingMenuDropdown/SortingMenuDropdown'
 import { defaultPerPage, PaginationHelper } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
@@ -30,6 +27,7 @@ import { ProducerQueryParamsParser } from '~/modules/Producers/Infrastructure/Fr
 import { SearchBar } from '~/components/SearchBar/SearchBar'
 import { CommonButton } from '~/modules/Shared/Infrastructure/Components/CommonButton/CommonButton'
 import { useToast } from '~/components/AppToast/ToastContext'
+import { ProfileCardGallery } from '~/modules/Shared/Infrastructure/Components/ProfileCardGallery/ProfileCardGallery'
 
 export interface ProducersPagePaginationState {
   page: number
@@ -243,8 +241,8 @@ export const Producers: FC<Props> = ({
         />
       </div>
 
-      <ProducerCardGallery
-        producers={ producers }
+      <ProfileCardGallery
+        profiles={ producers }
         loading={ loading }
         emptyState={ emptyState }
       />

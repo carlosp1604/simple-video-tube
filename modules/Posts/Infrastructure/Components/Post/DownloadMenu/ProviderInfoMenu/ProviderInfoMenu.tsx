@@ -2,7 +2,9 @@ import { FC, useMemo } from 'react'
 import useTranslation from 'next-translate/useTranslation'
 import { MediaProviderComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostMedia/MediaProviderComponentDto'
 import styles from './ProviderInfoMenu.module.scss'
-import Link from 'next/link'
+import { CommonButtonLink } from '~/modules/Shared/Infrastructure/Components/CommonButton/CommonLinkButton'
+import { rgbDataURL } from '~/modules/Shared/Infrastructure/FrontEnd/BlurDataUrlHelper'
+import Image from 'next/image'
 
 interface Props {
   provider: MediaProviderComponentDto
@@ -55,6 +57,19 @@ export const ProviderInfoMenu: FC<Props> = ({ provider }) => {
         { provider.name }
       </span>
 
+      <div className={ styles.providerInfoMenu__imageWrapper }>
+        <Image
+          alt={ 'a' }
+          className={ styles.providerInfoMenu__image }
+          src={ provider.logoUrl }
+          width={ 0 }
+          height={ 0 }
+          sizes={ '100vw' }
+          placeholder={ 'blur' }
+          blurDataURL={ rgbDataURL(81, 80, 80) }
+        />
+      </div>
+
       <div className={ styles.providerInfoMenu__dataContainer }>
         <div className={ styles.providerInfoMenu__itemContainer }>
           { t('post_provider_modal_max_resolution_title') }
@@ -73,8 +88,8 @@ export const ProviderInfoMenu: FC<Props> = ({ provider }) => {
         <div className={ styles.providerInfoMenu__itemContainer }>
           { t('post_provider_modal_free_downloads_delay_title') }
           <span className={ styles.providerInfoMenu__itemValue }>
-            { provider.freeDownloadsDay === 65635 ?
-              t('post_provider_modal_unlimited_response_title')
+            { provider.freeDownloadsDay === 65635
+              ? t('post_provider_modal_unlimited_response_title')
               : provider.freeDownloadsDay
             }
           </span>
@@ -107,17 +122,16 @@ export const ProviderInfoMenu: FC<Props> = ({ provider }) => {
         </div>
       </div>
 
-      {
-        provider.refUrl
-          ? <Link
-            href={ provider.refUrl }
-            className={ styles.providerInfoMenu__refButton }
+      { provider.refUrl
+        ? <CommonButtonLink
+            linksProps={ {
+              href: provider.refUrl,
+            } }
+            title={ t('post_provider_modal_create_account_button_title') }
             target={ '_blank' }
             rel={ 'nofollow' }
-          >
-            { t('post_provider_modal_create_account_button_title') }
-          </Link>
-          : null
+          />
+        : null
       }
     </div>
   )

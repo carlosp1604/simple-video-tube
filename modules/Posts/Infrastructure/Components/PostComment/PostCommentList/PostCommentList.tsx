@@ -124,13 +124,13 @@ export const PostCommentList: FC<PostCommentListProps | PostChildCommentListProp
       ${props.loading && 'postComment' in props ? styles.postCommentList__container_loading : ''}
     ` } >
       { commentToReply }
-      { commentsSection }
       { creatingComment
         ? <div className={ styles.postCommentList__postCommentSkeletonContainer }>
           <PostCommentCardSkeleton/>
         </div>
         : null
       }
+      { commentsSection }
       { skeletonSection }
     </div>
   )

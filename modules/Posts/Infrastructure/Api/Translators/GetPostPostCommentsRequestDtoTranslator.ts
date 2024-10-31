@@ -9,13 +9,13 @@ import {
 export class GetPostPostCommentsRequestDtoTranslator {
   public static fromApiDto (
     request: GetPostPostCommentsApiRequestDto,
-    userId: string | null
+    userIp: string
   ): GetPostPostCommentsApplicationRequest {
     return {
       page: request.page,
       perPage: request.perPage,
       postId: request.postId,
-      userId,
+      userIp,
     }
   }
 }

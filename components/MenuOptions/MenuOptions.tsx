@@ -74,9 +74,9 @@ export const MenuOptions: FC<Props> = ({ menuOptions }) => {
           ` }
           onClick={ menuOption.onClick }
         >
-          <span className={ styles.menuOptions__menuIconWraper }>
+          <div className={ styles.menuOptions__menuIconWraper }>
             { menuOption.picture }
-          </span>
+          </div>
           { menuOption.title }
         </div>
         { menuOption.onClickInfoButton

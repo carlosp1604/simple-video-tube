@@ -1,7 +1,4 @@
 {
-  "actor_card_image_alt_title": "{{actorName}} profile image",
-  "actor_card_posts_count_title": "{{postsNumber}} posts",
-  "actor_card_views_count_title": "{{viewsNumber}} views",
   "actor_image_alt_title": "{{actorName}} profile image",
   "actor_page_description": "Watch {{actorName}} full length and HD videos for free",
   "actor_page_profile_count_title": "{{viewsNumber}} views",

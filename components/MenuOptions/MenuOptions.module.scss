@@ -38,14 +38,14 @@
   }
 
   &__menu-icon-wraper {
-    @apply h-8 w-8;
+    @apply w-8 max-h-8 min-h-8 h-full overflow-hidden;
 
     @screen md {
-      @apply h-10 w-10;
+      @apply min-h-10 max-h-10 w-10;
     }
 
     @screen lg {
-      @apply h-12 w-12;
+      @apply min-h-12 max-h-12 w-12;
     }
   }
 }

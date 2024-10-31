@@ -72,6 +72,13 @@ export class CommentsApiService {
           jsonResponse.code
         )
 
+      case 422:
+        throw new APIException(
+          'invalid_name_error_message',
+          response.status,
+          jsonResponse.code
+        )
+
       case 404:
         switch (jsonResponse.code) {
           case POST_COMMENT_POST_NOT_FOUND:
@@ -131,6 +138,13 @@ export class CommentsApiService {
       case 400:
         throw new APIException(
           'bad_request_error_message',
+          response.status,
+          jsonResponse.code
+        )
+
+      case 422:
+        throw new APIException(
+          'invalid_name_error_message',
           response.status,
           jsonResponse.code
         )

@@ -1,23 +1,23 @@
-.producer-card {
+.profileCard {
   &__container {
     @apply flex flex-col shadow-base-300 shadow-lg
     rounded-md overflow-hidden
-    dark:shadow-black/40;
+    dark:shadow-black/40 transition-colors dark:transition-colors;
   }
 
-  &__image-wrapper {
+  &__imageWrapper {
     @apply aspect-h-1 aspect-w-1 overflow-hidden;
   }
 
-  &__producer-image {
+  &__profileImage {
     @apply h-full w-full object-cover transition-transform;
 
-    &:hover, &:focus {
+    &:hover {
       @apply scale-110 transition-transform;
     }
   }
 
-  &__producer-avatar {
+  &__profileAvatar {
     @apply h-full w-full text-6xl font-normal text-base-500
     transition-transform
     dark:text-base-700;
@@ -27,31 +27,26 @@
     }
   }
 
-  &__data-container {
-    @apply flex flex-col flex-grow justify-between p-2
-    cursor-default;
+  &__dataContainer {
+    @apply flex flex-col flex-grow justify-between
+    p-2 cursor-default;
   }
 
-  &__producer-name {
-    @apply text-sm font-semibold line-clamp-2 text-ellipsis
+  &__profileName {
+    @apply font-semibold line-clamp-2 text-ellipsis
     break-words dark:text-base-300;
-
-    @screen md {
-      @apply text-base font-bold;
-    }
   }
 
-  &__count-section {
-    @apply flex flex-row items-start gap-x-1 text-xs justify-between
-    font-normal text-brand-primary-light;
+  &__countSection {
+    @apply flex flex-row items-start gap-x-1 text-xs
+    justify-between font-normal text-brand-primary-light;
 
     @screen md {
       @apply text-sm;
     }
   }
 
-  &__views-title {
-    @apply text-base-600
-    dark:text-base-400;
+  &__viewsTitle {
+    @apply text-base-600 dark:text-base-400;
   }
 }

@@ -17,7 +17,6 @@ interface Props {
 export const Carousel: FC<Props> = ({ children, itemsAutoWidth, onEndReached }) => {
   const [scrollX, setScrollX] = useState(0)
   const [scrollXBottom, setScrollXBottom] = useState(false)
-  const [showScrollButtons, setShowScrollButtons] = useState(false)
   const scrollElement = createRef<HTMLDivElement>()
 
   const { t } = useTranslation('common')
@@ -37,7 +36,7 @@ export const Carousel: FC<Props> = ({ children, itemsAutoWidth, onEndReached }) 
 
   useEffect(() => {
     checkIfEndIsReached()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleScrollXRightClick = () => {
@@ -52,18 +51,20 @@ export const Carousel: FC<Props> = ({ children, itemsAutoWidth, onEndReached }) 
     }
   }
 
+  const onScroll = () => {
+    if (scrollElement.current) {
+      setScrollX(scrollElement.current?.scrollLeft)
+      checkIfEndIsReached()
+    }
+  }
+
   return (
-    <div
-      className={ styles.carousel__container }
-      onMouseOver={ () => setShowScrollButtons(true) }
-      onMouseLeave={ () => setShowScrollButtons(false) }
-    >
+    <div className={ styles.carousel__container }>
       <button
         className={ `
           ${styles.carousel__scrollButton}
           ${styles.carousel__leftScrollButton}
           ${scrollX === 0 ? styles.carousel__leftScrollButton_hidden : ''}        
-          ${showScrollButtons && scrollX !== 0 ? styles.carousel__scrollButton_active : ''}
         ` }
         onClick={ () => handleScrollXLeftClick() }
         title={ t('carousel_left_button_title') ?? '' }
@@ -75,7 +76,6 @@ export const Carousel: FC<Props> = ({ children, itemsAutoWidth, onEndReached }) 
           ${styles.carousel__scrollButton}
           ${styles.carousel__rightScrollButton}
           ${scrollXBottom ? styles.carousel__rightScrollButton_hidden : ''}        
-          ${showScrollButtons && !scrollXBottom ? styles.carousel__scrollButton_active : ''}
         ` }
         onClick={ () => handleScrollXRightClick() }
         title={ t('carousel_right_button_title') ?? '' }
@@ -86,22 +86,15 @@ export const Carousel: FC<Props> = ({ children, itemsAutoWidth, onEndReached }) 
       <div
         className={ styles.carousel__slider }
         ref={ scrollElement }
-        onScroll={ () => {
-          if (scrollElement.current) {
-            setScrollX(scrollElement.current?.scrollLeft)
-            checkIfEndIsReached()
-          }
-        } }
+        onScroll={ onScroll }
       >
-        { children.map((child) => {
-          return (
-            <div
-              key={ child.key }
-              className={ itemsAutoWidth ? `${styles.carousel__sliderItem_auto}` : `${styles.carousel__sliderItem}` }>
-              { child.component }
-            </div>
-          )
-        }) }
+        { children.map((child) => (
+          <div
+            key={ child.key }
+            className={ itemsAutoWidth ? `${styles.carousel__sliderItem_auto}` : `${styles.carousel__sliderItem}` }>
+            { child.component }
+          </div>
+        )) }
       </div>
     </div>
   )

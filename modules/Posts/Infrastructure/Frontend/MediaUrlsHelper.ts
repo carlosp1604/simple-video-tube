@@ -1,32 +1,10 @@
 import { MediaUrlComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostMedia/MediaUrlComponentDto'
 import { PostMediaComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostMedia/PostMediaComponentDto'
 import {
-  sanboxableProviders,
-  sandboxableIfLoggedIn
+  sanboxableProviders
 } from '~/modules/Posts/Infrastructure/Components/Post/VideoPostPlayer/SanboxableProviders'
 
-/**
- * Supreme Admin Uuid = f373b07d-fc3e-42a5-9543-c59d503324aa
- * This should be retrieved from database
- * */
 export class MediaUrlsHelper {
-  public static getVideoAccessUrl (
-    postMediaVideoType: PostMediaComponentDto[],
-    postMediaEmbedType: PostMediaComponentDto[]
-  ): MediaUrlComponentDto[] {
-    let mediaUrls: MediaUrlComponentDto[] = []
-
-    if (postMediaVideoType.length > 0) {
-      mediaUrls = [...mediaUrls, ...postMediaVideoType[0].urls]
-    }
-
-    if (postMediaEmbedType.length > 0) {
-      mediaUrls = [...mediaUrls, ...postMediaEmbedType[0].urls]
-    }
-
-    return MediaUrlsHelper.sortMediaUrl(mediaUrls)
-  }
-
   public static getVideoDownloadUrl (
     postMediaVideoType: PostMediaComponentDto[],
     postMediaEmbedType: PostMediaComponentDto[]
@@ -63,20 +41,8 @@ export class MediaUrlsHelper {
     return MediaUrlsHelper.sortMediaUrl(mediaUrls)
   }
 
-  public static shouldBeSanboxed (providerId: string, authenticated: boolean): boolean {
+  public static shouldBeSanboxed (providerId: string): boolean {
     if (sanboxableProviders.includes(providerId)) {
-      return true
-    }
-
-    if (sandboxableIfLoggedIn.includes(providerId) && authenticated) {
-      return true
-    }
-
-    return false
-  }
-
-  public static shouldShowExtraAdvertising (providerId: string): boolean {
-    if (providerId !== 'edf20c13-f085-4d0e-a124-567fdc42cf9f') { // for the moment, just ph
       return true
     }
 
@@ -104,7 +70,7 @@ export class MediaUrlsHelper {
     const providersDownloadOrder = [
       { id: '9a51b189-0cbe-4c68-822a-440b61301ec0' }, // Direct
       { id: 'e0f92228-068c-43a5-a61f-b7262f124868' }, // Katfile
-      { id: '7864f707-908c-4871-b075-aaae9a4dec58 '}, // K2S
+      { id: '7864f707-908c-4871-b075-aaae9a4dec58 ' }, // K2S
       { id: '3810a3c5-e4d1-4c99-bee0-7b611aafc89b' }, // 1fichier
       { id: '9327efd9-4ac5-4ddc-a7e0-bae8c46eb189' }, // Vidguard
       { id: 'ab535237-2262-4763-2443-dfec1a6ec1b9' }, // Vidhide

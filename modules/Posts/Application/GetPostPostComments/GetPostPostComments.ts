@@ -27,7 +27,7 @@ export class GetPostPostComments {
         request.postId,
         offset,
         request.perPage,
-        request.userId
+        request.userIp
       ),
       await this.postCommentRepository.countPostComments(request.postId),
     ])

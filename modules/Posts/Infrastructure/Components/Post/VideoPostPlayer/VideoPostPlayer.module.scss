@@ -18,7 +18,7 @@
     opacity-0 pointer-events-none transition;
 
     @screen md {
-      @apply p-10 gap-y-8;
+      @apply p-10 pb-4 gap-y-8;
     }
 
     &__visible {
@@ -38,7 +38,7 @@
     grid-template-columns: repeat(4, 1fr);
 
     @screen tb {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
     }
 
     @screen lg {
@@ -68,7 +68,16 @@
   }
 
   &__sourceOptionImageWrapper {
-    @apply h-10 w-10;
+    @apply w-10 max-h-10 min-h-10 h-full
+    overflow-hidden;
+
+    @screen md {
+      @apply min-h-14 max-h-14 w-14;
+    }
+
+    @screen lg {
+      @apply min-h-16 max-h-16 w-16;
+    }
   }
 
   &__sourceOptionImage {

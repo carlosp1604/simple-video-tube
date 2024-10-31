@@ -15,6 +15,10 @@
   "information_button_title": "Información",
   "like_reaction_active_title_button": "Eliminar reacción",
   "like_reaction_title_button": "Me gusta",
+  "profile_actor_card_image_alt_title": "Imagen de perfil del actor {{actorName}}",
+  "profile_card_posts_count_title": "{{postsNumber}} posts",
+  "profile_card_views_count_title": "{{viewsNumber}} vistas",
+  "profile_producer_card_image_alt_title": "Imagen de perfil de la productora {{producerName}}",
   "theme_switcher_dark_theme_title": "Tema Oscuro",
   "theme_switcher_light_theme_title": "Tema Claro",
   "theme_switcher_system_theme_title": "Sistema"

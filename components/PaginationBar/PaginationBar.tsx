@@ -2,7 +2,6 @@ import { FC, ReactElement, useMemo } from 'react'
 import styles from './PaginationBar.module.scss'
 import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 import { ElementLinkMode } from '~/modules/Shared/Infrastructure/FrontEnd/ElementLinkMode'
 import { PaginationHelper } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
 import { PaginationBarButton } from '~/components/PaginationBar/PaginationBarButton/PaginationBarButton'
@@ -13,6 +12,7 @@ import {
   MdKeyboardDoubleArrowLeft,
   MdKeyboardDoubleArrowRight
 } from 'react-icons/md'
+import { CommonButtonLink } from '~/modules/Shared/Infrastructure/Components/CommonButton/CommonLinkButton'
 
 interface Props {
   pageNumber: number
@@ -70,16 +70,17 @@ export const PaginationBar: FC<Partial<Props> & Pick<Props, 'pagesNumber' | 'pag
   if (pageNumber > pagesNumber && !disabled) {
     if (linkMode) {
       return (
-          <Link
-            href={ { pathname, query: buildQuery(1) } }
-            className={ styles.paginationBar__errorLink }
+        <span className={ styles.paginationBar__errorButton }>
+          <CommonButtonLink
             title={ t('error_state_button_title') }
-            shallow={ linkMode.shallowNavigation }
-            scroll={ linkMode.scrollOnClick }
-            replace={ true }
-          >
-            { t('error_state_button_title') }
-          </Link>
+            linksProps={ {
+              href: { pathname, query: buildQuery(1) },
+              shallow: linkMode.shallowNavigation,
+              scroll: linkMode.scrollOnClick,
+              replace: true,
+            } }
+          />
+        </span>
       )
     } else {
       return (

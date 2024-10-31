@@ -1,11 +1,11 @@
-import { FC, useState } from 'react'
+import { FC, useCallback, useMemo, useState } from 'react'
 import styles from './AddCommentInput.module.scss'
 import { TextArea } from './TextArea'
 import useTranslation from 'next-translate/useTranslation'
 import { useToast } from '~/components/AppToast/ToastContext'
 import { FormInputSection } from '~/components/FormInputSection/FormInputSection'
-import { NameValidator } from '~/modules/Shared/Infrastructure/FrontEnd/Validators/NameValidator'
 import { CommonButton } from '~/modules/Shared/Infrastructure/Components/CommonButton/CommonButton'
+import { UsernameValidator } from '~/modules/Shared/Infrastructure/FrontEnd/Validators/UsernameValidator'
 
 interface Props {
   onAddComment: (username: string, comment: string) => void
@@ -15,6 +15,7 @@ interface Props {
 export const AddCommentInput: FC<Props> = ({ onAddComment, disabled }) => {
   const [comment, setComment] = useState<string>('')
   const [userName, setUserName] = useState<string>('')
+  const [validUsername, setValidUsername] = useState<boolean>(false)
 
   const { t } = useTranslation('post_comments')
 
@@ -32,9 +33,16 @@ export const AddCommentInput: FC<Props> = ({ onAddComment, disabled }) => {
     setUserName('')
   }
 
-  const enableSubmitButton = () => {
-    return comment !== '' && userName !== ''
-  }
+  const handleUsernameChange = useCallback((value: string) => {
+    const isValidInput = new UsernameValidator().validate(value)
+
+    setUserName(value)
+    setValidUsername(isValidInput)
+  }, [])
+
+  const enableSubmitButton = useMemo(() => {
+    return !disabled && comment !== '' && userName !== ''
+  }, [comment, userName, disabled])
 
   return (
     <div className={ styles.addCommentInput__addCommentSection }>
@@ -43,8 +51,9 @@ export const AddCommentInput: FC<Props> = ({ onAddComment, disabled }) => {
         errorLabel={ t('add_comment_name_invalid_name_message_error') }
         type={ 'text' }
         placeholder={ t('add_comment_name_placeholder') }
-        validator={ new NameValidator() }
-        onChange={ setUserName }
+        invalidInput={ !validUsername }
+        onChange={ handleUsernameChange }
+        value={ userName }
       />
 
       <span className={ styles.addCommentInput__addCommentLabel }>
@@ -61,7 +70,7 @@ export const AddCommentInput: FC<Props> = ({ onAddComment, disabled }) => {
 
       <CommonButton
         title={ t('add_comment_button_title') }
-        disabled={ disabled || !enableSubmitButton() }
+        disabled={ !enableSubmitButton }
         onClick={ () => onClickAddComment(comment) }
       />
     </div>

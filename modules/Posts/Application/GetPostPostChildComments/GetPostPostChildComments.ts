@@ -28,7 +28,7 @@ export class GetPostPostChildComments {
         request.parentCommentId,
         offset,
         request.perPage,
-        request.userId
+        request.userIp
       ),
       await this.postCommentRepository.countPostChildComments(request.parentCommentId),
     ])

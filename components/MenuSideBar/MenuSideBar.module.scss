@@ -3,8 +3,10 @@
     @apply hidden;
 
     @screen lg {
-      @apply flex flex-col fixed top-12 pt-3 pb-14 overflow-y-scroll
-      scrollbar-hide h-screen w-[74px];
+      @apply flex flex-col fixed top-12 pt-3 pb-14
+      overflow-y-scroll scrollbar-hide h-screen w-[74px]
+      border-r border-r-base-300 dark:border-r-base-800
+      transition-colors dark:transition-colors;
 
       &_open {
         @apply block w-40 pr-1;

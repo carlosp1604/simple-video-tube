@@ -19,7 +19,7 @@
 
   &__live-section {
     @apply absolute top-1 left-2 text-xs font-bold
-    pointer-events-none;
+    pointer-events-none text-white;
   }
 
   &__live-users-viewers {
@@ -40,7 +40,7 @@
   }
 
   &__title {
-    @apply flex flex-col font-normal;
+    @apply flex flex-col font-bold;
   }
 
   &__username {
@@ -48,7 +48,8 @@
   }
 
   &__description {
-    @apply text-base-500 line-clamp-2;
+    @apply text-base-500 line-clamp-2 leading-tight
+    font-normal;
   }
 
   &__title-link {

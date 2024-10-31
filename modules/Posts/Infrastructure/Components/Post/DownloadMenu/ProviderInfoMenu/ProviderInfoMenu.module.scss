@@ -3,6 +3,22 @@
     @apply flex flex-col gap-y-2 px-5 pb-5 cursor-default;
   }
 
+  &__imageWrapper {
+    @apply h-8 w-full overflow-hidden mb-2;
+
+    @screen md {
+      @apply h-10;
+    }
+
+    @screen lg {
+      @apply h-12;
+    }
+  }
+
+  &__image {
+    @apply h-full w-full object-contain object-center;
+  }
+
   &__refButton {
     @apply p-1 px-4 text-center bg-brand-primary-light
     text-white outline-none rounded-lg;
@@ -13,7 +29,7 @@
   }
 
   &__title {
-    @apply font-bold text-center pb-2;
+    @apply font-bold text-center;
   }
 
   &__dataContainer {

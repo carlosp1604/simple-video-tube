@@ -12,7 +12,6 @@ import { GetPostPostChildComments } from '~/modules/Posts/Application/GetPostPos
 import {
   PostCommentApiRequestValidatorError
 } from '~/modules/Posts/Infrastructure/Api/Validators/PostCommentApiRequestValidatorError'
-import { GetPostsApplicationException } from '~/modules/Posts/Application/GetPosts/GetPostsApplicationException'
 import {
   GetPostPostChildCommentsApplicationException
 } from '~/modules/Posts/Application/GetPostPostChildComments/GetPostPostChildCommentsApplicationException'
@@ -34,7 +33,7 @@ import {
   CreatePostChildCommentApplicationException
 } from '~/modules/Posts/Application/CreatePostChildComment/CreatePostChildCommentApplicationException'
 import {
-  POST_CHILD_COMMENT_BAD_REQUEST,
+  POST_CHILD_COMMENT_BAD_REQUEST, POST_CHILD_COMMENT_INVALID_NAME,
   POST_CHILD_COMMENT_INVALID_PAGE,
   POST_CHILD_COMMENT_INVALID_PER_PAGE,
   POST_CHILD_COMMENT_METHOD,
@@ -46,6 +45,7 @@ import {
   GetPostPostChildCommentsRequestDtoTranslator
 } from '~/modules/Posts/Infrastructure/Api/Translators/GetPostPostChildCommentsRequestDtoTranslator'
 import requestIp from 'request-ip'
+import { ValidationException } from '~/modules/Shared/Domain/ValidationException'
 
 export default async function handler (
   request: NextApiRequest,
@@ -101,9 +101,9 @@ async function handleGet (request: NextApiRequest, response: NextApiResponse) {
 
     switch (exception.id) {
       case GetPostPostChildCommentsApplicationException.invalidPageValueId:
-        return handleUnprocessableEntity(response, exception, POST_CHILD_COMMENT_INVALID_PAGE)
+        return handleUnprocessableEntity(response, exception.message, POST_CHILD_COMMENT_INVALID_PAGE)
       case GetPostPostChildCommentsApplicationException.invalidPerPageValueId:
-        return handleUnprocessableEntity(response, exception, POST_CHILD_COMMENT_INVALID_PER_PAGE)
+        return handleUnprocessableEntity(response, exception.message, POST_CHILD_COMMENT_INVALID_PER_PAGE)
 
       default: {
         console.error(exception)
@@ -156,7 +156,10 @@ async function handlePost (request: NextApiRequest, response: NextApiResponse) {
 
     return response.status(201).json(childComment)
   } catch (exception: unknown) {
-    if (!(exception instanceof CreatePostChildCommentApplicationException)) {
+    if (
+      !(exception instanceof CreatePostChildCommentApplicationException) &&
+      !(exception instanceof ValidationException)
+    ) {
       console.error(exception)
 
       return handleServerError(response)
@@ -168,6 +171,9 @@ async function handlePost (request: NextApiRequest, response: NextApiResponse) {
 
       case CreatePostChildCommentApplicationException.parentCommentNotFoundId:
         return handleNotFound(response, exception.message, POST_COMMENT_PARENT_COMMENT_NOT_FOUND)
+
+      case ValidationException.invalidNameId:
+        return handleUnprocessableEntity(response, exception.message, POST_CHILD_COMMENT_INVALID_NAME)
 
       default: {
         console.error(exception)
@@ -219,13 +225,13 @@ function handleServerError (response: NextApiResponse) {
 
 function handleUnprocessableEntity (
   response: NextApiResponse,
-  exception: GetPostsApplicationException,
+  message: string,
   code: string
 ) {
   return response.status(422)
     .json({
       code,
-      message: exception.message,
+      message,
     })
 }
 

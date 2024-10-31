@@ -29,9 +29,8 @@ import { container } from '~/awilix.container'
 import {
   GetPostPostCommentsApplicationException
 } from '~/modules/Posts/Application/GetPostPostComments/GetPostPostCommentsApplicationException'
-import { GetPostsApplicationException } from '~/modules/Posts/Application/GetPosts/GetPostsApplicationException'
 import {
-  POST_COMMENT_BAD_REQUEST,
+  POST_COMMENT_BAD_REQUEST, POST_COMMENT_INVALID_NAME,
   POST_COMMENT_INVALID_PAGE,
   POST_COMMENT_INVALID_PER_PAGE,
   POST_COMMENT_METHOD,
@@ -43,6 +42,7 @@ import {
   GetPostPostCommentsRequestDtoTranslator
 } from '~/modules/Posts/Infrastructure/Api/Translators/GetPostPostCommentsRequestDtoTranslator'
 import requestIp from 'request-ip'
+import { ValidationException } from '~/modules/Shared/Domain/ValidationException'
 
 export default async function handler (
   request: NextApiRequest,
@@ -97,10 +97,10 @@ async function handleGET (request: NextApiRequest, response: NextApiResponse) {
 
     switch (exception.id) {
       case GetPostPostCommentsApplicationException.invalidPageValueId:
-        return handleUnprocessableEntity(response, exception, POST_COMMENT_INVALID_PAGE)
+        return handleUnprocessableEntity(response, exception.message, POST_COMMENT_INVALID_PAGE)
 
       case GetPostPostCommentsApplicationException.invalidPerPageValueId:
-        return handleUnprocessableEntity(response, exception, POST_COMMENT_INVALID_PER_PAGE)
+        return handleUnprocessableEntity(response, exception.message, POST_COMMENT_INVALID_PER_PAGE)
 
       default: {
         console.error(exception)
@@ -151,7 +151,10 @@ async function handlePOST (request: NextApiRequest, response: NextApiResponse) {
 
     return response.status(201).json(comment)
   } catch (exception: unknown) {
-    if (!(exception instanceof CreatePostCommentApplicationException)) {
+    if (
+      !(exception instanceof CreatePostCommentApplicationException) &&
+      !(exception instanceof ValidationException)
+    ) {
       console.error(exception)
 
       return handleServerError(response)
@@ -163,6 +166,9 @@ async function handlePOST (request: NextApiRequest, response: NextApiResponse) {
 
       case CreatePostCommentApplicationException.userNotFoundId:
         return handleNotFound(response, exception.message, POST_COMMENT_USER_NOT_FOUND)
+
+      case ValidationException.invalidNameId:
+        return handleUnprocessableEntity(response, exception.message, POST_COMMENT_INVALID_NAME)
 
       default: {
         console.error(exception)
@@ -222,12 +228,12 @@ function handleNotFound (response: NextApiResponse, message: string, code: strin
 
 function handleUnprocessableEntity (
   response: NextApiResponse,
-  exception: GetPostsApplicationException,
+  message: string,
   code: string
 ) {
   return response.status(422)
     .json({
       code,
-      message: exception.message,
+      message,
     })
 }

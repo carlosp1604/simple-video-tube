@@ -8,13 +8,13 @@ import {
 export class GetPostPostChildCommentsRequestDtoTranslator {
   public static fromApiDto (
     request: GetPostPostChildCommentsApiRequestDto,
-    userId: string | null
+    userIp: string
   ): GetPostPostChildCommentsApplicationRequest {
     return {
       page: request.page,
       perPage: request.perPage,
       parentCommentId: request.parentCommentId,
-      userId,
+      userIp,
     }
   }
 }
