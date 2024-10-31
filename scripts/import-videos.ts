@@ -450,7 +450,7 @@ async function run (
       video.description,
       video.slug,
       parseInt(video.duration ?? '0'),
-      video.trailerUrl ?? null,
+      video.trailer ?? null,
       video.thumb,
       video.externalUrl ?? null,
       0,

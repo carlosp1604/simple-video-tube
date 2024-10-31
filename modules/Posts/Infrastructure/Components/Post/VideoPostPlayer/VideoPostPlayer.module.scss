@@ -3,11 +3,6 @@
     @apply h-full w-full overflow-hidden relative;
   }
 
-  &__overlay-contaier {
-    @apply h-full w-full absolute top-0 left-0 bg-transparent
-    z-video-player-overlay;
-  }
-
   &__iframe {
     @apply z-video-player w-full h-full overflow-hidden;
 

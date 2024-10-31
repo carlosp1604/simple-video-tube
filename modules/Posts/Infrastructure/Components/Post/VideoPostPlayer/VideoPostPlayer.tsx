@@ -31,7 +31,6 @@ export const VideoPostPlayer: FC<Props> = ({
   onCloseSourceMenu,
 }) => {
   const [videoReady, setVideoReady] = useState<boolean>(false)
-  const [adOpen, setAdOpen] = useState<boolean>(true)
   const [selectedMediaUrl, setSelectedMediaUrl] = useState<MediaUrlComponentDto>(selectableUrls[0])
 
   const firstRender = useFirstRender()
@@ -75,20 +74,6 @@ export const VideoPostPlayer: FC<Props> = ({
         onPlayerReady={ () => setVideoReady(true) }
       />
     )
-  }
-
-  const overlay = (
-    <div
-      className={ styles.videoPostPlayer__overlayContaier }
-      id={ 'video-player-overlay' }
-      onClick={ () => { setAdOpen(false) } }
-    />
-  )
-
-  let shouldShowExtraAds = true
-
-  if (selectedMediaUrl) {
-    shouldShowExtraAds = MediaUrlsHelper.shouldShowExtraAdvertising(selectedMediaUrl.provider.id)
   }
 
   const closeVideoSourceMenuButton = (
@@ -151,7 +136,6 @@ export const VideoPostPlayer: FC<Props> = ({
         </div>
       </div>
       { sourcesMenuOpen ? closeVideoSourceMenuButton : null }
-      { adOpen && shouldShowExtraAds && overlay }
       { !videoReady ? <VideoLoadingState/> : null }
       { playerElement }
     </div>
