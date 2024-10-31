@@ -1,5 +1,5 @@
 import { MenuOptionComponentInterface } from '~/components/MenuOptions/MenuOptions'
-import {FC, ReactElement, useEffect, useMemo, useState} from 'react'
+import { FC, ReactElement, useEffect, useMemo, useState } from 'react'
 import ReactDOM from 'react-dom'
 import Link from 'next/link'
 import styles from './MenuSideBarOption.module.scss'
@@ -24,25 +24,36 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
     setTooltipId(nanoid())
   }, [])
 
-  const content = useMemo(() => {
-    return [
-      !menuOpen && mounted
-        ? buildPortal(<Tooltip
-          tooltipId={ tooltipId }
-          place={ 'right' }
-          content={ menuOption.title }
-        />)
-        : null,
-      (<span className={ styles.menuSidebarOption__menuItemIcon }>
+  const tooltip = useMemo(() => {
+    return !menuOpen && mounted
+      ? buildPortal(<Tooltip
+        tooltipId={ tooltipId }
+        place={ 'right' }
+        content={ menuOption.title }
+      />)
+      : null
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [menuOption])
+
+  const icon = useMemo(() => {
+    return (
+      <span className={ styles.menuSidebarOption__menuItemIcon }>
         { menuOption.picture }
-      </span>),
-      (<span className={ `
+      </span>
+    )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [menuOption])
+
+  const text = useMemo(() => {
+    return (
+      <span className={ `
         ${styles.menuSidebarOption__menuItemText}
         ${menuOpen ? styles.menuSidebarOption__menuItemText__open : ''}
       ` }>
         { menuOption.title }
-      </span>)
-    ]
+      </span>
+    )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menuOption])
 
   if (menuOption.action) {
@@ -57,7 +68,9 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
         target={ menuOption.action.blank ? '_blank' : '_self' }
         data-tooltip-id={ tooltipId }
       >
-        {content}
+        { tooltip }
+        { icon }
+        { text }
       </Link>
     )
   }
@@ -73,7 +86,9 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
         onClick={ menuOption.onClick }
         data-tooltip-id={ tooltipId }
       >
-        { content }
+        { tooltip }
+        { icon }
+        { text }
       </div>
     )
   }
