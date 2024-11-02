@@ -13,7 +13,6 @@ import {
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaContextProps'
 import { Producers } from '~/modules/Producers/Infrastructure/Components/Producers/Producers'
 import { HtmlPageMeta } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMeta'
-import { MobileBanner } from '~/modules/Shared/Infrastructure/Components/Banner/MobileBanner'
 
 export interface ProducersPageProps {
   initialSearchTerm: string
@@ -51,8 +50,6 @@ export const ProducersPage: NextPage<ProducersPageProps> = ({
   return (
     <>
       <HtmlPageMeta { ...htmlPageMetaProps } />
-
-      <MobileBanner />
 
       <Producers
         initialSearchTerm={ initialSearchTerm }

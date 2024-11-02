@@ -4,9 +4,9 @@ import { PostComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostCompon
 import { ReactionComponentDto } from '~/modules/Reactions/Infrastructure/Components/ReactionComponentDto'
 import { ReactionType } from '~/modules/Reactions/Infrastructure/ReactionType'
 import { PostData } from '~/modules/Posts/Infrastructure/Components/Post/PostData/PostData'
-import { Banner } from '~/modules/Shared/Infrastructure/Components/Banner/Banner'
-import { DesktopBanner } from '~/modules/Shared/Infrastructure/Components/ExoclickBanner/DesktopBanner'
-import { OutstreamBanner } from '~/modules/Shared/Infrastructure/Components/ExoclickBanner/OutstreamBanner'
+import { AdsterraBanner } from '~/modules/Shared/Infrastructure/Components/Advertising/AdsterraBanner/AdsterraBanner'
+import { DesktopBanner } from '~/modules/Shared/Infrastructure/Components/Advertising/DesktopBanner'
+import { OutstreamBanner } from '~/modules/Shared/Infrastructure/Components/Advertising/OutstreamBanner'
 import dynamic from 'next/dynamic'
 import { VideoPostType } from '~/modules/Posts/Infrastructure/Components/Post/VideoPostType/VideoPostType'
 import { APIException } from '~/modules/Shared/Infrastructure/FrontEnd/ApiException'
@@ -190,7 +190,7 @@ export const Post: FC<Props> = ({
 
         <div className={ styles.post__rightContainer }>
           <span className={ styles.post__rightContainerItem }>
-            <Banner />
+            <AdsterraBanner />
           </span>
           <span className={ styles.post__rightContainerItem }>
             <OutstreamBanner />

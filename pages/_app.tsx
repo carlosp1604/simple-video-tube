@@ -6,16 +6,17 @@ import dynamic from 'next/dynamic'
 import UsingRouterProvider from '~/modules/Shared/Infrastructure/Components/UsingRouterProvider'
 import { Roboto } from 'next/font/google'
 import { AppMenu } from '~/components/AppMenu/AppMenu'
-import { ReactElement, useState } from 'react'
 import { MenuSideBar } from '~/components/MenuSideBar/MenuSideBar'
+import { ThemeProvider } from 'next-themes'
 import { ToastProvider } from '~/components/AppToast/ToastProvider'
 import { AppProgressBar } from '~/components/AppProgressBar/AppProgressBar'
+import { GoogleAnalytics } from '@next/third-parties/google'
+import { LanguageMenuProvider } from '~/modules/Shared/Infrastructure/Components/LanguageMenu/LanguageMenuProvider'
+import { ReactElement, useState } from 'react'
 import {
   TrafficstarsVideoSlider
-} from '~/modules/Shared/Infrastructure/Components/Trafficstars/TrafficstarsVideoSlider'
-import { ThemeProvider } from 'next-themes'
-import { LanguageMenuProvider } from '~/modules/Shared/Infrastructure/Components/LanguageMenu/LanguageMenuProvider'
-import { GoogleAnalytics } from '@next/third-parties/google'
+} from '~/modules/Shared/Infrastructure/Components/Advertising/Trafficstars/TrafficstarsVideoSlider'
+import { TopMobileMenu } from '~/components/TopMobileMenu/TopMobileMenu'
 
 const AppFooter = dynamic(() => import('~/components/AppFooter/AppFooter')
   .then((module) => module.AppFooter),
@@ -90,8 +91,9 @@ function App ({
                   `${styles.app__mainLayout} ${menuOpen ? styles.app__mainLayout__open : ''} ${roboto.variable}` }
                 >
                   { /** Workaround to show tooltip in the sidebar menú **/ }
-                  <div id="tooltip-container" className={ 'z-tooltip fixed' }></div>
+                  <div id="tooltip-container" className={ 'z-tooltip fixed' }/>
                   <main className={ styles.app__container }>
+                    <TopMobileMenu />
                     <Component { ...pageProps }/>
                     { googleAnalytics }
 

@@ -8,13 +8,14 @@
     }
 
     &:hover {
-      @apply bg-base-100
+      @apply bg-base-200
       dark:bg-base-800;
     }
 
     &__active {
-      @apply bg-base-200 text-base-950 transition-colors pointer-events-none
-      dark:bg-base-700 dark:text-base-200 dark:transition-colors;
+      @apply bg-base-300 text-base-950 transition-colors
+      pointer-events-none dark:bg-base-700 dark:text-base-200
+      dark:transition-colors;
     }
   }
 }

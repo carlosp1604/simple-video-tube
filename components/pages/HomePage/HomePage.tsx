@@ -11,7 +11,6 @@ import {
   HtmlPageMetaResourceService
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaResourceService/HtmlPageMetaResourceService'
 import { HtmlPageMeta } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMeta'
-import { MobileBanner } from '~/modules/Shared/Infrastructure/Components/ExoclickBanner/MobileBanner'
 import { useRouter } from 'next/router'
 import { i18nConfig } from '~/i18n.config'
 
@@ -67,8 +66,6 @@ export const HomePage: NextPage<Props> = (props: Props) => {
   return (
     <>
       <HtmlPageMeta { ...htmlPageMetaProps } />
-
-      <MobileBanner />
 
       <Home
         page={ props.page }

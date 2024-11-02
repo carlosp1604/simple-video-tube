@@ -1,22 +1,40 @@
 .top-mobile-menu {
   &__container {
-    @apply flex items-center justify-center gap-x-2 px-5 pt-1
-    overflow-x-scroll scrollbar-hide z-top-mobile;
+    @apply flex items-center justify-between border-b
+    border-base-300 px-5 py-0.5 overflow-x-scroll
+    scrollbar-hide gap-x-1 z-top-mobile
+    dark:border-base-800 transition-colors dark:transition-colors;
 
     @screen md {
       @apply overflow-hidden;
     }
+
+    @screen lg {
+      @apply py-1;
+    }
+  }
+
+  &__offer-container {
+    @apply flex-auto flex-shrink-0 items-center text-center
+    leading-none text-base-500 border-l border-base-300
+    mx-auto px-2 py-1 dark:border-base-300 dark:text-base-400;
+
+    &:first-child {
+      @apply -ml-1 border-none;
+    }
+
+    &:last-child {
+      @apply -mr-1;
+    }
+
+    &:hover {
+      @apply cursor-pointer text-brand-primary-light
+      transition-colors;
+    }
   }
 
   &__offer {
-    @apply flex flex-row gap-x-2 items-center justify-center
-    bg-base-200 py-1 px-2 rounded-lg whitespace-nowrap
-    cursor-pointer transition-colors dark:transition-colors;
-
-    &:hover {
-      @apply bg-base-300 transition-colors dark:transition-colors
-      text-brand-primary-light;
-    }
+    @apply flex flex-row gap-x-2 items-center justify-center;
   }
 
   &__offer-icon {

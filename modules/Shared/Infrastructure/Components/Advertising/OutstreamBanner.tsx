@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { Outstream } from 'exoclick-react'
-import styles from './OutstreamBanner.module.scss'
-import { RiAdvertisementFill } from 'react-icons/ri'
+import styles from './Banner.module.scss'
 import useTranslation from 'next-translate/useTranslation'
 
 export const OutstreamBanner: FC = () => {
@@ -12,10 +11,9 @@ export const OutstreamBanner: FC = () => {
   }
 
   return (
-    <div className={ styles.outstreamBanner__container }>
-      <div className={ styles.outstreamBanner__bannerWrapper }>
+    <div className={ styles.banner__container }>
+      <div className={ styles.banner__bannerWrapper250x300 }>
         <Outstream zoneId={ process.env.NEXT_PUBLIC_OUTSTREAM_EXOCLICK_BANNER_ID } maxWidth={ 300 }/>
-        <RiAdvertisementFill className={ styles.outstreamBanner__bannerAd }/>
       </div>
       { t('banner_ad_title') }
     </div>

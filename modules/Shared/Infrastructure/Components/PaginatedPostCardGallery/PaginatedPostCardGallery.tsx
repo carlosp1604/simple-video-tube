@@ -107,6 +107,8 @@ export const PaginatedPostCardGallery: FC<Partial<Props> & Omit<Props,
     order: PostsPaginationSortingType,
     filters: FetchFilter<PostFilterOptions>[]
   ) => {
+    setLoading(true)
+
     const PostsQueryParamsParser = (await import('~/modules/Posts/Infrastructure/Frontend/PostsQueryParamsParser'))
       .PostsQueryParamsParser
 
@@ -128,8 +130,6 @@ export const PaginatedPostCardGallery: FC<Partial<Props> & Omit<Props,
     const componentOrder = fromOrderTypeToComponentSortingOption(order)
 
     try {
-      setLoading(true)
-
       const newPosts = await postsApiService.getPosts(
         page,
         defaultPerPage,

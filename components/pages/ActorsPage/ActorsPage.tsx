@@ -11,7 +11,6 @@ import {
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaContextProps'
 import { HtmlPageMeta } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMeta'
 import { Actors } from '~/modules/Actors/Infrastructure/Components/Actors/Actors'
-import { MobileBanner } from '~/modules/Shared/Infrastructure/Components/Banner/MobileBanner'
 
 export interface ActorsPageProps {
   initialSearchTerm: string
@@ -49,8 +48,6 @@ export const ActorsPage: NextPage<ActorsPageProps> = ({
   return (
     <>
       <HtmlPageMeta { ...htmlPageMetaProps } />
-
-      <MobileBanner />
 
       <Actors
         initialSearchTerm={ initialSearchTerm }

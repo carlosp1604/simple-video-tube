@@ -10,7 +10,6 @@ import {
   HtmlPageMetaVideoService
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaResourceService/HtmlPageMetaVideoService'
 import { ReactElement, useEffect, useRef } from 'react'
-import { MobileBanner } from '~/modules/Shared/Infrastructure/Components/ExoclickBanner/MobileBanner'
 import Script from 'next/script'
 import { SEOHelper } from '~/modules/Shared/Infrastructure/FrontEnd/SEOHelper'
 
@@ -131,8 +130,6 @@ export const PostPage: NextPage<PostPageProps> = ({
       { popUnder }
 
       <HtmlPageMeta { ...htmlPageMetaProps } />
-
-      <MobileBanner />
 
       <Post
         post={ post }

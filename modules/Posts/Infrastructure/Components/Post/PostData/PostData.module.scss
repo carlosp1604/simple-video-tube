@@ -31,7 +31,7 @@
   &__data-item-container {
     @apply flex flex-col text-base-600 py-1 px-2 font-semibold
     text-sm bg-base-300 justify-between transition-colors
-    dark:text-base-400 dark:bg-base-800;
+    dark:text-base-400 dark:bg-base-800 leading-tight cursor-default;
   }
 
   &__data-item-container-empty {
@@ -49,8 +49,8 @@
   }
 
   &__overflow-container {
-    @apply flex flex-nowrap gap-x-2 -mx-5 pl-5 overflow-x-scroll
-    scrollbar-hide;
+    @apply flex flex-nowrap gap-x-2 -mx-5 px-5 overflow-x-scroll
+    scrollbar-hide pb-0.5;
   }
 
   &__list-item-container {

@@ -3,8 +3,8 @@ import { PostCardComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostCa
 import styles from './PostCardGallery.module.scss'
 import { defaultPerPage } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
 import { PostCardSkeleton } from '~/modules/Posts/Infrastructure/Components/PostCard/PostCardSkeleton/PostCardSkeleton'
-import { Banner } from '~/modules/Shared/Infrastructure/Components/Banner/Banner'
-import { DesktopBanner } from '~/modules/Shared/Infrastructure/Components/ExoclickBanner/DesktopBanner'
+import { AdsterraBanner } from '~/modules/Shared/Infrastructure/Components/Advertising/AdsterraBanner/AdsterraBanner'
+import { DesktopBanner } from '~/modules/Shared/Infrastructure/Components/Advertising/DesktopBanner'
 import { PostCard } from '~/modules/Posts/Infrastructure/Components/PostCard/PostCard'
 
 interface Props {
@@ -105,7 +105,7 @@ export const PostCardGallery: FC<Partial<Props> & Pick<Props, 'posts'>> = ({
           { loading ? firstSkeletonList : null }
         </div>
 
-        <Banner/>
+        <AdsterraBanner/>
 
         <div className={ `
           ${styles.postCardGallery__container}

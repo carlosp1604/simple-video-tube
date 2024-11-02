@@ -1,5 +1,5 @@
 import { createRef, FC, useEffect } from 'react'
-import styles from './ClickaduBanner.module.scss'
+import styles from '~/modules/Shared/Infrastructure/Components/Advertising/Banner.module.scss'
 
 export const ClickaduBanner: FC = () => {
   const bannerRef = createRef<HTMLDivElement>()
@@ -24,9 +24,8 @@ export const ClickaduBanner: FC = () => {
   }
 
   return (
-    <section className={ styles.calickaduBanner__container }>
-      <div ref={ bannerRef } className={ styles.calickaduBanner__bannerContainer }>
-      </div>
+    <section className={ styles.banner__container }>
+      <div ref={ bannerRef } className={ styles.banner__bannerContainer100x300 } />
     </section>
   )
 }
