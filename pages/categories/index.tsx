@@ -14,7 +14,14 @@ export const getStaticProps: GetStaticProps<CategoriesPageProps> = async (contex
   const locale = context.locale ?? i18nConfig.defaultLocale
 
   const { env } = process
+  let indexPage = false
   let baseUrl = ''
+
+  if (!env.INDEX_WEBSITE) {
+    throw Error('Missing env var: INDEX_WEBSITE. Required in the categories page')
+  } else {
+    indexPage = env.INDEX_WEBSITE === 'true'
+  }
 
   if (!env.BASE_URL) {
     throw Error('Missing env var: BASE_URL. Required in the categories page')
@@ -35,7 +42,7 @@ export const getStaticProps: GetStaticProps<CategoriesPageProps> = async (contex
     req: {
       url,
     },
-  }, { includeQuery: false, includeLocale: true }, { follow: true, index: true })
+  }, { includeQuery: false, includeLocale: true }, { follow: indexPage, index: indexPage })
 
   const props: CategoriesPageProps = {
     categoriesCards: [],

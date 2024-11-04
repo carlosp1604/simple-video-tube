@@ -1,9 +1,13 @@
-import { FC, ReactElement, Ref, useEffect, useRef, useState } from 'react'
 import styles from './IconButton.module.scss'
-import { nanoid } from 'nanoid'
-import { Tooltip } from '~/components/Tooltip/Tooltip'
-import { useClickAnimation } from '~/hooks/ClickAnimation/ClickAnimation'
+import dynamic from 'next/dynamic'
 import TailwindConfig from '~/tailwind.config'
+import { nanoid } from 'nanoid'
+import { useClickAnimation } from '~/hooks/ClickAnimation/ClickAnimation'
+import { FC, ReactElement, Ref, useEffect, useRef, useState } from 'react'
+
+const Tooltip = dynamic(() =>
+  import('~/components/Tooltip/Tooltip').then((module) => module.Tooltip), { ssr: false }
+)
 
 interface Props {
   onClick: (() => void) | undefined

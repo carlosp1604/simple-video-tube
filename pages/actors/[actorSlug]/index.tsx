@@ -37,14 +37,15 @@ export const getServerSideProps: GetServerSideProps<ActorPageProps> = async (con
     }
   }
 
-  const htmlPageMetaContextService = new HtmlPageMetaContextService(
-    context,
-    { includeQuery: false, includeLocale: true },
-    { index: true, follow: true }
-  )
-
   const { env } = process
+  let indexPage = false
   let baseUrl = ''
+
+  if (!env.INDEX_WEBSITE) {
+    throw Error('Missing env var: INDEX_WEBSITE. Required in the actor page')
+  } else {
+    indexPage = env.INDEX_WEBSITE === 'true'
+  }
 
   if (!env.BASE_URL) {
     throw Error('Missing env var: BASE_URL. Required in the actor page')
@@ -52,10 +53,10 @@ export const getServerSideProps: GetServerSideProps<ActorPageProps> = async (con
     baseUrl = env.BASE_URL
   }
 
-  // Experimental: Try yo improve performance
-  context.res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=60, stale-while-revalidate=300'
+  const htmlPageMetaContextService = new HtmlPageMetaContextService(
+    context,
+    { includeQuery: false, includeLocale: true },
+    { index: indexPage, follow: indexPage }
   )
 
   const props: ActorPageProps = {
@@ -103,6 +104,12 @@ export const getServerSideProps: GetServerSideProps<ActorPageProps> = async (con
   } catch (exception: unknown) {
     console.error(exception)
   }
+
+  // Experimental: Try yo improve performance
+  context.res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=60, stale-while-revalidate=300'
+  )
 
   return {
     props,

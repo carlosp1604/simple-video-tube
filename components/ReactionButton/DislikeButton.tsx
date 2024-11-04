@@ -1,13 +1,17 @@
-import { FC, ReactElement, useEffect, useState } from 'react'
 import styles from './ReactionButton.module.scss'
+import dynamic from 'next/dynamic'
 import useTranslation from 'next-translate/useTranslation'
-import { AiOutlineDislike, AiOutlineLoading, AiTwotoneDislike } from 'react-icons/ai'
-import { useToast } from '~/components/AppToast/ToastContext'
 import { nanoid } from 'nanoid'
-import { Tooltip } from '~/components/Tooltip/Tooltip'
-import { NumberFormatter } from '~/modules/Shared/Infrastructure/FrontEnd/NumberFormatter'
+import { useToast } from '~/components/AppToast/ToastContext'
 import { useRouter } from 'next/router'
 import { i18nConfig } from '~/i18n.config'
+import { NumberFormatter } from '~/modules/Shared/Infrastructure/FrontEnd/NumberFormatter'
+import { FC, ReactElement, useEffect, useState } from 'react'
+import { AiOutlineDislike, AiOutlineLoading, AiTwotoneDislike } from 'react-icons/ai'
+
+const Tooltip = dynamic(() =>
+  import('~/components/Tooltip/Tooltip').then((module) => module.Tooltip), { ssr: false }
+)
 
 interface Props {
   disliked: boolean

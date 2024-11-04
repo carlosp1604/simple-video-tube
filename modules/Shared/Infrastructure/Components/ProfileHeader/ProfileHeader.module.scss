@@ -1,6 +1,7 @@
 .profile-header {
   &__container {
-    @apply my-5 transition-colors dark:transition-colors;
+    @apply my-5 transition-colors dark:transition-colors
+    cursor-default;
   }
 
   &__name-image-container {

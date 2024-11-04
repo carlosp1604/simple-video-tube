@@ -26,18 +26,14 @@ export const HtmlVideoPlayer: FC<HTMLVideoPlayerProps> = ({
         controls={ true }
         loop={ true }
       >
-        {
-          videoPostMediaUrls.map((mediaUrl) => {
-            return (
-              <source
-                src={ mediaUrl.url }
-                type="video/mp4"
-                title={ mediaUrl.title }
-                key={ mediaUrl.url }
-              />
-            )
-          })
-        }
+        { videoPostMediaUrls.map((mediaUrl) => (
+          <source
+            src={ mediaUrl.url }
+            type="video/mp4"
+            title={ mediaUrl.title }
+            key={ mediaUrl.url }
+          />
+        )) }
       </video>
     </div>
   )

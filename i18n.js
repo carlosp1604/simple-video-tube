@@ -21,12 +21,12 @@ const config = {
       'menu',
       'error',
       'common',
+      'api_exceptions',
     ],
     '/': [
       'sorting_menu_dropdown',
       'post',
       'pagination_bar',
-      'api_exceptions',
       'home_page',
     ],
     'rgx:/producers/*': [
@@ -41,19 +41,16 @@ const config = {
       'post',
       'pagination_bar',
       'categories',
-      'api_exceptions',
     ],
     'rgx:/actors/*': [
       'sorting_menu_dropdown',
       'post',
       'pagination_bar',
       'actors',
-      'api_exceptions',
     ],
     'rgx:/posts/videos/*': [
       'sorting_menu_dropdown',
       'pagination_bar',
-      'api_exceptions',
       'post_page',
       'post',
       'post_comments',
@@ -63,7 +60,6 @@ const config = {
       'post',
       'pagination_bar',
       'search',
-      'api_exceptions',
     ],
   },
 }

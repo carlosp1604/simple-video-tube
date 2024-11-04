@@ -21,7 +21,6 @@ const Modal = dynamic(() =>
 
 export const LanguageMenu: FC = () => {
   const { open, setOpen } = useLanguageMenuContext()
-  const { pathname, query, asPath, push } = useRouter()
   const { t } = useTranslation('menu')
   const { error } = useToast()
 
@@ -31,7 +30,7 @@ export const LanguageMenu: FC = () => {
 
   const onClickOption = async (currentLocale: string, newLocale: string) => {
     if (currentLocale !== newLocale) {
-      await setLanguage(newLocale)
+      await setLanguage(newLocale, false)
       setOpen(false)
     } else {
       error(t('language_menu_already_on_language_error_message'), languageMenuToastId)

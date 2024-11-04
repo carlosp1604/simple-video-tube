@@ -153,4 +153,10 @@ export interface PostRepositoryInterface {
    * @return PostUserInteraction
    */
   findUserInteraction (postId: Post['id'], userIp: string): Promise<PostUserInteraction>
+
+  /**
+   * Get a random post slug
+   * @return Post slug
+   */
+  getRandomPostSlug (): Promise<string>
 }

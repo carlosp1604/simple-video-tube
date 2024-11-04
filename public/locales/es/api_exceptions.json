@@ -17,7 +17,6 @@
   "post_reaction_does_not_exist_error_message": "El usuario todavía no ha reaccionado al post",
   "post_save_cannot_remove_saved_post_error_message": "No se puede eliminar el post de la lista de posts guardados del usuario",
   "post_save_post_already_on_saved_post_error_message": "El post ya fue guardado por el usuario",
-  "post_save_post_does_not_belong_to_user_saved_posts_error_message": "El post no pertenece a la lista de posts guardados del usuario",
   "post_video_no_sources_error_message": "El video no existe o fue eliminado por derechos de autor.\nPuedes reportar el video e intentaremos arreglarlo si es posible",
   "server_error_error_message": "Servicio no disponible. Inténtalo después",
   "something_went_wrong_error_message": "Algo salió mal al intentar realizar la operación. Inténtalo después",

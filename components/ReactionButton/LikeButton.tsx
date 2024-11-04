@@ -1,12 +1,16 @@
-import { FC, ReactElement, useEffect, useState } from 'react'
 import styles from './ReactionButton.module.scss'
+import dynamic from 'next/dynamic'
 import useTranslation from 'next-translate/useTranslation'
+import { nanoid } from 'nanoid'
+import { useToast } from '~/components/AppToast/ToastContext'
 import { useRouter } from 'next/router'
 import { NumberFormatter } from '~/modules/Shared/Infrastructure/FrontEnd/NumberFormatter'
+import { FC, ReactElement, useEffect, useState } from 'react'
 import { AiOutlineLike, AiOutlineLoading, AiTwotoneLike } from 'react-icons/ai'
-import { useToast } from '~/components/AppToast/ToastContext'
-import { nanoid } from 'nanoid'
-import { Tooltip } from '~/components/Tooltip/Tooltip'
+
+const Tooltip = dynamic(() =>
+  import('~/components/Tooltip/Tooltip').then((module) => module.Tooltip), { ssr: false }
+)
 
 interface Props {
   liked: boolean

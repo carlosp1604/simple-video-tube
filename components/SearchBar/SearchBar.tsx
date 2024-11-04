@@ -1,11 +1,15 @@
-import { ChangeEvent, createRef, FC, KeyboardEvent, Ref, useEffect, useState } from 'react'
 import styles from './SearchBar.module.scss'
-import { IconButton } from '~/components/IconButton/IconButton'
-import { TfiClose } from 'react-icons/tfi'
+import dynamic from 'next/dynamic'
 import useTranslation from 'next-translate/useTranslation'
 import { nanoid } from 'nanoid'
-import { Tooltip } from '~/components/Tooltip/Tooltip'
+import { TfiClose } from 'react-icons/tfi'
 import { IoSearch } from 'react-icons/io5'
+import { IconButton } from '~/components/IconButton/IconButton'
+import { ChangeEvent, createRef, FC, KeyboardEvent, Ref, useEffect, useState } from 'react'
+
+const Tooltip = dynamic(() =>
+  import('~/components/Tooltip/Tooltip').then((module) => module.Tooltip), { ssr: false }
+)
 
 export type Style = 'main' | 'sub'
 

@@ -80,26 +80,21 @@ module.exports = {
         },
         brand: {
           primary: {
-            light: '#b88b5c', // 600
-            bg: '#a06c3f', // 700
-            dark: '#8e582c', // 800
-          },
-          secondary: {
-            light: '#834f23', // 300
-            bg: '#78451a', // 400
-            dark: '#6d3c11', // 500
+            light: '#3d78e6', // 600
+            bg: '#3d78e6', // 700
+            dark: '#3464dc', // 800
           },
         },
-        tooltip: '#8e582c',
+        tooltip: '#3464dc',
         toast: {
           error: {
             bg: '#DC143C',
             icon: '#F28585',
           },
-          bg: '#78451a',
-          icon: '#b88b5c',
+          bg: '#3d78e6',
+          icon: '#3464dc',
         },
-        'progress-bar': '#a06c3f',
+        'progress-bar': '#3d78e6',
         red: '#FF0000',
         blue: '#00BFFF',
         green: '#008000',

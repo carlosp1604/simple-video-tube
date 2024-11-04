@@ -120,7 +120,7 @@ export const Menu: FC<Props> = ({ open, onClose }) => {
               </Link>
               <div className={ styles.menu__optionWithBorderContainer }>
                 { t('menu_theme_button_title') }
-                { <ThemeSwitcher/> }
+                <ThemeSwitcher/>
               </div>
 
               <div className={ styles.menu__optionWithBorderContainer }>
@@ -134,15 +134,6 @@ export const Menu: FC<Props> = ({ open, onClose }) => {
                   { locale }
                 </button>
               </div>
-              {
-                /**
-                 <div className={ styles.menu__optionWithBorderContainer }>
-                 { t('app_menu_language_switcher_title') }
-                 <LanguageSwitcher />
-                 </div>
-                 */
-              }
-
             </div>
           </CSSTransition>
         </div>

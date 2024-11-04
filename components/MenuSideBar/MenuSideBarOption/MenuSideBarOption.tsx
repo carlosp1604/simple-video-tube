@@ -1,10 +1,14 @@
-import { MenuOptionComponentInterface } from '~/components/MenuOptions/MenuOptions'
-import { FC, ReactElement, useEffect, useMemo, useState } from 'react'
-import ReactDOM from 'react-dom'
 import Link from 'next/link'
 import styles from './MenuSideBarOption.module.scss'
+import dynamic from 'next/dynamic'
+import { createPortal } from 'react-dom'
 import { nanoid } from 'nanoid'
-import { Tooltip } from '~/components/Tooltip/Tooltip'
+import { MenuOptionComponentInterface } from '~/components/MenuOptions/MenuOptions'
+import { FC, ReactElement, useEffect, useMemo, useState } from 'react'
+
+const Tooltip = dynamic(() =>
+  import('~/components/Tooltip/Tooltip').then((module) => module.Tooltip), { ssr: false }
+)
 
 interface Props {
   menuOption: MenuOptionComponentInterface
@@ -16,7 +20,7 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
   const [tooltipId, setTooltipId] = useState<string>('')
 
   const buildPortal = (component: ReactElement) => {
-    return ReactDOM.createPortal(component, document.getElementById('tooltip-container') as HTMLElement)
+    return createPortal(component, document.getElementById('tooltip-container') as HTMLElement)
   }
 
   useEffect(() => {

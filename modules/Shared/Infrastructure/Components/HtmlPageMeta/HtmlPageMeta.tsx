@@ -13,6 +13,8 @@ export const HtmlPageMeta: FC<HtmlPageMetaProps> = (props) => {
   let videoMeta: ReactElement[] | null = null
   let rtaLabel: ReactElement| null = null
   let canonicalTag: ReactElement | null = null
+  const robotsTagContent =
+    `${props.robots.follow ? 'follow' : 'nofollow'}, ${props.robots.index ? 'index' : 'noindex'}`
 
   if (props.resourceProps.resourceType === HtmlPageMetaContextResourceType.VIDEO_MOVIE) {
     const videoProps = props.resourceProps as HtmlPageMetaVideoProps
@@ -97,6 +99,7 @@ export const HtmlPageMeta: FC<HtmlPageMetaProps> = (props) => {
     <Head>
       { rtaLabel }
       { canonicalTag }
+      <meta name="robots" content={ robotsTagContent }/>
       <title>{ props.resourceProps.title }</title>
       <meta name="description" content={ props.resourceProps.description } key="description" />
       <meta property="og:title" content={ props.resourceProps.title } key="og:title" />

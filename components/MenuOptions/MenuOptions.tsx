@@ -94,9 +94,9 @@ export const MenuOptions: FC<Props> = ({ menuOptions }) => {
 
   return (
     <div className={ styles.menuOptions__menuContainer }>
-      { menuOptions.map((menuOption) => {
-        return buildOptionContent(menuOption)
-      }) }
+      { menuOptions.map((menuOption) => (
+        buildOptionContent(menuOption)
+      )) }
     </div>
   )
 }

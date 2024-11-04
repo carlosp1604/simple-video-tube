@@ -17,7 +17,7 @@
   &__offer-container {
     @apply flex-auto flex-shrink-0 items-center text-center
     leading-none text-base-500 border-l border-base-300
-    mx-auto px-2 py-1 dark:border-base-300 dark:text-base-400;
+    mx-auto px-2 py-1 dark:border-base-800 dark:text-base-400;
 
     &:first-child {
       @apply -ml-1 border-none;

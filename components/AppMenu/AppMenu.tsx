@@ -14,6 +14,8 @@ import { IoSearch } from 'react-icons/io5'
 import { FaArrowUp } from 'react-icons/fa'
 import { HiMiniBars3BottomLeft } from 'react-icons/hi2'
 import { i18nConfig } from '~/i18n.config'
+import { LiaDiceD6Solid } from 'react-icons/lia'
+import { APIException } from '~/modules/Shared/Infrastructure/FrontEnd/ApiException'
 
 export interface Props {
   onClickMenuButton : () => void
@@ -63,6 +65,31 @@ export const AppMenu: FC<Props> = ({ onClickMenuButton }) => {
       setOpenSearchBar(false)
     } else {
       error(t('already_searching_term_error_message'))
+    }
+  }
+
+  const handleRandomButton = async () => {
+    const PostsApiService =
+      (await import('~/modules/Posts/Infrastructure/Frontend/PostsApiService')).PostsApiService
+
+    const postsApiService = new PostsApiService()
+
+    try {
+      const postSlug = await postsApiService.getRandomPostSlug()
+
+      await router.push({
+        pathname: `/posts/videos/${postSlug}`,
+      }, undefined, { shallow: true, scroll: true })
+    } catch (exception: unknown) {
+      if (!(exception instanceof APIException)) {
+        error(t('api_exceptions:something_went_wrong_error_message'))
+
+        console.error(exception)
+
+        return
+      }
+
+      error(t(`api_exceptions:${exception.translationKey}`))
     }
   }
 
@@ -124,6 +151,12 @@ export const AppMenu: FC<Props> = ({ onClickMenuButton }) => {
               showTooltip={ true }
             />
           </div>
+          <IconButton
+            onClick={ handleRandomButton }
+            icon={ <LiaDiceD6Solid /> }
+            title={ t('random_icon_button_title') }
+            showTooltip={ true }
+          />
         </div>
       </div>
     </nav>

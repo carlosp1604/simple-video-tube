@@ -41,7 +41,7 @@ export const VideoPostPlayer: FC<Props> = ({
     if (firstRender) {
       setVideoReady(true)
     }
-  }, [firstRender])
+  }, [])
 
   let playerElement: ReactElement | null = null
 
@@ -113,6 +113,7 @@ export const VideoPostPlayer: FC<Props> = ({
                   category: VideoPostCategory,
                   label: selectableUrl.provider.name,
                 })
+                setVideoReady(false)
                 setSelectedMediaUrl(selectableUrl)
               } }
             >
@@ -121,8 +122,8 @@ export const VideoPostPlayer: FC<Props> = ({
                   src={ selectableUrl.provider.logoUrl }
                   alt={ selectableUrl.provider.name }
                   className={ styles.videoPostPlayer__sourceOptionImage }
-                  width={ '100' }
-                  height={ 200 }
+                  width={ 0 }
+                  height={ 0 }
                   sizes={ '100vw' }
                   placeholder={ 'blur' }
                   blurDataURL={ rgbDataURL(81, 80, 80) }

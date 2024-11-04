@@ -743,6 +743,21 @@ export class MysqlPostRepository implements PostRepositoryInterface {
     }
   }
 
+  /**
+   * Get a random post slug
+   * @return Post slug
+   */
+  public async getRandomPostSlug (): Promise<string> {
+    const postsCount = await prisma.post.count()
+
+    const post = await prisma.post.findFirst({
+      take: 1,
+      skip: Math.floor(Math.random() * (postsCount - 1)),
+    })
+
+    return post ? post.slug : ''
+  }
+
   private static buildFilters (
     filters: PostFilterOptionInterface[]
   ): Prisma.PostWhereInput | undefined {

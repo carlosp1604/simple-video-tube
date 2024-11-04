@@ -15,6 +15,15 @@ export const getServerSideProps: GetServerSideProps<PostPageProps> = async (cont
     }
   }
 
+  const { env } = process
+  let indexPage = false
+
+  if (!env.INDEX_WEBSITE) {
+    throw Error('Missing env var: INDEX_WEBSITE. Required in the page page')
+  } else {
+    indexPage = env.INDEX_WEBSITE === 'true'
+  }
+
   const slug = String(context.query.slug)
   const locale = context.locale ?? i18nConfig.defaultLocale
 
@@ -22,7 +31,7 @@ export const getServerSideProps: GetServerSideProps<PostPageProps> = async (cont
   const htmlPageMetaContextService = new HtmlPageMetaContextService(
     context,
     { includeQuery: false, includeLocale: true },
-    { index: true, follow: true }
+    { index: indexPage, follow: indexPage }
   )
 
   let postWithCount
@@ -62,6 +71,12 @@ export const getServerSideProps: GetServerSideProps<PostPageProps> = async (cont
       notFound: true,
     }
   }
+
+  // Experimental: Try yo improve performance
+  context.res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=50, stale-while-revalidate=10'
+  )
 
   return {
     props: {

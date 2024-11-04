@@ -9,7 +9,7 @@ import { HtmlPageMeta } from '~/modules/Shared/Infrastructure/Components/HtmlPag
 import {
   HtmlPageMetaVideoService
 } from '~/modules/Shared/Infrastructure/Components/HtmlPageMeta/HtmlPageMetaResourceService/HtmlPageMetaVideoService'
-import { ReactElement, useEffect, useRef } from 'react'
+import { ReactElement } from 'react'
 import Script from 'next/script'
 import { SEOHelper } from '~/modules/Shared/Infrastructure/FrontEnd/SEOHelper'
 
@@ -31,7 +31,6 @@ export const PostPage: NextPage<PostPageProps> = ({
   htmlPageMetaContextProps,
 }) => {
   const { t } = useTranslation('post_page')
-  const firstClickRef = useRef(0)
 
   const description = SEOHelper.buildDescription(
     post.title,
@@ -52,30 +51,6 @@ export const PostPage: NextPage<PostPageProps> = ({
       />
     )
   }
-
-  useEffect(() => {
-    const clickHandler = () => {
-      if (firstClickRef.current < 3) {
-        firstClickRef.current = firstClickRef.current + 1
-      }
-
-      if (
-        firstClickRef.current === 2 &&
-        process.env.NEXT_PUBLIC_VIDEO_PLAYER_POPUNDER_URL
-      ) {
-        const script = document.createElement('script')
-
-        script.async = true
-        script.src = process.env.NEXT_PUBLIC_VIDEO_PLAYER_POPUNDER_URL
-
-        document.body.appendChild(script)
-      }
-    }
-
-    document.addEventListener('click', clickHandler)
-
-    return () => document.addEventListener('click', clickHandler)
-  }, [])
 
   const structuredData = {
     '@context': 'http://schema.org',

@@ -36,6 +36,7 @@ import { GetAllCategories } from '~/modules/Categories/Application/GetAllCategor
 import { MysqlReportRepository } from '~/modules/Reports/Infrastructure/MysqlReportRepository'
 import { CreateReport } from '~/modules/Reports/Application/CreateReport'
 import { AddCategoryView } from '~/modules/Categories/Application/AddCategoryView/AddCategoryView'
+import { GetRandomPostSlug } from '~/modules/Posts/Application/GetRandomPostSlug/GetRandomPostSlug'
 
 /**
  * We create a container to register our classes dependencies
@@ -73,6 +74,7 @@ container.register('categoryRepository', asClass(MysqlCategoryRepository))
  * Use-cases
  */
 container.register('getPostsUseCase', asClass(GetPosts))
+container.register('getRandomPostSlugUseCase', asClass(GetRandomPostSlug))
 container.register('getActorsUseCase', asClass(GetActors))
 container.register('getPopularProducersUseCase', asClass(GetPopularProducers))
 container.register('getRelatedPostsUseCase', asClass(GetRelatedPosts))

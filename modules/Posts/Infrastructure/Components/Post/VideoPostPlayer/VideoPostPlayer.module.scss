@@ -48,21 +48,17 @@
 
   &__sourceOption {
     @apply flex flex-col gap-y-1 items-center text-black
-    justify-center rounded-lg p-1 border-black border-2
+    justify-center rounded-lg p-1 px-4 border-black border-2
     font-bold transition-colors leading-none
-    dark:border-white dark:text-white text-xs;
-
-    @screen md {
-      @apply text-sm;
-    }
+    dark:border-white dark:text-white;
 
     &:hover {
-      @apply border-brand-primary-light transition-colors;
+      @apply border-brand-primary-light bg-brand-primary-bg/20 transition-colors;
     }
 
     &__selected {
-      @apply border-brand-primary-dark bg-brand-primary-dark/40 transition-colors
-      pointer-events-none
+      @apply border-brand-primary-bg bg-brand-primary-bg/50
+      transition-colors pointer-events-none
       dark:border-brand-primary-dark;
     }
   }

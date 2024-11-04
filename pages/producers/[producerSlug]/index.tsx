@@ -68,7 +68,14 @@ export const getServerSideProps: GetServerSideProps<ProducerPageProps> = async (
   }
 
   const { env } = process
+  let indexPage = false
   let baseUrl = ''
+
+  if (!env.INDEX_WEBSITE) {
+    throw Error('Missing env var: INDEX_WEBSITE. Required in the producer page')
+  } else {
+    indexPage = env.INDEX_WEBSITE === 'true'
+  }
 
   if (!env.BASE_URL) {
     throw Error('Missing env var: BASE_URL. Required in the producer page')
@@ -76,16 +83,10 @@ export const getServerSideProps: GetServerSideProps<ProducerPageProps> = async (
     baseUrl = env.BASE_URL
   }
 
-  // Experimental: Try yo improve performance
-  context.res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=50, stale-while-revalidate=10'
-  )
-
   const htmlPageMetaContextService = new HtmlPageMetaContextService(
     context,
     { includeQuery: false, includeLocale: true },
-    { index: true, follow: true }
+    { index: indexPage, follow: indexPage }
   )
 
   const props: ProducerPageProps = {
@@ -149,6 +150,12 @@ export const getServerSideProps: GetServerSideProps<ProducerPageProps> = async (
   } catch (exception: unknown) {
     console.error(exception)
   }
+
+  // Experimental: Try yo improve performance
+  context.res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=50, stale-while-revalidate=10'
+  )
 
   return {
     props,

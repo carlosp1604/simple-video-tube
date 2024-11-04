@@ -63,7 +63,19 @@ export class PostsApiService {
       }
     }
 
-    throw new APIException('a', 500, 'c')
+    throw new APIException('server_error_error_message', jsonResponse.status, jsonResponse.code)
+  }
+
+  public async getPostsFromPartner (baseUrl: string): Promise<Response> {
+    const response = await fetch(`${baseUrl}/api/posts?page=1&perPage=20&orderBy=date&order=desc`)
+
+    if (response.ok) {
+      return response
+    }
+
+    const jsonResponse = await response.json()
+
+    throw new APIException('server_error_error_message', jsonResponse.status, jsonResponse.code)
   }
 
   public async addPostView (postId: string): Promise<Response> {
@@ -205,5 +217,17 @@ export class PostsApiService {
           jsonResponse.code
         )
     }
+  }
+
+  public async getRandomPostSlug (): Promise<string> {
+    const response = await fetch('api/posts/random')
+
+    const jsonResponse = await response.json()
+
+    if (response.ok) {
+      return jsonResponse.postSlug as string
+    }
+
+    throw new APIException('server_error_error_message', jsonResponse.status, jsonResponse.code)
   }
 }

@@ -48,16 +48,19 @@ export const getServerSideProps: GetServerSideProps<ProducersPageProps> = async 
     }
   }
 
-  // Experimental: Try yo improve performance
-  context.res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=50, stale-while-revalidate=10'
-  )
+  const { env } = process
+  let indexPage = false
+
+  if (!env.INDEX_WEBSITE) {
+    throw Error('Missing env var: INDEX_WEBSITE. Required in the producers page')
+  } else {
+    indexPage = env.INDEX_WEBSITE === 'true'
+  }
 
   const htmlPageMetaContextService = new HtmlPageMetaContextService(
     context,
     { includeQuery: false, includeLocale: true },
-    { index: true, follow: true }
+    { index: indexPage, follow: indexPage }
   )
 
   const props: ProducersPageProps = {
@@ -104,6 +107,12 @@ export const getServerSideProps: GetServerSideProps<ProducersPageProps> = async 
       return ProducerCardDtoTranslator
         .fromApplicationDto(producer.producer, producer.postsNumber, producer.producerViews)
     })
+
+    // Experimental: Try yo improve performance
+    context.res.setHeader(
+      'Cache-Control',
+      'public, s-maxage=50, stale-while-revalidate=10'
+    )
 
     return {
       props,

@@ -6,11 +6,29 @@ import { MdOutlinePhotoSizeSelectActual } from 'react-icons/md'
 import { SlGameController } from 'react-icons/sl'
 import { TbBrandTinder } from 'react-icons/tb'
 import { RiLiveLine } from 'react-icons/ri'
+import { PiDog } from 'react-icons/pi'
 
 export const TopMobileMenu: FC = () => {
   const { t } = useTranslation('menu')
 
   const links: ReactElement[] = []
+
+  if (process.env.NEXT_PUBLIC_PARTNER_URL) {
+    links.push(
+      <div
+        className={ styles.topMobileMenu__offerContainer }
+        onClick={ () => handleClick(process.env.NEXT_PUBLIC_CAMS_AD_URL) }
+        title={ t('partner_advertising_title') }
+        key={ t('partner_advertising_title') }
+      >
+        <span className={ styles.topMobileMenu__offer }>
+          <PiDog className={ styles.topMobileMenu__offerIcon }/>
+          { t('partner_advertising_title') }
+        </span>
+
+      </div>
+    )
+  }
 
   if (process.env.NEXT_PUBLIC_CAMS_AD_URL) {
     links.push(

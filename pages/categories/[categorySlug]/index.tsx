@@ -76,12 +76,6 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
     baseUrl = env.BASE_URL
   }
 
-  // Experimental: Try yo improve performance
-  context.res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=50, stale-while-revalidate=10'
-  )
-
   const htmlPageMetaContextService =
     new HtmlPageMetaContextService(context, { includeQuery: false, includeLocale: true })
 
@@ -145,6 +139,12 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
   } catch (exception: unknown) {
     console.error(exception)
   }
+
+  // Experimental: Try yo improve performance
+  context.res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=50, stale-while-revalidate=10'
+  )
 
   return {
     props,

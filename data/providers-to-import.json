@@ -207,5 +207,18 @@
     "refUrl": "",
     "multiQuality": false,
     "maxResolution": "2160"
+  },
+  {
+    "id": "bdeaa99d-1263-4195-9244-b29c1839e5a8",
+    "name": "Media.cm",
+    "logoUrl": "https://cdn.cheemsporn.com/static/media-logo.png",
+    "advertisingLevel": 0,
+    "paymentRequired": false,
+    "downloadSpeed": 1,
+    "freeDownloadsDay": 65635,
+    "delayBetweenDownloads": 0,
+    "refUrl": "",
+    "multiQuality": false,
+    "maxResolution": "2160"
   }
 ]

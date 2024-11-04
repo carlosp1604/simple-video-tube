@@ -66,10 +66,19 @@ export const getServerSideProps: GetServerSideProps<SearchPageProps> = async (co
     'public, s-maxage=86400, stale-while-revalidate=300'
   )
 
+  const { env } = process
+  let indexPage = false
+
+  if (!env.INDEX_WEBSITE) {
+    throw Error('Missing env var: INDEX_WEBSITE. Required in the search page')
+  } else {
+    indexPage = env.INDEX_WEBSITE === 'true'
+  }
+
   const htmlPageMetaContextService = new HtmlPageMetaContextService(
     context,
     { includeQuery: false, includeLocale: true },
-    { index: true, follow: true }
+    { index: indexPage, follow: indexPage }
   )
 
   return {

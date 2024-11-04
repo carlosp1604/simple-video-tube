@@ -93,18 +93,16 @@ export const DropdownMenu: FC<Partial<Props> & Pick<Props, 'options' | 'title' >
         onMouseLeave={ () => setOpen(false) }
         style={ positionStyles as CSSProperties }
       >
-        { options.map((option) => {
-          return (
-            <DropdownMenuOption
-              key={ option.title }
-              link={ option.link }
-              title={ option.title }
-              icon={ option.icon }
-              onClick={ () => onClickOption(option) }
-              active={ option.active }
-            />
-          )
-        }) }
+        { options.map((option) => (
+          <DropdownMenuOption
+            key={ option.title }
+            link={ option.link }
+            title={ option.title }
+            icon={ option.icon }
+            onClick={ () => onClickOption(option) }
+            active={ option.active }
+          />
+        )) }
       </div>
     </div>
   )
