@@ -25,7 +25,7 @@ import {
   POST_COMMENT_PARENT_COMMENT_NOT_FOUND,
   POST_COMMENT_POST_NOT_FOUND
 } from '~/modules/Posts/Infrastructure/Api/PostApiExceptionCodes'
-import requestIp from 'request-ip'
+import { ClientIpServiceInterface } from '~/modules/Shared/Domain/ClientIpServiceInterface'
 
 export default async function handler (
   request: NextApiRequest,
@@ -41,7 +41,8 @@ export default async function handler (
 }
 
 async function handleDeleteMethod (request: NextApiRequest, response: NextApiResponse) {
-  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
+  const clientIpService = container.resolve<ClientIpServiceInterface>('clientIpService')
+  const userIp = clientIpService.getClientIp(request, false)
 
   const { postId, commentId, childCommentId } = request.query
 

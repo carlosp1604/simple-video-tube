@@ -44,8 +44,8 @@ import {
 import {
   GetPostPostChildCommentsRequestDtoTranslator
 } from '~/modules/Posts/Infrastructure/Api/Translators/GetPostPostChildCommentsRequestDtoTranslator'
-import requestIp from 'request-ip'
 import { ValidationException } from '~/modules/Shared/Domain/ValidationException'
+import { ClientIpServiceInterface } from '~/modules/Shared/Domain/ClientIpServiceInterface'
 
 export default async function handler (
   request: NextApiRequest,
@@ -76,7 +76,8 @@ async function handleGet (request: NextApiRequest, response: NextApiResponse) {
     parentCommentId: String(commentId),
   }
 
-  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
+  const clientIpService = container.resolve<ClientIpServiceInterface>('clientIpService')
+  const userIp = clientIpService.getClientIp(request, false)
 
   const validationError = GetPostPostChildCommentsApiRequestValidator.validate(apiRequest)
 
@@ -115,7 +116,8 @@ async function handleGet (request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function handlePost (request: NextApiRequest, response: NextApiResponse) {
-  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
+  const clientIpService = container.resolve<ClientIpServiceInterface>('clientIpService')
+  const userIp = clientIpService.getClientIp(request, false)
 
   const { commentId, postId } = request.query
 

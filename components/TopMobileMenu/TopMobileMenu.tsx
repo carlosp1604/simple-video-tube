@@ -17,7 +17,7 @@ export const TopMobileMenu: FC = () => {
     links.push(
       <div
         className={ styles.topMobileMenu__offerContainer }
-        onClick={ () => handleClick(process.env.NEXT_PUBLIC_CAMS_AD_URL) }
+        onClick={ () => handleClick(process.env.NEXT_PUBLIC_PARTNER_URL) }
         title={ t('partner_advertising_title') }
         key={ t('partner_advertising_title') }
       >

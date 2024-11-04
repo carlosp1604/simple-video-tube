@@ -37,6 +37,7 @@ import { MysqlReportRepository } from '~/modules/Reports/Infrastructure/MysqlRep
 import { CreateReport } from '~/modules/Reports/Application/CreateReport'
 import { AddCategoryView } from '~/modules/Categories/Application/AddCategoryView/AddCategoryView'
 import { GetRandomPostSlug } from '~/modules/Posts/Application/GetRandomPostSlug/GetRandomPostSlug'
+import { VercelCloudflareClientIpService } from '~/modules/Shared/Infrastructure/VercelCloudflareClientIpService'
 
 /**
  * We create a container to register our classes dependencies
@@ -70,6 +71,7 @@ container.register('baseUrl', asFunction(() => {
 }))
 container.register('reactionRepository', asClass(MysqlReactionRepository))
 container.register('categoryRepository', asClass(MysqlCategoryRepository))
+container.register('clientIpService', asClass(VercelCloudflareClientIpService))
 /**
  * Use-cases
  */

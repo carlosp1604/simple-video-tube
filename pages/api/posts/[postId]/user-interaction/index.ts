@@ -17,13 +17,14 @@ import { GetPostUserInteraction } from '~/modules/Posts/Application/GetPostUserI
 import {
   GetPostUserInteractionDtoTranslator
 } from '~/modules/Posts/Infrastructure/Translators/GetPostUserInteractionDtoTranslator'
-import requestIp from 'request-ip'
+import { ClientIpServiceInterface } from '~/modules/Shared/Domain/ClientIpServiceInterface'
 
 export default async function handler (
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
+  const clientIpService = container.resolve<ClientIpServiceInterface>('clientIpService')
+  const userIp = clientIpService.getClientIp(request, false)
 
   if (request.method !== 'GET') {
     return handleMethod(request, response)

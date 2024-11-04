@@ -3,7 +3,6 @@ import {
   PostsApiRequestValidatorError
 } from '~/modules/Posts/Infrastructure/Api/Validators/PostsApiRequestValidatorError'
 import { container } from '~/awilix.container'
-import requestIp from 'request-ip'
 import { CreateReportApiRequestDto } from '~/modules/Reports/Infrastructure/Api/CreateReportApiRequestDto'
 import { CreateReportApiRequestSanitizer } from '~/modules/Reports/Infrastructure/Api/CreateReportApiRequestSanitizer'
 import { CreateReportApiRequestValidator } from '~/modules/Reports/Infrastructure/Api/CreateReportApiRequestValidator'
@@ -20,12 +19,14 @@ import {
 } from '~/modules/Reports/Infrastructure/Api/ReportApiExceptionCodes'
 import { CreateReportApplicationException } from '~/modules/Reports/Application/CreateReportApplicationException'
 import { ValidationException } from '~/modules/Shared/Domain/ValidationException'
+import { ClientIpServiceInterface } from '~/modules/Shared/Domain/ClientIpServiceInterface'
 
 export default async function handler (
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
+  const clientIpService = container.resolve<ClientIpServiceInterface>('clientIpService')
+  const userIp = clientIpService.getClientIp(request, false)
 
   if (request.method !== 'POST') {
     return handleMethod(request, response)

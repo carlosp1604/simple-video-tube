@@ -39,7 +39,7 @@ import {
 import {
   DeletePostCommentReactionApplicationException
 } from '~/modules/Posts/Application/DeletePostCommentReaction/DeletePostCommentReactionApplicationException'
-import requestIp from 'request-ip'
+import { ClientIpServiceInterface } from '~/modules/Shared/Domain/ClientIpServiceInterface'
 
 export default async function handler (
   request: NextApiRequest,
@@ -58,7 +58,8 @@ export default async function handler (
 }
 
 async function handlePostMethod (request: NextApiRequest, response: NextApiResponse) {
-  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
+  const clientIpService = container.resolve<ClientIpServiceInterface>('clientIpService')
+  const userIp = clientIpService.getClientIp(request, false)
 
   const { commentId, childCommentId } = request.query
 
@@ -109,7 +110,8 @@ async function handlePostMethod (request: NextApiRequest, response: NextApiRespo
 }
 
 async function handleDeleteMethod (request: NextApiRequest, response: NextApiResponse) {
-  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
+  const clientIpService = container.resolve<ClientIpServiceInterface>('clientIpService')
+  const userIp = clientIpService.getClientIp(request, false)
 
   const { commentId, childCommentId } = request.query
 

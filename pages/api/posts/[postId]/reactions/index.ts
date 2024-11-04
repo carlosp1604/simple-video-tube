@@ -32,7 +32,7 @@ import { DeletePostReaction } from '~/modules/Posts/Application/DeletePostReacti
 import {
   DeletePostReactionApplicationException
 } from '~/modules/Posts/Application/DeletePostReaction/DeletePostReactionApplicationException'
-import requestIp from 'request-ip'
+import { ClientIpServiceInterface } from '~/modules/Shared/Domain/ClientIpServiceInterface'
 
 export default async function handler (
   request: NextApiRequest,
@@ -51,7 +51,8 @@ export default async function handler (
 }
 
 async function handlePost (request: NextApiRequest, response: NextApiResponse) {
-  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
+  const clientIpService = container.resolve<ClientIpServiceInterface>('clientIpService')
+  const userIp = clientIpService.getClientIp(request, false)
 
   const { postId } = request.query
 
@@ -102,7 +103,8 @@ async function handlePost (request: NextApiRequest, response: NextApiResponse) {
 }
 
 async function handleDelete (request: NextApiRequest, response: NextApiResponse) {
-  const userIp = requestIp.getClientIp(request) ?? '127.0.0.1'
+  const clientIpService = container.resolve<ClientIpServiceInterface>('clientIpService')
+  const userIp = clientIpService.getClientIp(request, false)
 
   const { postId } = request.query
 
