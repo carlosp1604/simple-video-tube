@@ -22,6 +22,7 @@ const config = {
       'error',
       'common',
       'api_exceptions',
+      'advertising',
     ],
     '/': [
       'sorting_menu_dropdown',

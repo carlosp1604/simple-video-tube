@@ -66,7 +66,12 @@ export class PostComponentDtoTranslator {
 
     const video = VideoComponentDtoTranslator.fromApplicationDto(applicationDto)
 
+    let formattedReleaseDate : string | null = null
     const formattedPublishedAt = (new DateService()).formatDate(applicationDto.publishedAt, locale)
+
+    if (applicationDto.releaseDate) {
+      formattedReleaseDate = (new DateService()).formatDate(applicationDto.releaseDate, locale)
+    }
 
     const languageHasTranslations = applicationDto.translations.find((translation) => translation.language === locale)
 
@@ -115,6 +120,7 @@ export class PostComponentDtoTranslator {
       producer,
       description: descriptionTranslation,
       formattedPublishedAt,
+      formattedReleaseDate,
       publishedAt: applicationDto.publishedAt,
       title: titleTranslation,
       thumb: applicationDto.thumbnailUrl,

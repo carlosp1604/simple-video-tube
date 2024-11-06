@@ -461,6 +461,7 @@ async function run (
       nowDate,
       null,
       video.publishDate ? DateTime.fromISO(video.publishDate) : nowDate,
+      video.releaseDate ? DateTime.fromISO(video.releaseDate) : nowDate,
       categoryCollection,
       actorsCollection,
       Collection.initializeCollection(),

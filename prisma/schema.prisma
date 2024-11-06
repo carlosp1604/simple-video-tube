@@ -43,6 +43,7 @@ model Post {
   updatedAt    DateTime        @map("updated_at")
   deletedAt    DateTime?       @map("deleted_at")
   publishedAt  DateTime?       @map("published_at")
+  releaseDate  DateTime?       @map("release_date")
   producer     Producer?       @relation(fields: [producerId], references: [id])
   producerId   String?         @map("producer_id")
   actor        Actor?          @relation(fields: [actorId], references: [id])
@@ -75,13 +76,13 @@ model Category {
 }
 
 model PostCategory {
-  post        Post      @relation(fields: [postId], references: [id])
-  category    Category  @relation(fields: [categoryId], references: [id])
-  postId      String    @map("post_id")
-  categoryId  String    @map("category_id")
-  createdAt   DateTime  @map("created_at")
-  updatedAt   DateTime  @map("updated_at")
-  deletedAt   DateTime? @map("deleted_at")
+  post       Post      @relation(fields: [postId], references: [id])
+  category   Category  @relation(fields: [categoryId], references: [id])
+  postId     String    @map("post_id")
+  categoryId String    @map("category_id")
+  createdAt  DateTime  @map("created_at")
+  updatedAt  DateTime  @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
 
   @@id([postId, categoryId])
   @@map("post_categories")
@@ -168,7 +169,7 @@ model Translatation {
   value            String
   translatableType TranslatableType @map("translatable_type")
 
-  post    Post?     @relation("PostTranslation", fields: [translatableId], references: [id], map: "post_translation")
+  post     Post?     @relation("PostTranslation", fields: [translatableId], references: [id], map: "post_translation")
   category Category? @relation("CategoryTranslation", fields: [translatableId], references: [id], map: "category_translation")
 
   language  String
@@ -196,19 +197,19 @@ model PostMedia {
 }
 
 model MediaProvider {
-  id                    String    @id
+  id                    String     @id
   name                  String
-  logoUrl               String    @map("logo_url")
-  advertisingLevel      Int       @map("advertising_level")
-  downloadSpeed         Int       @map("download_speed")
-  paymentRequired       Boolean   @map("payment_required")
-  freeDownloadsDay      Int       @map("free_downloads_day")        @default(0)
-  delayBetweenDownloads Int       @map("delay_between_downloads")   @default(0)
-  refUrl                String    @map("ref_url")
-  maxResolution         String    @map("max_resolution")
-  multiQuality          Boolean   @map("multi_quality")             @default(false)
-  createdAt             DateTime  @map("created_at")
-  updatedAt             DateTime  @map("updated_at")
+  logoUrl               String     @map("logo_url")
+  advertisingLevel      Int        @map("advertising_level")
+  downloadSpeed         Int        @map("download_speed")
+  paymentRequired       Boolean    @map("payment_required")
+  freeDownloadsDay      Int        @default(0) @map("free_downloads_day")
+  delayBetweenDownloads Int        @default(0) @map("delay_between_downloads")
+  refUrl                String     @map("ref_url")
+  maxResolution         String     @map("max_resolution")
+  multiQuality          Boolean    @default(false) @map("multi_quality")
+  createdAt             DateTime   @map("created_at")
+  updatedAt             DateTime   @map("updated_at")
   mediaUrls             MediaUrl[]
 
   @@map("media_providers")
@@ -230,16 +231,16 @@ model MediaUrl {
 }
 
 model Report {
-  id              String        @id
-  userIp          String        @map("user_ip")
-  userName        String        @map("user_name")
-  userEmail       String        @map("user_email")
-  content         String
-  postId          String        @map("post_id")
-  post            Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
-  type            String
-  createdAt       DateTime      @map("created_at")
-  updatedAt       DateTime      @map("updated_at")
+  id        String   @id
+  userIp    String   @map("user_ip")
+  userName  String   @map("user_name")
+  userEmail String   @map("user_email")
+  content   String
+  postId    String   @map("post_id")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  type      String
+  createdAt DateTime @map("created_at")
+  updatedAt DateTime @map("updated_at")
 
   @@index([userIp, postId, type])
   @@map("reports")

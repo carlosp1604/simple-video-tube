@@ -17,6 +17,7 @@ export interface PostApplicationDto {
   readonly resolution: number
   readonly viewsCount: number
   readonly publishedAt: string
+  readonly releaseDate: string | null
   readonly producer: ProducerApplicationDto | null
   readonly actor: ActorApplicationDto | null
   readonly actors: ActorApplicationDto[]

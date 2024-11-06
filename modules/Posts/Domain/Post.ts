@@ -17,8 +17,6 @@ import { applyMixins } from '~/helpers/Domain/Mixins'
 import { PostMedia } from '~/modules/Posts/Domain/PostMedia/PostMedia'
 import { Report } from '~/modules/Reports/Domain/Report'
 
-export const supportedQualities = ['240p', '360p', '480p', '720p', '1080p', '1440p', '4k']
-
 export class Post {
   public readonly id: string
   public readonly title: string
@@ -36,6 +34,7 @@ export class Post {
   public updatedAt: DateTime
   public deletedAt: DateTime | null
   public publishedAt: DateTime | null
+  public releaseDate: DateTime | null
 
   /** Relationships **/
   private _categories: Collection<Category, Category['id']>
@@ -63,6 +62,7 @@ export class Post {
     updatedAt: DateTime,
     deletedAt: DateTime | null,
     publishedAt: DateTime | null,
+    releaseDate: DateTime | null,
     categories: Collection<Category, Category['id']> = Collection.notLoaded(),
     actors: Collection<Actor, Actor['id']> = Collection.notLoaded(),
     comments: Collection<PostComment, PostComment['id']> = Collection.notLoaded(),
@@ -89,6 +89,7 @@ export class Post {
     this.updatedAt = updatedAt
     this.deletedAt = deletedAt
     this.publishedAt = publishedAt
+    this.releaseDate = releaseDate
     this._categories = categories
     this._actors = actors
     this._comments = comments

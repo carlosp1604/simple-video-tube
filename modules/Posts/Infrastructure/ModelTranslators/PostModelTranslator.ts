@@ -39,7 +39,11 @@ export class PostModelTranslator {
   ) {
     let publishedAt: DateTime | null = null
     let deletedAt: DateTime | null = null
+    let releaseDate: DateTime | null = null
 
+    if (prismaPostModel.releaseDate !== null) {
+      releaseDate = DateTime.fromJSDate(prismaPostModel.releaseDate)
+    }
     if (prismaPostModel.publishedAt !== null) {
       publishedAt = DateTime.fromJSDate(prismaPostModel.publishedAt)
     }
@@ -186,6 +190,7 @@ export class PostModelTranslator {
       DateTime.fromJSDate(prismaPostModel.updatedAt),
       deletedAt,
       publishedAt,
+      releaseDate,
       tagsCollection,
       actorsCollection,
       commentsCollection,
@@ -214,6 +219,7 @@ export class PostModelTranslator {
       publishedAt: post.publishedAt?.toJSDate() ?? null,
       createdAt: post.createdAt.toJSDate(),
       deletedAt: post.deletedAt?.toJSDate() ?? null,
+      releaseDate: post.releaseDate?.toJSDate() ?? null,
       updatedAt: post.updatedAt.toJSDate(),
       viewsCount: BigInt(post.viewsCount),
     }

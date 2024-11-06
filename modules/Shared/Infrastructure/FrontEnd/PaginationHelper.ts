@@ -1,6 +1,7 @@
 export const minPerPage = 10
 export const maxPerPage = 256
-export const defaultPerPage = 36
+export const defaultPerPage = 31
+export const adsPerPage = 5
 
 export class PaginationHelper {
   public static getPagesAfterCurrentPage (

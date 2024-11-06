@@ -2,21 +2,21 @@
   &__container {
     @apply flex flex-col items-center justify-center
     w-full h-fit overflow-hidden text-sm text-base-500
-    font-semibold gap-y-1 z-advertising cursor-default;
+    font-semibold z-advertising cursor-default;
   }
 
   &__bannerWrapper250x300 {
     @apply h-[250px] min-w-[300px] bg-base-300
-    dark:bg-base-800;
+    dark:bg-base-800 mb-1;
   }
 
   &__bannerContainer50x320 {
     @apply relative h-[50px] w-[320px] bg-base-300
-    dark:bg-base-800;
+    dark:bg-base-800 mb-1;
   }
 
   &__bannerContainer100x300 {
-    @apply min-h-[100px] h-auto w-[300px]  bg-base-300
-    dark:bg-base-800;
+    @apply min-h-[100px] h-auto w-[300px] bg-base-300
+    dark:bg-base-800 mb-1;
   }
 }

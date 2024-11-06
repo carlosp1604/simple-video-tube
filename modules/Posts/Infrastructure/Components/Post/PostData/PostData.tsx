@@ -17,6 +17,7 @@ export interface Props {
   categories: PostComponentDtoCategoryDto[]
   postDescription: string
   date: string
+  releaseDate: string | null
   viewsNumber: number
 }
 
@@ -27,6 +28,7 @@ export const PostData: FC<Props> = ({
   categories,
   postDescription,
   date,
+  releaseDate,
   viewsNumber,
 }) => {
   const { t } = useTranslation('post')
@@ -69,16 +71,18 @@ export const PostData: FC<Props> = ({
 
   if (producer !== null && actor !== null) {
     collaborationSection = (
-      <div className={ styles.postData__dataItemContainer }>
-        { t('post_data_collaborator_title') }
-        <Link
-          className={ styles.postData__listItemContainer }
-          href={ `/actors/${actor.slug}` }
-          title={ actor.name }
-        >
-          <BsStarFill />
-          { actor.name }
-        </Link>
+      <div className={ styles.postData__dataItem }>
+        <div className={ styles.postData__dataItemContainer }>
+          { t('post_data_collaborator_title') }
+          <Link
+            className={ styles.postData__listItemContainer }
+            href={ `/actors/${actor.slug}` }
+            title={ actor.name }
+          >
+            <BsStarFill />
+            { actor.name }
+          </Link>
+        </div>
       </div>
     )
   }
@@ -160,6 +164,19 @@ export const PostData: FC<Props> = ({
     )
   }
 
+  let releaseDateSection: ReactElement | null = null
+
+  if (releaseDate) {
+    releaseDateSection = (
+      <div className={ styles.postData__dataItemContainer }>
+        { t('post_data_release_date_title') }
+        <span className={ styles.postData__dataItemContent }>
+          { releaseDate }
+        </span>
+      </div>
+    )
+  }
+
   return (
     <div className={ styles.postData__container }>
       <div className={ styles.postData__dataItem }>
@@ -171,6 +188,8 @@ export const PostData: FC<Props> = ({
             </span>
           </div>
 
+          { releaseDateSection }
+
           <div className={ styles.postData__dataItemContainer }>
             { t('post_data_views_title') }
             <span className={ styles.postData__dataItemContent }>
@@ -181,6 +200,7 @@ export const PostData: FC<Props> = ({
           { collaborationSection ?? <div className={ styles.postData__dataItemContainerEmpty }/> }
         </div>
       </div>
+
       { showExtraData ? actorsSection : null }
       { showExtraData ? categorySection : null }
       { showExtraData ? descriptionSection : null }

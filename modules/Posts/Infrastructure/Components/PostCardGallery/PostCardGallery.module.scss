@@ -12,21 +12,50 @@
       grid-template-columns: repeat(2, 1fr);
     }
 
-
     @screen md {
       grid-template-columns: repeat(3, 1fr);
     }
 
     @screen lg {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
     }
 
     @screen xl {
       grid-template-columns: repeat(4, 1fr);
     }
+  }
 
-    @screen 2xl {
-      grid-template-columns: repeat(6, 1fr);
+  &__topBanner {
+    grid-area: 13 y;
+
+    @screen sm {
+      grid-area: 7 / 1 / 8 / 3;
+    }
+
+    @screen md {
+      grid-area: 5 / 1 / 6 / 4;
+    }
+
+    @screen lg {
+      @apply self-center;
+      grid-area: 2 / 3 / 2 / 5;
     }
   }
+
+  &__bottomBanner {
+    grid-area: 25 y;
+
+    @screen sm {
+      grid-area: 14 / 1 / 15 / 3;
+    }
+
+    @screen md {
+      grid-area: 10 / 1 / 11 / 4;
+    }
+
+    @screen lg {
+      grid-area: 5 / 1 / 5 / 3;
+    }
+  }
+  
 }

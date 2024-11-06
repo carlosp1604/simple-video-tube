@@ -9,7 +9,6 @@ import { LikeButton } from '~/components/ReactionButton/LikeButton'
 import { DislikeButton } from '~/components/ReactionButton/DislikeButton'
 import { MediaUrlComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostMedia/MediaUrlComponentDto'
 import { MediaUrlsHelper } from '~/modules/Posts/Infrastructure/Frontend/MediaUrlsHelper'
-import { sendGAEvent } from '@next/third-parties/google'
 import {
   ClickDownloadButtonAction,
   VideoPostCategory, DownloadVideoCompletedAction
@@ -97,7 +96,9 @@ export const PostOptions: FC<Props> = ({
         mediaUrls={ MediaUrlsHelper.sortMediaUrl(downloadUrls) }
         setIsOpen={ setDownloadMenuOpen }
         isOpen={ downloadMenuOpen }
-        onClickOption={ (mediaUrl: MediaUrlComponentDto) => {
+        onClickOption={ async (mediaUrl: MediaUrlComponentDto) => {
+          const { sendGAEvent } = await (import('@next/third-parties/google'))
+
           sendGAEvent('event', DownloadVideoCompletedAction, {
             category: VideoPostCategory,
             label: mediaUrl.provider.name,
@@ -110,6 +111,8 @@ export const PostOptions: FC<Props> = ({
       <span
         className={ styles.postOptions__optionItem }
         onClick={ async () => {
+          const { sendGAEvent } = await (import('@next/third-parties/google'))
+
           sendGAEvent('event', ClickDownloadButtonAction, {
             category: VideoPostCategory,
             label: pathname,

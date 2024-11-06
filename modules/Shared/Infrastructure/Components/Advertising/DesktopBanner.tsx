@@ -4,7 +4,7 @@ import styles from './Banner.module.scss'
 import useTranslation from 'next-translate/useTranslation'
 
 export const DesktopBanner: FC = () => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('advertising')
 
   if (!process.env.NEXT_PUBLIC_DESKTOP_EXOCLICK_BANNER_ID) {
     return null
@@ -15,7 +15,7 @@ export const DesktopBanner: FC = () => {
       <div className={ styles.banner__bannerWrapper250x300 }>
         <Banner zoneId={ process.env.NEXT_PUBLIC_DESKTOP_EXOCLICK_BANNER_ID } />
       </div>
-      { t('banner_ad_title') }
+      { t('advertising_banner_title') }
     </div>
   )
 }

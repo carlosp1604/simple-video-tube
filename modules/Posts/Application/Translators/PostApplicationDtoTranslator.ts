@@ -33,6 +33,7 @@ export class PostApplicationDtoTranslator {
       externalUrl: post.externalUrl,
       viewsCount: post.viewsCount,
       publishedAt: post.publishedAt?.toISO() ?? '',
+      releaseDate: post.releaseDate ? post.releaseDate.toISO() : null,
       categories: post.categories.map((category) => {
         return CategoryApplicationDtoTranslator.fromDomain(category)
       }),

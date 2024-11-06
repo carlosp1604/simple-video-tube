@@ -3,7 +3,7 @@ import styles from '~/modules/Shared/Infrastructure/Components/Advertising/Banne
 import useTranslation from 'next-translate/useTranslation'
 
 export const AdsterraBanner: FC = () => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('advertising')
   const bannerRef = createRef<HTMLDivElement>()
 
   const atOptions = {
@@ -41,7 +41,7 @@ export const AdsterraBanner: FC = () => {
     <section className={ styles.banner__container }>
       <div ref={ bannerRef } className={ styles.banner__bannerWrapper250x300 } />
       <div id ={ `atContainer-${process.env.NEXT_PUBLIC_ADSTERRA_BANNER_KEY ?? ''}` } />
-      { t('banner_ad_title') }
+      { t('advertising_banner_title') }
     </section>
   )
 }

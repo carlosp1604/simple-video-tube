@@ -18,6 +18,7 @@ export interface Props {
   page: number
   order: PostsPaginationSortingType
   initialPosts: PostCardComponentDto[]
+
   initialPostsNumber: number
   htmlPageMetaContextProps: HtmlPageMetaContextProps
   baseUrl: string

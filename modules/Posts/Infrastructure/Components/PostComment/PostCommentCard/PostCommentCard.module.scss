@@ -8,7 +8,7 @@
   }
 
   &__user-avatar {
-    @apply h-6 w-6 self-start text-sm font-bold;
+    @apply h-6 w-6 self-start text-sm font-bold uppercase;
     grid-area: user-logo;
   }
 

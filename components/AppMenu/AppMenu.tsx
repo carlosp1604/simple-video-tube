@@ -79,7 +79,7 @@ export const AppMenu: FC<Props> = ({ onClickMenuButton }) => {
 
       await router.push({
         pathname: `/posts/videos/${postSlug}`,
-      }, undefined, { shallow: true, scroll: true })
+      }, undefined, { shallow: false, scroll: false })
     } catch (exception: unknown) {
       if (!(exception instanceof APIException)) {
         error(t('api_exceptions:something_went_wrong_error_message'))

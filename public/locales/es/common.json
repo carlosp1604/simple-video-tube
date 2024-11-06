@@ -1,6 +1,5 @@
 {
   "action_cannot_be_performed_error_message": "No puedes hacer esto ahora, espera a que termine la operación actual",
-  "banner_ad_title": "Publicidad",
   "cam_card_live_title": "En vivo",
   "cam_card_play_button": "Toca aquí para reproducir el show",
   "cam_card_title": "Mira el show de <0>{{camUsername}}</0>",

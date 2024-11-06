@@ -753,6 +753,12 @@ export class MysqlPostRepository implements PostRepositoryInterface {
     const post = await prisma.post.findFirst({
       take: 1,
       skip: Math.floor(Math.random() * (postsCount - 1)),
+      where: {
+        publishedAt: {
+          not: null,
+        },
+        deletedAt: null,
+      },
     })
 
     return post ? post.slug : ''

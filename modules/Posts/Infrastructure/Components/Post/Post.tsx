@@ -184,6 +184,7 @@ export const Post: FC<Props> = ({
             categories={ post.categories }
             postDescription={ post.description }
             date={ post.formattedPublishedAt }
+            releaseDate={ post.formattedReleaseDate }
             viewsNumber={ viewsNumber }
           />
         </div>

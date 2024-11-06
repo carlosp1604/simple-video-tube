@@ -4,7 +4,7 @@ import styles from './Banner.module.scss'
 import useTranslation from 'next-translate/useTranslation'
 
 export const OutstreamBanner: FC = () => {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('advertising')
 
   if (!process.env.NEXT_PUBLIC_OUTSTREAM_EXOCLICK_BANNER_ID) {
     return null
@@ -15,7 +15,7 @@ export const OutstreamBanner: FC = () => {
       <div className={ styles.banner__bannerWrapper250x300 }>
         <Outstream zoneId={ process.env.NEXT_PUBLIC_OUTSTREAM_EXOCLICK_BANNER_ID } maxWidth={ 300 }/>
       </div>
-      { t('banner_ad_title') }
+      { t('advertising_banner_title') }
     </div>
   )
 }

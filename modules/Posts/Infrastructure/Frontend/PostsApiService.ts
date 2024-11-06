@@ -220,7 +220,7 @@ export class PostsApiService {
   }
 
   public async getRandomPostSlug (): Promise<string> {
-    const response = await fetch('api/posts/random')
+    const response = await fetch('/api/posts/random')
 
     const jsonResponse = await response.json()
 

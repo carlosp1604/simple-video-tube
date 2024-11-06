@@ -11,7 +11,6 @@ import { IconButton } from '~/components/IconButton/IconButton'
 import { rgbDataURL } from '~/modules/Shared/Infrastructure/FrontEnd/BlurDataUrlHelper'
 import Image from 'next/image'
 import useTranslation from 'next-translate/useTranslation'
-import { sendGAEvent } from '@next/third-parties/google'
 import {
   ChangeVideoPlayerSourceAction,
   VideoPostCategory
@@ -108,7 +107,9 @@ export const VideoPostPlayer: FC<Props> = ({
               ${styles.videoPostPlayer__sourceOption} 
               ${selectedMediaUrl.url === selectableUrl.url ? styles.videoPostPlayer__sourceOption__selected : ''}
             ` }
-              onClick={ () => {
+              onClick={ async () => {
+                const { sendGAEvent } = await (import('@next/third-parties/google'))
+
                 sendGAEvent('event', ChangeVideoPlayerSourceAction, {
                   category: VideoPostCategory,
                   label: selectableUrl.provider.name,

@@ -24,18 +24,18 @@
     grid-template-columns: repeat(2, auto);
 
     @screen md {
-      grid-template-columns: repeat(4, auto);
+      grid-template-columns: repeat(5, auto);
     }
   }
 
   &__data-item-container {
     @apply flex flex-col text-base-600 py-1 px-2 font-semibold
-    text-sm bg-base-300 justify-between transition-colors
+    text-sm bg-base-300 justify-between transition-colors whitespace-nowrap
     dark:text-base-400 dark:bg-base-800 leading-tight cursor-default;
   }
 
   &__data-item-container-empty {
-    @apply bg-base-200 transition-colors
+    @apply bg-base-200 transition-colors min-w-20 w-full
     dark:bg-base-900 dark:transition-colors;
   }
 

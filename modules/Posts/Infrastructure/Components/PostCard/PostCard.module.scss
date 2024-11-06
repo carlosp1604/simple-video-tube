@@ -5,6 +5,16 @@
     @apply relative cursor-default;
   }
 
+  &__adContainer {
+    @apply cursor-pointer;
+
+    &:hover {
+      #{$parentBlock}__video-title-link {
+        @apply text-brand-primary-light;
+      }
+    }
+  }
+
   &__video-container {
     @apply aspect-w-16 aspect-h-9 rounded-lg
     overflow-hidden z-post-card-video;

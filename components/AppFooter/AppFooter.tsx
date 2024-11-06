@@ -11,7 +11,6 @@ import {
   SocialNetworkCategory
 } from '~/modules/Shared/Infrastructure/FrontEnd/AnalyticsEvents/Footer'
 import { ThemeSwitcher } from '~/components/ThemeSwitcher/ThemeSwitcher'
-import { sendGAEvent } from '@next/third-parties/google'
 
 export const AppFooter: FC = () => {
   const { t } = useTranslation('footer')
@@ -30,7 +29,9 @@ export const AppFooter: FC = () => {
   let tiktokProfile: ReactElement | null = null
   let telegramProfile: ReactElement | null = null
 
-  const onClickSocialNetworkIcon = (socialNetwork: string) => {
+  const onClickSocialNetworkIcon = async (socialNetwork: string) => {
+    const { sendGAEvent } = await (import('@next/third-parties/google'))
+
     sendGAEvent('event', ClickSocialNetworkProfile, {
       category: SocialNetworkCategory,
       label: socialNetwork,
@@ -44,7 +45,7 @@ export const AppFooter: FC = () => {
         title={ t('facebook_icon_title') }
         target={ '_blank' }
         className={ styles.appFooter__socialNetwork }
-        onClick={ () => {
+        onClick={ async () => {
           onClickSocialNetworkIcon(t('facebook_icon_title'))
         } }
       >
@@ -60,7 +61,7 @@ export const AppFooter: FC = () => {
         title={ t('twitter_icon_title') }
         target={ '_blank' }
         className={ styles.appFooter__socialNetwork }
-        onClick={ () => {
+        onClick={ async () => {
           onClickSocialNetworkIcon(t('twitter_icon_title'))
         } }
       >
@@ -76,7 +77,7 @@ export const AppFooter: FC = () => {
         title={ t('tiktok_icon_title') }
         target={ '_blank' }
         className={ styles.appFooter__socialNetwork }
-        onClick={ () => {
+        onClick={ async () => {
           onClickSocialNetworkIcon(t('tiktok_icon_title'))
         } }
       >
@@ -92,7 +93,7 @@ export const AppFooter: FC = () => {
         title={ t('telegram_icon_title') }
         target={ '_blank' }
         className={ styles.appFooter__socialNetwork }
-        onClick={ () => {
+        onClick={ async () => {
           onClickSocialNetworkIcon(t('telegram_icon_title'))
         } }
       >

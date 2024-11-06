@@ -31,6 +31,7 @@ export interface PostComponentDto {
   readonly parsedISO8601Duration: string
   readonly video: VideoComponentDto
   readonly formattedPublishedAt: string
+  readonly formattedReleaseDate: string | null
   readonly publishedAt: string
   readonly description: string
   readonly actors: PostComponentDtoActorDto[]
