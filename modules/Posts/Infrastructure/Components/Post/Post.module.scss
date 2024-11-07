@@ -5,30 +5,27 @@
   }
 
   &__post-with-ads {
-    @apply grid  gap-y-4;
-    grid-template-areas:
-      "left-container"
-      "right-container";
+    @apply flex flex-col gap-y-4;
 
     @screen lg {
       @apply flex flex-row gap-x-4 justify-between;
-      grid-template-columns: 1fr 300px;
     }
   }
 
   &__left-container {
-    @apply flex flex-col gap-y-4 flex-grow
-    overflow-hidden;
-    grid-area: left-container;
+    @apply flex flex-col gap-y-4 flex-grow;
+
+    @screen lg {
+      @apply overflow-hidden;
+    }
   }
 
   &__right-container {
     @apply flex flex-row gap-x-1 gap-y-0.5
     flex-wrap justify-center items-center m-1;
-    grid-area: right-container;
 
     @screen lg {
-      @apply flex-col max-w-[300px] max-h-max w-full m-0;
+      @apply flex-col justify-start;
     }
   }
 

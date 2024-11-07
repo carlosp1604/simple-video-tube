@@ -482,6 +482,10 @@ async function run (
     }
 
     console.log(`  - Post with slug ${video.slug} saved`)
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, 2000) // 2s
+    })
   }
 
   process.exit()

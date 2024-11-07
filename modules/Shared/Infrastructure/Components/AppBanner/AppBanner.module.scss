@@ -1,7 +1,7 @@
 .app-banner {
   &__container {
     @apply container p-5 border-t-2 border-brand-primary-light/50
-    mx-auto text-center;
+    mx-auto text-center cursor-default;
   }
 
   &__title {
@@ -30,7 +30,7 @@
   }
 
   &__rta-block-access-link {
-    @apply text-brand-primary-bg font-semibold;
+    @apply text-brand-primary-dark font-semibold;
 
     @screen md {
       @apply text-sm;

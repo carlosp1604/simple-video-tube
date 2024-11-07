@@ -91,7 +91,7 @@ export const PostCardGallery: FC<Partial<Props> & Pick<Props, 'posts'>> = ({
 
       for (let i = 0; i < placesToAddAds.length; i++) {
         const indexes: Array<number> = []
-        const adIndex = PaginatedPostCardGalleryHelper.genRandomValue(i, nativeAdsData.length - (i + 1), indexes)
+        const adIndex = PaginatedPostCardGalleryHelper.genRandomValue(0, nativeAdsData.length - 1, indexes)
 
         indexes.push(adIndex)
 

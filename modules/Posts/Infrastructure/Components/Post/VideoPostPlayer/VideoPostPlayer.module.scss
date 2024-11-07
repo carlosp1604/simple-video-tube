@@ -12,7 +12,7 @@
   }
 
   &__sourcesMenuContainer {
-    @apply flex flex-col gap-y-2 p-4 h-full w-full absolute
+    @apply flex flex-col gap-y-2 p-4 pb-1 h-full w-full absolute
     top-0 right-0 bg-body-light/80 translate-y-full
     dark:bg-body-dark/80 z-video-player-options
     opacity-0 pointer-events-none transition;
@@ -29,16 +29,20 @@
   }
 
   &__sourcesMenuCloseButton {
-    @apply absolute top-2 right-2 z-video-player-options;
+    @apply absolute top-1 right-1 z-video-player-options;
+
+    @screen md {
+      @apply top-2 right-2;
+    }
   }
 
   &__sourcesMenuList {
     @apply grid gap-2 overflow-y-scroll scrollbar-hide
     justify-center mx-auto;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
 
     @screen tb {
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(3, 1fr);
     }
 
     @screen lg {
