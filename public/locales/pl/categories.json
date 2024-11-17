@@ -1,0 +1,21 @@
+{
+  "category_image_alt_title": "Obrazek profilowy {{categoryName}}",
+  "category_page_description": "Oglądaj najlepsze filmy porno sklasyfikowane według {{categoryName}}",
+  "category_page_profile_count_title": "{{categoriesNumber}} wyświetleń",
+  "category_page_profile_type_title": "Kategoria",
+  "category_page_title": "Filmy sklasyfikowane według {{categoryName}}",
+  "category_posts_empty_state_subtitle": "Brak postów sklasyfikowanych według {{categoryName}}\nWróć później",
+  "category_posts_empty_state_title": "Nic do obejrzenia",
+  "category_posts_gallery_posts_quantity": "{{postsNumber}} posty",
+  "category_posts_gallery_title": "Posty sklasyfikowane przez <0>{{categoryName}}</0>",
+  "categories_gallery_empty_state_subtitle": "Nie znaleziono kategorii spełniających Twoje kryteria wyszukiwania\nSpróbuj zmienić parametry wyszukiwania i spróbuj ponownie",
+  "categories_gallery_empty_state_title": "Nie znaleziono nic",
+  "categories_gallery_subtitle": "{{categoriesNumber}} kategorie",
+  "categories_gallery_title": "Kategorie",
+  "categories_page_description": "Szukaj swoich ulubionych kategorii porno i oglądaj ich filmy za darmo w HD!",
+  "categories_page_title": "Kategorie. Darmowe filmy porno w HD",
+  "categories_search_button_title": "Szukaj kategorii",
+  "categories_search_placeholder_title": "Szukaj kategorii po nazwie",
+  "categories_search_result_title": "Wyniki dla <0>{{searchTerm}}</0>",
+  "categories_see_all_button_title": "Zobacz wszystko"
+}

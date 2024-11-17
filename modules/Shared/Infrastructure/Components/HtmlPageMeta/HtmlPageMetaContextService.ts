@@ -7,7 +7,6 @@ import {
   HtmlPageMetaContextProps,
   HtmlPageMetaRobots
 } from './HtmlPageMetaContextProps'
-import { localeWithTerritory } from '~/modules/Shared/Domain/Locale'
 
 export interface StaticContext extends GetStaticPropsContext {
   pathname: string
@@ -30,7 +29,6 @@ export class HtmlPageMetaContextService implements HtmlPageMetaContextServiceInt
     return {
       url: this.getFullUrl(this.getLocale()),
       locale: this.getExtendedLocale(),
-      alternateLocaleWithTerritory: this.getExtendedAlternateLocale(),
       alternateLocale: this.getAlternateLocaleWithAlternateUrl(),
       canonicalUrl: this.getCanonicalUrl(),
       robots: this.robots,
@@ -42,7 +40,7 @@ export class HtmlPageMetaContextService implements HtmlPageMetaContextServiceInt
   }
 
   private getExtendedLocale (): string {
-    return localeWithTerritory(this.getLocale())
+    return this.getLocale()
   }
 
   private getAlternateLocale (): string[] {
@@ -61,10 +59,6 @@ export class HtmlPageMetaContextService implements HtmlPageMetaContextServiceInt
     })
 
     return alternateLocale
-  }
-
-  private getExtendedAlternateLocale (): string[] {
-    return this.getAlternateLocale().map(localeWithTerritory)
   }
 
   private getFullUrl (locale: string): string {

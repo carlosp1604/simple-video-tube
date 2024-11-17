@@ -1,6 +1,5 @@
 {
   "action_cannot_be_performed_error_message": "You can't do this now, wait for the current operation to finish",
-  "advertising_section_title": "Advertising",
   "post_card_external_link_title": "External link",
   "post_card_post_views": "{{views}} views",
   "post_data_actor_title": "Star",
@@ -8,7 +7,7 @@
   "post_data_producer_title": "Producer",
   "post_data_published_title": "Published",
   "post_data_release_date_title": "Released",
-  "post_data_views_title": "Vistas",
+  "post_data_views_title": "Views",
   "post_comments_button_title": "Comments",
   "post_download_button_title": "Download",
   "post_download_no_downloads_error_message": "There are no download options for this video",
@@ -23,15 +22,15 @@
   "post_player_title": "{{postName}} video player",
   "post_provider_modal_advertising_level_title": "Advertising Level",
   "post_provider_modal_back_button_title": "Go Back",
-  "post_provider_modal_create_account_button_title": "Crear una cuenta",
+  "post_provider_modal_create_account_button_title": "Create an account",
   "post_provider_modal_delay_between_downloads_title": "Delay between downloads",
   "post_provider_modal_download_speed_title": "Download Speed",
   "post_provider_modal_free_downloads_delay_title": "Downloads per day",
   "post_provider_modal_high_level_response_title": "High (no popups)",
   "post_provider_modal_high_speed_response_title": "High speed",
-  "post_provider_modal_high_level_with_pops_response_title": "High (with popups)",
+  "post_provider_modal_high_level_with_pops_response_title": "High (popups)",
   "post_provider_modal_hours_delay_title": "{{hours}} hours",
-  "post_provider_modal_low_level_response_title": "Low (no popups)",
+  "post_provider_modal_low_level_response_title": "Low (popups)",
   "post_provider_modal_low_speed_response_title": "Low speed",
   "post_provider_modal_max_resolution_response": "{{maxResolution}}p",
   "post_provider_modal_max_resolution_title": "Max Resolution",
@@ -62,7 +61,5 @@
   "post_sources_menu_close_button_title": "Close menu",
   "post_video_no_sources_error_message": "The video does not exist or was removed due to copyright.\nYou can report the video and we will try to fix it if possible.",
   "post_video_player_sources_menu_subtitle": "Select an option to play the video",
-  "post_video_player_sources_menu_title": "Player selection",
-  "post_video_player_sources_option_button_title": "Players",
-  "post_views_title": "{{views}} views"
+  "post_video_player_sources_menu_title": "Player selection"
 }

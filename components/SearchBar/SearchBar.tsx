@@ -110,6 +110,7 @@ export const SearchBar: FC<Partial<Props> & Omit<Props, 'style' | 'clearBarOnSea
         className={ `${styles.searchBar__searchButton} ${style === 'sub' ? styles.searchBar__searchButtonStyle2 : ''}` }
         onClick={ handleSearch }
         data-tooltip-id={ tooltipId }
+        title={ searchIconTitle }
       >
         <IoSearch/>
         { mounted

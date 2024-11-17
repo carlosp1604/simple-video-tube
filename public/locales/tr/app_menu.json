@@ -1,0 +1,15 @@
+{
+  "action_cannot_be_performed_error_message": "Şu anda bunu yapamazsınız. Lütfen mevcut işlemin bitmesini bekleyin ve tekrar deneyin.",
+  "already_searching_term_error_message": "Bu terimi zaten arıyorsunuz.",
+  "app_menu_logo_url_alt": "The X Hub",
+  "app_menu_menu_button": "Menü",
+  "app_menu_search_button_title": "Gönderileri Ara",
+  "app_menu_search_menu_placeholder_title": "Gönderileri Ara",
+  "app_menu_theme_switcher_title": "Tema",
+  "empty_search_error_message": "Geçerli bir arama terimi girin",
+  "language_button_image_alt": "Geçerli dil: {{locale}}",
+  "language_button_title": "Uygulama dilini değiştir",
+  "random_icon_button_title": "Rastgele Video!",
+  "search_bar_contract_title": "Daralt",
+  "search_bar_expand_title": "Aramayı Aç"
+}

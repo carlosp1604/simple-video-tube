@@ -132,7 +132,7 @@ export const PostCard: FC<Props> = ({ post }) => {
           { producerNameLink }
           <div className={ styles.postCard__extraData }>
             { t('post_card_post_views', { views: NumberFormatter.compatFormat(post.views, locale) }) }
-            <BsDot className={ styles.postCard__separatorIcon }/>
+              <BsDot className={ styles.postCard__separatorIcon }/>
             { post.date }
           </div>
         </div>

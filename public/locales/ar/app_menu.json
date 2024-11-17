@@ -1,0 +1,15 @@
+{
+  "action_cannot_be_performed_error_message": "لا يمكنك القيام بذلك الآن. انتظر حتى تنتهي العملية الحالية ثم حاول مرة أخرى",
+  "already_searching_term_error_message": "أنت تبحث بالفعل عن هذا المصطلح",
+  "app_menu_logo_url_alt": "Netpornly",
+  "app_menu_menu_button": "قائمة",
+  "app_menu_search_button_title": "ابحث عن المشاركات",
+  "app_menu_search_menu_placeholder_title": "ابحث عن المشاركات",
+  "app_menu_theme_switcher_title": "المظهر",
+  "empty_search_error_message": "يرجى إدخال مصطلح بحث صالح",
+  "language_button_image_alt": "اللغة الحالية: {{locale}}",
+  "language_button_title": "تغيير لغة التطبيق",
+  "random_icon_button_title": "فيديو عشوائي!",
+  "search_bar_contract_title": "طي",
+  "search_bar_expand_title": "فتح البحث"
+}

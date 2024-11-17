@@ -1,0 +1,8 @@
+{
+  "error_state_button_title": "返回第一页",
+  "first_page_button_title": "第一页",
+  "last_page_button_title": "最后一页",
+  "n_page_button_title": "第{{pageNumber}}页",
+  "next_page_button_title": "下一页",
+  "previous_page_button_title": "上一页"
+}

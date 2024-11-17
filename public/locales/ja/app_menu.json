@@ -1,0 +1,15 @@
+{
+  "action_cannot_be_performed_error_message": "現在、この操作は実行できません。現在のアクションが完了するのを待ってから、再試行してください。",
+  "already_searching_term_error_message": "この用語はすでに検索しています。",
+  "app_menu_logo_url_alt": "The X Hub",
+  "app_menu_menu_button": "メニュー",
+  "app_menu_search_button_title": "投稿を検索",
+  "app_menu_search_menu_placeholder_title": "投稿を検索",
+  "app_menu_theme_switcher_title": "テーマ",
+  "empty_search_error_message": "有効な検索用語を入力してください",
+  "language_button_image_alt": "現在の言語: {{locale}}",
+  "language_button_title": "アプリの言語を変更する",
+  "random_icon_button_title": "ランダム動画！",
+  "search_bar_contract_title": "縮小",
+  "search_bar_expand_title": "検索を開く"
+}

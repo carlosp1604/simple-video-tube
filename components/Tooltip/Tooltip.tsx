@@ -29,7 +29,7 @@ export const Tooltip: FC<Required<TooltipProps> & Partial<OptionalTooltipProps>>
   const [referenceElement, setReferenceElement] = useState<Element | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLElement | null>(null)
 
-  const { styles, attributes, update } = usePopper(referenceElement, popperElement, {
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: place,
     strategy,
     modifiers: [
@@ -66,16 +66,13 @@ export const Tooltip: FC<Required<TooltipProps> & Partial<OptionalTooltipProps>>
     }
   }, [tooltipId])
 
-  useEffect(() => {
-    if (showTooltip) {
-      update && update()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showTooltip, content])
+  if (!showTooltip) {
+    return null
+  }
 
   return (
     <div
-      className={ `${cssStyles.tooltip__container} ${showTooltip ? cssStyles.tooltip__container_visible : ''}` }
+      className={ cssStyles.tooltip__container }
       ref={ setPopperElement }
       style={ styles.popper }
       { ...attributes.popper }

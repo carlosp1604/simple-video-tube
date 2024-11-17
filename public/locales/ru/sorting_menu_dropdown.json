@@ -1,0 +1,14 @@
+{
+  "latest_entries_option": "Последние",
+  "less_posts_entries_option": "Меньше постов",
+  "more_posts_entries_option": "Больше постов",
+  "most_viewed_entries_option": "Самые просматриваемые",
+  "name_first_entries_option": "По алфавиту A-Z",
+  "name_last_entries_option": "По алфавиту Z-A",
+  "newest_viewed_posts_option": "Недавно просмотренные",
+  "newest_saved_posts_option": "Недавно сохраненные",
+  "oldest_entries_option": "Самые старые",
+  "oldest_saved_posts_option": "Самые старые сохраненные",
+  "oldest_viewed_posts_option": "Самые старые просмотренные",
+  "popularity_entries_option": "Популярность"
+}

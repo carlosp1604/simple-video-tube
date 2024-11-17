@@ -1,6 +1,5 @@
 {
   "action_cannot_be_performed_error_message": "No puedes hacer esto ahora, espera a que termine la operación actual",
-  "advertising_section_title": "Publicidad",
   "post_card_external_link_title": "Link externo",
   "post_card_post_views": "{{views}} vistas",
   "post_data_actor_title": "Estrella",
@@ -8,7 +7,7 @@
   "post_data_producer_title": "Productora",
   "post_data_published_title": "Publicado",
   "post_data_release_date_title": "Lanzado",
-  "post_data_views_title": "Views",
+  "post_data_views_title": "Vistas",
   "post_comments_button_title": "Comentarios",
   "post_download_button_title": "Descargar",
   "post_download_no_downloads_error_message": "No hay opciones de descarga para este video",
@@ -19,7 +18,7 @@
   "post_extra_data_description_title": "Descripción",
   "post_extra_data_section_show_less": "Ver menos",
   "post_extra_data_section_show_more": "Ver más",
-  "post_extra_data_categories_title": "Categories",
+  "post_extra_data_categories_title": "Categorias",
   "post_player_title": "Reproductor del video {{postName}}",
   "post_provider_modal_advertising_level_title": "Nivel de anuncios",
   "post_provider_modal_back_button_title": "Regresar",
@@ -31,7 +30,7 @@
   "post_provider_modal_high_speed_response_title": "Velocidad alta",
   "post_provider_modal_high_level_with_pops_response_title": "Alto (con popups)",
   "post_provider_modal_hours_delay_title": "{{hours}} horas",
-  "post_provider_modal_low_level_response_title": "Bajo (sin popups)",
+  "post_provider_modal_low_level_response_title": "Bajo (con popups)",
   "post_provider_modal_low_speed_response_title": "Baja velocidad",
   "post_provider_modal_max_resolution_response": "{{maxResolution}}p",
   "post_provider_modal_max_resolution_title": "Resolución máxima",
@@ -63,7 +62,5 @@
   "post_sources_menu_close_button_title": "Cerrar menú",
   "post_video_no_sources_error_message": "El video no existe o fue eliminado por derechos de autor.\nPuedes reportar el video e intentaremos arreglarlo si es posible.",
   "post_video_player_sources_menu_subtitle": "Selecciona una opción para reproducir el vídeo",
-  "post_video_player_sources_menu_title": "Seleccionar reproductor",
-  "post_video_player_sources_option_button_title": "Reproductores",
-  "post_views_title": "{{views}} vistas"
+  "post_video_player_sources_menu_title": "Seleccionar reproductor"
 }

@@ -1,0 +1,15 @@
+{
+  "action_cannot_be_performed_error_message": "Non puoi farlo adesso. Attendi il completamento dell'azione corrente e riprova",
+  "already_searching_term_error_message": "Stai già cercando questo termine",
+  "app_menu_logo_url_alt": "Netpornly",
+  "app_menu_menu_button": "Menu",
+  "app_menu_search_button_title": "Cerca post",
+  "app_menu_search_menu_placeholder_title": "Cerca post",
+  "app_menu_theme_switcher_title": "Tema",
+  "empty_search_error_message": "Inserisci un termine di ricerca valido",
+  "language_button_image_alt": "Lingua attuale: {{locale}}",
+  "language_button_title": "Cambia la lingua dell'app",
+  "random_icon_button_title": "Video casuale!",
+  "search_bar_contract_title": "Contrai",
+  "search_bar_expand_title": "Apri ricerca"
+}

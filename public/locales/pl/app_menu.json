@@ -1,0 +1,15 @@
+{
+  "action_cannot_be_performed_error_message": "Nie możesz tego teraz zrobić. Poczekaj, aż bieżąca akcja zostanie zakończona, a następnie spróbuj ponownie.",
+  "already_searching_term_error_message": "Już szukasz tego terminu.",
+  "app_menu_logo_url_alt": "The X Hub",
+  "app_menu_menu_button": "Menu",
+  "app_menu_search_button_title": "Szukaj postów",
+  "app_menu_search_menu_placeholder_title": "Szukaj postów",
+  "app_menu_theme_switcher_title": "Motyw",
+  "empty_search_error_message": "Wprowadź prawidłowy termin wyszukiwania",
+  "language_button_image_alt": "Aktualny język: {{locale}}",
+  "language_button_title": "Zmień język aplikacji",
+  "random_icon_button_title": "Losowe wideo!",
+  "search_bar_contract_title": "Zwiń",
+  "search_bar_expand_title": "Otwórz wyszukiwanie"
+}

@@ -1,0 +1,21 @@
+{
+  "category_image_alt_title": "صورة ملف التعريف لـ {{categoryName}}",
+  "category_page_description": "شاهد أفضل مقاطع الفيديو الإباحية المصنفة حسب {{categoryName}}",
+  "category_page_profile_count_title": "{{categoriesNumber}} مشاهدات",
+  "category_page_profile_type_title": "فئة",
+  "category_page_title": "مقاطع الفيديو المصنفة حسب {{categoryName}}",
+  "category_posts_empty_state_subtitle": "لا توجد منشورات مصنفة حسب {{categoryName}} بعد\nعد في وقت لاحق",
+  "category_posts_empty_state_title": "لا شيء للمشاهدة هنا",
+  "category_posts_gallery_posts_quantity": "{{postsNumber}} منشورات",
+  "category_posts_gallery_title": "المنشورات المصنفة حسب <0>{{categoryName}}</0>",
+  "categories_gallery_empty_state_subtitle": "يبدو أنه لا توجد فئات تتناسب مع معايير البحث الخاصة بك\nحاول تغيير معايير البحث وحاول مرة أخرى",
+  "categories_gallery_empty_state_title": "لم نتمكن من العثور على شيء",
+  "categories_gallery_subtitle": "{{categoriesNumber}} فئات",
+  "categories_gallery_title": "الفئات",
+  "categories_page_description": "ابحث عن فئات الأفلام الإباحية المفضلة لديك وشاهد مقاطع الفيديو مجانًا بجودة HD!",
+  "categories_page_title": "الفئات. مقاطع فيديو إباحية مجانية بجودة HD",
+  "categories_search_button_title": "بحث عن فئات",
+  "categories_search_placeholder_title": "ابحث عن فئات حسب الاسم",
+  "categories_search_result_title": "نتائج لـ <0>{{searchTerm}}</0>",
+  "categories_see_all_button_title": "عرض الكل"
+}

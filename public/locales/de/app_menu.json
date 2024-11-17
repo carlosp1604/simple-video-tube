@@ -1,0 +1,15 @@
+{
+  "action_cannot_be_performed_error_message": "Dies können Sie derzeit nicht tun. Warten Sie, bis die aktuelle Aktion abgeschlossen ist, und versuchen Sie es dann erneut.",
+  "already_searching_term_error_message": "Sie suchen bereits nach diesem Begriff.",
+  "app_menu_logo_url_alt": "The X Hub",
+  "app_menu_menu_button": "Menü",
+  "app_menu_search_button_title": "Beiträge suchen",
+  "app_menu_search_menu_placeholder_title": "Beiträge suchen",
+  "app_menu_theme_switcher_title": "Thema",
+  "empty_search_error_message": "Bitte geben Sie einen gültigen Suchbegriff ein",
+  "language_button_image_alt": "Aktuelle Sprache: {{locale}}",
+  "language_button_title": "Sprache der App ändern",
+  "random_icon_button_title": "Zufalls-Video!",
+  "search_bar_contract_title": "Zuklappen",
+  "search_bar_expand_title": "Suche öffnen"
+}

@@ -1,0 +1,15 @@
+{
+  "action_cannot_be_performed_error_message": "आप अभी यह कार्य नहीं कर सकते। कृपया वर्तमान क्रिया समाप्त होने का इंतजार करें और फिर से प्रयास करें।",
+  "already_searching_term_error_message": "आप पहले ही इस शब्द को खोज रहे हैं।",
+  "app_menu_logo_url_alt": "The X Hub",
+  "app_menu_menu_button": "मेनू",
+  "app_menu_search_button_title": "पोस्ट खोजें",
+  "app_menu_search_menu_placeholder_title": "पोस्ट खोजें",
+  "app_menu_theme_switcher_title": "थीम",
+  "empty_search_error_message": "कृपया एक वैध खोज शब्द दर्ज करें।",
+  "language_button_image_alt": "वर्तमान भाषा: {{locale}}",
+  "language_button_title": "एप्लिकेशन की भाषा बदलें",
+  "random_icon_button_title": "रैंडम वीडियो!",
+  "search_bar_contract_title": "संकुचित करें",
+  "search_bar_expand_title": "खोज खोलें"
+}

@@ -1,0 +1,8 @@
+{
+  "error_state_button_title": "最初のページに戻る",
+  "first_page_button_title": "最初のページ",
+  "last_page_button_title": "最後のページ",
+  "n_page_button_title": "ページ {{pageNumber}}",
+  "next_page_button_title": "次のページ",
+  "previous_page_button_title": "前のページ"
+}

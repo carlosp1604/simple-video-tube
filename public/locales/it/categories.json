@@ -1,0 +1,21 @@
+{
+  "category_image_alt_title": "Immagine del profilo di {{categoryName}}",
+  "category_page_description": "Guarda i migliori video porno classificati per {{categoryName}}",
+  "category_page_profile_count_title": "{{categoriesNumber}} visualizzazioni",
+  "category_page_profile_type_title": "Categoria",
+  "category_page_title": "Video classificati per {{categoryName}}",
+  "category_posts_empty_state_subtitle": "Non ci sono ancora post classificati per {{categoryName}}\nTorna più tardi",
+  "category_posts_empty_state_title": "Niente da vedere qui",
+  "category_posts_gallery_posts_quantity": "{{postsNumber}} post",
+  "category_posts_gallery_title": "Post classificati per <0>{{categoryName}}</0>",
+  "categories_gallery_empty_state_subtitle": "Sembra che non ci siano categorie che corrispondono ai tuoi criteri di ricerca\nProva a cambiare i parametri di ricerca e riprova",
+  "categories_gallery_empty_state_title": "Non abbiamo trovato nulla",
+  "categories_gallery_subtitle": "{{categoriesNumber}} categorie",
+  "categories_gallery_title": "Categorie",
+  "categories_page_description": "Cerca le tue categorie porno preferite e guarda i loro video gratuiti in HD!",
+  "categories_page_title": "Categorie. Video porno gratuiti in HD",
+  "categories_search_button_title": "Cerca categorie",
+  "categories_search_placeholder_title": "Cerca categorie per nome",
+  "categories_search_result_title": "Risultati per <0>{{searchTerm}}</0>",
+  "categories_see_all_button_title": "Vedi tutto"
+}

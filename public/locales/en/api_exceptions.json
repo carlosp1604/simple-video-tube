@@ -17,7 +17,6 @@
   "post_reaction_does_not_exist_error_message": "User have not yet reacted to this post",
   "post_save_cannot_remove_saved_post_error_message": "Post cannot be removed from saved post user's list",
   "post_save_post_already_on_saved_post_error_message": "Post has already been saved by user",
-  "post_video_no_sources_error_message": "The video does not exist or was removed due to copyright.\nYou can report the video and we will try to fix it if possible.",
   "server_error_error_message": "Service not available. Try later",
   "something_went_wrong_error_message": "Something went wrong while trying to perform the operation. Try later",
   "user_already_reacted_to_post_error_message": "User have already reacted to this post",

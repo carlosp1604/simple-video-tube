@@ -1,0 +1,14 @@
+{
+  "latest_entries_option": "Najnowsze",
+  "less_posts_entries_option": "Mniej postów",
+  "more_posts_entries_option": "Więcej postów",
+  "most_viewed_entries_option": "Najbardziej oglądane",
+  "name_first_entries_option": "Alfabetycznie A-Z",
+  "name_last_entries_option": "Alfabetycznie Z-A",
+  "newest_viewed_posts_option": "Ostatnio oglądane",
+  "newest_saved_posts_option": "Ostatnio zapisane",
+  "oldest_entries_option": "Najstarsze",
+  "oldest_saved_posts_option": "Najstarsze zapisane",
+  "oldest_viewed_posts_option": "Najstarsze oglądane",
+  "popularity_entries_option": "Popularność"
+}

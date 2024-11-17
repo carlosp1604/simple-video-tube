@@ -1,0 +1,8 @@
+{
+  "error_state_button_title": "العودة إلى الصفحة الأولى",
+  "first_page_button_title": "الصفحة الأولى",
+  "last_page_button_title": "الصفحة الأخيرة",
+  "n_page_button_title": "الصفحة {{pageNumber}}",
+  "next_page_button_title": "الصفحة التالية",
+  "previous_page_button_title": "الصفحة السابقة"
+}

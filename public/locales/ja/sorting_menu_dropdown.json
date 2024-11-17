@@ -1,0 +1,14 @@
+{
+  "latest_entries_option": "最新",
+  "less_posts_entries_option": "投稿数が少ない",
+  "more_posts_entries_option": "投稿数が多い",
+  "most_viewed_entries_option": "最も視聴された",
+  "name_first_entries_option": "アルファベット順 A-Z",
+  "name_last_entries_option": "アルファベット順 Z-A",
+  "newest_viewed_posts_option": "最近視聴された",
+  "newest_saved_posts_option": "最近保存された",
+  "oldest_entries_option": "最も古い",
+  "oldest_saved_posts_option": "最も古い保存された",
+  "oldest_viewed_posts_option": "最も古い視聴された",
+  "popularity_entries_option": "人気"
+}

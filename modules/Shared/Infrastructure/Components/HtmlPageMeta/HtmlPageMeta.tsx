@@ -112,11 +112,11 @@ export const HtmlPageMeta: FC<HtmlPageMetaProps> = (props) => {
       { websiteMeta }
       { videoMeta }
       {
-        props.alternateLocaleWithTerritory.map((locale) => (
+        props.alternateLocale.map((alternate) => (
           <meta
             property="og:locale:alternate"
-            content={ locale }
-            key={ locale }
+            content={ alternate.locale }
+            key={ alternate.locale }
           />
         ))
       }

@@ -1,0 +1,8 @@
+{
+  "error_state_button_title": "पहले पृष्ठ पर लौटें",
+  "first_page_button_title": "पहला पृष्ठ",
+  "last_page_button_title": "अंतिम पृष्ठ",
+  "n_page_button_title": "पृष्ठ {{pageNumber}}",
+  "next_page_button_title": "अगला पृष्ठ",
+  "previous_page_button_title": "पिछला पृष्ठ"
+}

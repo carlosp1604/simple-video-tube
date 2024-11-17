@@ -1,0 +1,8 @@
+{
+  "error_state_button_title": "İlk sayfaya dön",
+  "first_page_button_title": "İlk sayfa",
+  "last_page_button_title": "Son sayfa",
+  "n_page_button_title": "Sayfa {{pageNumber}}",
+  "next_page_button_title": "Sonraki sayfa",
+  "previous_page_button_title": "Önceki sayfa"
+}

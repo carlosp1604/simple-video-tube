@@ -8,7 +8,7 @@
   "category_posts_empty_state_title": "Nothing to see here",
   "category_posts_gallery_posts_quantity": "{{postsNumber}} posts",
   "category_posts_gallery_title": "Posts categorized by <0>{{categoryName}}</0>",
-  "categories_gallery_empty_state_subtitle": "It seems that there are no category that match the criteria you have indicated\nTry changing your search parameters and try again",
+  "categories_gallery_empty_state_subtitle": "It seems that there are no categories matching your criteria\nTry changing your search parameters and try again",
   "categories_gallery_empty_state_title": "We haven't found anything",
   "categories_gallery_subtitle": "{{categoriesNumber}} categories",
   "categories_gallery_title": "Categories",

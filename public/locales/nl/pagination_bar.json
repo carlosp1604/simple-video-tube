@@ -1,0 +1,8 @@
+{
+  "error_state_button_title": "Ga terug naar de eerste pagina",
+  "first_page_button_title": "Eerste pagina",
+  "last_page_button_title": "Laatste pagina",
+  "n_page_button_title": "Pagina {{pageNumber}}",
+  "next_page_button_title": "Volgende pagina",
+  "previous_page_button_title": "Vorige pagina"
+}

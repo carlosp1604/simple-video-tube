@@ -1,0 +1,8 @@
+{
+  "error_state_button_title": "Torna alla prima pagina",
+  "first_page_button_title": "Prima pagina",
+  "last_page_button_title": "Ultima pagina",
+  "n_page_button_title": "Pagina {{pageNumber}}",
+  "next_page_button_title": "Pagina successiva",
+  "previous_page_button_title": "Pagina precedente"
+}

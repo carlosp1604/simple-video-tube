@@ -71,6 +71,7 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
         ` }
         target={ menuOption.action.blank ? '_blank' : '_self' }
         data-tooltip-id={ tooltipId }
+        title={ menuOption.title }
       >
         { tooltip }
         { icon }
@@ -89,6 +90,7 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
       ` }
         onClick={ menuOption.onClick }
         data-tooltip-id={ tooltipId }
+        title={ menuOption.title }
       >
         { tooltip }
         { icon }

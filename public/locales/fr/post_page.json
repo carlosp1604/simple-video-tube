@@ -1,0 +1,6 @@
+{
+  "post_description_base_title": "Regardez ou téléchargez la vidéo complète de {{title}} sur The X Hub",
+  "post_description_base_title_with_resolution": "Regardez ou téléchargez la vidéo complète de {{title}} en résolution {{resolution}}p sur The X Hub",
+  "post_description_with_producer_title": "Regardez ou téléchargez la vidéo complète de {{producer}} - {{title}} sur The X Hub",
+  "post_description_with_producer_with_resolution_title": "Regardez ou téléchargez la vidéo complète de {{producer}} - {{title}} en {{resolution}}p sur The X Hub"
+}

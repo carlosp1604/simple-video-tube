@@ -18,7 +18,6 @@ export type CanonicalUrl = string | CanonicalCurrentUrl | null
 export interface HtmlPageMetaContextProps {
   url: string
   locale: string
-  alternateLocaleWithTerritory: string[]
   alternateLocale: AlternateUrl[]
   canonicalUrl: string | null
   robots: HtmlPageMetaRobots

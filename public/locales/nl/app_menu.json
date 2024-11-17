@@ -1,0 +1,15 @@
+{
+  "action_cannot_be_performed_error_message": "Je kunt dit nu niet doen. Wacht tot de huidige actie is voltooid en probeer het opnieuw.",
+  "already_searching_term_error_message": "Je zoekt al naar deze term.",
+  "app_menu_logo_url_alt": "The X Hub",
+  "app_menu_menu_button": "Menu",
+  "app_menu_search_button_title": "Zoek berichten",
+  "app_menu_search_menu_placeholder_title": "Zoek berichten",
+  "app_menu_theme_switcher_title": "Thema",
+  "empty_search_error_message": "Voer een geldige zoekterm in",
+  "language_button_image_alt": "Huidige taal: {{locale}}",
+  "language_button_title": "Wijzig de taal van de app",
+  "random_icon_button_title": "Willekeurig video!",
+  "search_bar_contract_title": "Samenvouwen",
+  "search_bar_expand_title": "Open zoekopdracht"
+}

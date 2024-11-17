@@ -1,15 +1,13 @@
 import styles from './PostCardGallery.module.scss'
 import useTranslation from 'next-translate/useTranslation'
 import { PostCard } from '~/modules/Posts/Infrastructure/Components/PostCard/PostCard'
+import { nativeAdsData } from '~/nativeAdsData'
 import { PostCardSkeleton } from '~/modules/Posts/Infrastructure/Components/PostCard/PostCardSkeleton/PostCardSkeleton'
 import { PostCardAdvertising } from '~/modules/Shared/Infrastructure/Components/Advertising/PostCardAdvertising'
 import { PostCardComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostCardComponentDto'
 import { adsPerPage, defaultPerPage } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
+import { PaginatedPostCardGalleryHelper } from '~/modules/Posts/Infrastructure/Frontend/PaginatedPostCardGalleryHelper'
 import { FC, ReactElement, useEffect, useMemo, useState } from 'react'
-import {
-  nativeAdsData,
-  PaginatedPostCardGalleryHelper
-} from '~/modules/Posts/Infrastructure/Frontend/PaginatedPostCardGalleryHelper'
 
 interface Props {
   posts: PostCardComponentDto[]
@@ -89,8 +87,9 @@ export const PostCardGallery: FC<Partial<Props> & Pick<Props, 'posts'>> = ({
       const firstCardViews = posts[0].views
       const firstCardDate = posts[0].date
 
+      const indexes: Array<number> = []
+
       for (let i = 0; i < placesToAddAds.length; i++) {
-        const indexes: Array<number> = []
         const adIndex = PaginatedPostCardGalleryHelper.genRandomValue(0, nativeAdsData.length - 1, indexes)
 
         indexes.push(adIndex)
@@ -99,7 +98,7 @@ export const PostCardGallery: FC<Partial<Props> & Pick<Props, 'posts'>> = ({
           <PostCardAdvertising
             key={ nativeAdsData[adIndex].offerUrl }
             offerUrl={ nativeAdsData[adIndex].offerUrl }
-            thumb={ nativeAdsData[adIndex].thumb }
+            thumb={ PaginatedPostCardGalleryHelper.getRandomElementFromArray(nativeAdsData[adIndex].thumbs) }
             title={ t(nativeAdsData[adIndex].titleKey) }
             adNetworkName={ nativeAdsData[adIndex].adNetworkName }
             views={ firstCardViews }

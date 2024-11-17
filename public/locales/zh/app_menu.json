@@ -1,0 +1,15 @@
+{
+  "action_cannot_be_performed_error_message": "当前无法执行此操作。请等待当前操作完成后重试。",
+  "already_searching_term_error_message": "您已经在搜索该术语。",
+  "app_menu_logo_url_alt": "The X Hub",
+  "app_menu_menu_button": "菜单",
+  "app_menu_search_button_title": "搜索帖子",
+  "app_menu_search_menu_placeholder_title": "搜索帖子",
+  "app_menu_theme_switcher_title": "主题",
+  "empty_search_error_message": "请输入有效的搜索词。",
+  "language_button_image_alt": "当前语言：{{locale}}",
+  "language_button_title": "更改应用语言",
+  "random_icon_button_title": "随机视频！",
+  "search_bar_contract_title": "收起",
+  "search_bar_expand_title": "展开搜索"
+}
