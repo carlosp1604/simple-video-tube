@@ -1,6 +1,6 @@
 .tooltip {
   &__container {
-    @apply hidden rounded-lg bg-brand-primary-bg
+    @apply rounded-lg bg-brand-primary-bg
     whitespace-nowrap p-2 text-white text-xs z-tooltip;
 
     @screen md {
@@ -9,10 +9,6 @@
 
     @screen lg {
       @apply text-base;
-    }
-
-    &_visible {
-      @apply block;
     }
   }
 }

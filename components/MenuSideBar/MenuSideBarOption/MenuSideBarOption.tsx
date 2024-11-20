@@ -37,7 +37,7 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
       />)
       : null
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [menuOption])
+  }, [menuOption, mounted])
 
   const icon = useMemo(() => {
     return (
@@ -63,6 +63,7 @@ export const MenuSideBarOption: FC<Props> = ({ menuOption, menuOpen }) => {
   if (menuOption.action) {
     return (
       <Link
+        prefetch={ false }
         href={ menuOption.action.url }
         className={ `
           ${styles.menuSidebarOption__menuItemContent}

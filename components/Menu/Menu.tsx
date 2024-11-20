@@ -67,6 +67,7 @@ export const Menu: FC<Props> = ({ open, onClose }) => {
               ref={ slideOutContainerRef }
             >
               <Link
+                prefetch={ false }
                 key={ t('menu_home_button_title') }
                 href={ '/' }
                 title={ t('menu_home_button_title') }
@@ -80,6 +81,7 @@ export const Menu: FC<Props> = ({ open, onClose }) => {
                 { t('menu_home_button_title') }
               </Link>
               <Link
+                prefetch={ false }
                 key={ t('menu_stars_button_title') }
                 href={ '/actors' }
                 title={ t('menu_stars_button_title') }
@@ -93,6 +95,7 @@ export const Menu: FC<Props> = ({ open, onClose }) => {
                 { t('menu_stars_button_title') }
               </Link>
               <Link
+                prefetch={ false }
                 key={ t('menu_producers_button_title') }
                 href={ '/producers' }
                 title={ t('menu_producers_button_title') }
@@ -106,6 +109,7 @@ export const Menu: FC<Props> = ({ open, onClose }) => {
                 { t('menu_producers_button_title') }
               </Link>
               <Link
+                prefetch={ false }
                 key={ t('menu_categories_button_title') }
                 href={ '/categories' }
                 title={ t('menu_categories_button_title') }

@@ -46,7 +46,7 @@ export const AppFooter: FC = () => {
         target={ '_blank' }
         className={ styles.appFooter__socialNetwork }
         onClick={ async () => {
-          onClickSocialNetworkIcon(t('facebook_icon_title'))
+          await onClickSocialNetworkIcon(t('facebook_icon_title'))
         } }
       >
         <FaFacebookF />
@@ -62,7 +62,7 @@ export const AppFooter: FC = () => {
         target={ '_blank' }
         className={ styles.appFooter__socialNetwork }
         onClick={ async () => {
-          onClickSocialNetworkIcon(t('twitter_icon_title'))
+          await onClickSocialNetworkIcon(t('twitter_icon_title'))
         } }
       >
         <FaXTwitter />
@@ -78,7 +78,7 @@ export const AppFooter: FC = () => {
         target={ '_blank' }
         className={ styles.appFooter__socialNetwork }
         onClick={ async () => {
-          onClickSocialNetworkIcon(t('tiktok_icon_title'))
+          await onClickSocialNetworkIcon(t('tiktok_icon_title'))
         } }
       >
         <FaTiktok />
@@ -94,7 +94,7 @@ export const AppFooter: FC = () => {
         target={ '_blank' }
         className={ styles.appFooter__socialNetwork }
         onClick={ async () => {
-          onClickSocialNetworkIcon(t('telegram_icon_title'))
+          await onClickSocialNetworkIcon(t('telegram_icon_title'))
         } }
       >
         <FaTelegramPlane />

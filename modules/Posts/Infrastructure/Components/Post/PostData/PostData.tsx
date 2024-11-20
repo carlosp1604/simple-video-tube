@@ -42,6 +42,7 @@ export const PostData: FC<Props> = ({
       <div className={ styles.postData__dataItemContainer }>
         { t('post_data_producer_title') }
         <Link
+          prefetch={ false }
           className={ styles.postData__listItemContainer }
           href={ `/producers/${producer.slug}` }
           title={ producer.name }
@@ -58,6 +59,7 @@ export const PostData: FC<Props> = ({
       <div className={ styles.postData__dataItemContainer }>
         { t('post_data_actor_title') }
         <Link
+          prefetch={ false }
           className={ styles.postData__listItemContainer }
           href={ `/actors/${actor.slug}` }
           title={ actor.name }
@@ -75,6 +77,7 @@ export const PostData: FC<Props> = ({
         <div className={ styles.postData__dataItemContainer }>
           { t('post_data_collaborator_title') }
           <Link
+            prefetch={ false }
             className={ styles.postData__listItemContainer }
             href={ `/actors/${actor.slug}` }
             title={ actor.name }
@@ -100,6 +103,7 @@ export const PostData: FC<Props> = ({
             { postActors.map((actor) => {
               return (
                 <Link
+                  prefetch={ false }
                   key={ actor.id }
                   className={ styles.postData__listItemContainer }
                   href={ `/actors/${actor.slug}` }
@@ -125,6 +129,7 @@ export const PostData: FC<Props> = ({
             { categories.map((tag) => {
               return (
                 <Link
+                  prefetch={ false }
                   className={ styles.postData__listItemContainer }
                   href={ `/categories/${tag.slug}` }
                   key={ tag.slug }

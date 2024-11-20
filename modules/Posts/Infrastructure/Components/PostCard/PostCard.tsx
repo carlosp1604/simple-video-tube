@@ -103,6 +103,7 @@ export const PostCard: FC<Props> = ({ post }) => {
         ${post.externalLink !== null ? styles.postCard__videoContainer__external : ''}
       ` }>
         <Link
+          prefetch={ false }
           href={ postCardLink }
           className={ styles.postCard__videoLink }
           title={ post.title }
@@ -121,6 +122,7 @@ export const PostCard: FC<Props> = ({ post }) => {
       <div className={ styles.postCard__videoDataContainer }>
         <div className={ styles.postCard__postData }>
           <Link
+            prefetch={ false }
             href={ postCardLink }
             className={ styles.postCard__videoTitleLink }
             title={ post.title }

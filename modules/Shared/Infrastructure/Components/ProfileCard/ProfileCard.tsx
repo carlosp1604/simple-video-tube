@@ -38,6 +38,7 @@ export const ProfileCard: FC<Props> = ({ profile }) => {
     <div className={ styles.profileCard__container }>
       <div className={ styles.profileCard__imageWrapper }>
         <Link
+          prefetch={ false }
           href={ `/${route}/${profile.slug}` }
           title={ profile.name }
         >
@@ -53,6 +54,7 @@ export const ProfileCard: FC<Props> = ({ profile }) => {
       </div>
       <div className={ styles.profileCard__dataContainer }>
         <Link
+          prefetch={ false }
           className={ styles.profileCard__profileName }
           href={ `/${route}/${profile.slug}` }
           title={ profile.name }
