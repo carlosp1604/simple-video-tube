@@ -16,7 +16,9 @@ export default async function handler (
   try {
     const postSlug = await useCase.get()
 
-    return response
+    response.setHeader('Cache-Control', 'no-store')
+
+    response
       .status(200)
       .json({ postSlug })
   } catch (exception: unknown) {

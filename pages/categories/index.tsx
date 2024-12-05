@@ -39,9 +39,7 @@ export const getStaticProps: GetStaticProps<CategoriesPageProps> = async (contex
     ...context,
     locale,
     pathname: 'categories',
-    req: {
-      url,
-    },
+    resolvedUrl: url,
   }, { includeQuery: false, includeLocale: true }, { follow: indexPage, index: indexPage })
 
   const props: CategoriesPageProps = {

@@ -10,7 +10,7 @@ interface Props {
 export const PostCardAdvertisingName: FC<Props> = ({ name }) => {
   return (
     <div className={ styles.postCardProducerActor__producerTitle }>
-      <RiAdvertisementFill className={ styles.postCardProducerActor__producerIcon }/>
+      <RiAdvertisementFill className={ styles.postCardProducerActor__producerIconAd }/>
       { name }
     </div>
   )

@@ -1,13 +1,17 @@
 .modal {
   &__container {
-    @apply w-full rounded-lg bg-base-200 hidden translate-y-full
-    transition-all
+    @apply flex-grow rounded-lg bg-base-200 hidden translate-y-full
+    transition-all m-5 scrollbar-hide overflow-y-scroll
     dark:bg-base-800 dark:transition-colors
     dark:translate-y-full;
+    max-height: calc(100vh - 150px);
 
     @screen tb {
-      @apply max-w-md w-auto
-      opacity-0 scale-50 translate-y-0;
+      @apply max-w-md w-auto opacity-0 scale-50 translate-y-0;
+    }
+
+    @screen md {
+      max-height: calc(100vh - 40px);
     }
 
     &-enter {
@@ -86,27 +90,27 @@
   }
 
   &__modal-backdrop {
-    @apply hidden overflow-y-scroll place-items-end fixed inset-0
-    bg-transparent z-modal-backdrop scrollbar-hide px-5 pb-5;
+    @apply hidden items-end justify-center fixed inset-0
+    bg-transparent z-modal-backdrop;
 
     &-enter {
-      @apply grid;
+      @apply flex;
     }
 
     &-enter-active {
-      @apply grid bg-body-dark/30 transition-colors;
+      @apply flex bg-body-dark/40 backdrop-blur-sm transition-colors;
     }
 
     &-enter-done {
-      @apply grid bg-body-dark/30;
+      @apply flex bg-body-dark/40 backdrop-blur-sm;
     }
 
     &-exit {
-      @apply grid bg-body-dark/30;
+      @apply flex bg-body-dark/30;
     }
 
     &-exit-active {
-      @apply grid bg-transparent transition-colors;
+      @apply flex bg-transparent transition-colors;
     }
 
     &-exit-done {
@@ -114,35 +118,31 @@
     }
 
     @screen tb {
-      @apply p-16 place-items-center;
+      @apply items-center;
 
       &-enter {
-        @apply grid;
+        @apply flex;
       }
 
       &-enter-active {
-        @apply grid bg-body-dark/50 transition-colors;
+        @apply flex bg-body-dark/50 transition-colors;
       }
 
       &-enter-done {
-        @apply grid bg-body-dark/50;
+        @apply flex bg-body-dark/50;
       }
 
       &-exit {
-        @apply grid bg-body-dark/50;
+        @apply flex bg-body-dark/50;
       }
 
       &-exit-active {
-        @apply grid bg-transparent transition-colors;
+        @apply flex bg-transparent transition-colors;
       }
 
       &-exit-done {
         @apply hidden;
       }
-    }
-
-    @screen lg {
-      @apply p-24;
     }
   }
 }

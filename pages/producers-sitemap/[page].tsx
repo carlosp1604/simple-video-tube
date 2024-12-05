@@ -55,6 +55,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     )),
   }))
 
+  context.res.setHeader(
+    'Cache-Control',
+    'no-store'
+  )
+
   return getServerSideSitemapLegacy(context, fields)
 }
 

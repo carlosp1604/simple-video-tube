@@ -1,5 +1,4 @@
-import { ParsedUrlQuery } from 'querystring'
-import { GetServerSidePropsContext, GetStaticPropsContext, PreviewData } from 'next'
+import { GetServerSidePropsContext, GetStaticPropsContext } from 'next'
 import { i18nConfig } from '~/i18n.config'
 import { HtmlPageMetaContextServiceInterface } from './HtmlPageMetaContextServiceInterface'
 import {
@@ -11,12 +10,12 @@ import {
 export interface StaticContext extends GetStaticPropsContext {
   pathname: string
   locale: string
-  req: { url: string }
+  resolvedUrl: string
 }
 
 export class HtmlPageMetaContextService implements HtmlPageMetaContextServiceInterface {
   public constructor (
-    private context: GetServerSidePropsContext<ParsedUrlQuery, PreviewData> | StaticContext,
+    private context: GetServerSidePropsContext | StaticContext,
     private readonly canonicalUrl: CanonicalUrl = null,
     private readonly robots: HtmlPageMetaRobots = { index: true, follow: true }
   ) {
@@ -65,7 +64,7 @@ export class HtmlPageMetaContextService implements HtmlPageMetaContextServiceInt
     const env = process.env
     const baseUrl = env.BASE_URL
 
-    return `${baseUrl}/${locale}${this.context.req.url}`
+    return `${baseUrl}/${locale}${this.context.resolvedUrl}`
   }
 
   private getCanonicalUrl (): string | null {
@@ -87,9 +86,9 @@ export class HtmlPageMetaContextService implements HtmlPageMetaContextServiceInt
     }
 
     if (this.canonicalUrl.includeQuery) {
-      canonicalUrl = `${canonicalUrl}${this.context.req.url}`
+      canonicalUrl = `${canonicalUrl}${this.context.resolvedUrl}`
     } else {
-      canonicalUrl = `${canonicalUrl}${(this.context.req.url ?? '').split('?')[0]}`
+      canonicalUrl = `${canonicalUrl}${(this.context.resolvedUrl ?? '').split('?')[0]}`
     }
 
     return canonicalUrl

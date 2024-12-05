@@ -22,6 +22,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     .filter((index) => { return index !== 0 })
     .map((index) => `${baseUrl}/producers-sitemap-${index}.xml`)
 
+  context.res.setHeader(
+    'Cache-Control',
+    'no-store'
+  )
+
   return getServerSideSitemapIndexLegacy(context, sitemaps)
 }
 

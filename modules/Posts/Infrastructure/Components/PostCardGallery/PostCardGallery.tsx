@@ -8,6 +8,7 @@ import { PostCardComponentDto } from '~/modules/Posts/Infrastructure/Dtos/PostCa
 import { adsPerPage, defaultPerPage } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
 import { PaginatedPostCardGalleryHelper } from '~/modules/Posts/Infrastructure/Frontend/PaginatedPostCardGalleryHelper'
 import { FC, ReactElement, useEffect, useMemo, useState } from 'react'
+import { PostCardGalleryAdsPreset } from '~/modules/Posts/Infrastructure/Frontend/PostCardGalleryAdsPreset'
 
 interface Props {
   posts: PostCardComponentDto[]
@@ -23,32 +24,10 @@ export const PostCardGallery: FC<Partial<Props> & Pick<Props, 'posts'>> = ({
   showAds,
 }) => {
   const { t } = useTranslation('advertising')
-  const [placesToAddAds, setPlacesToAddAds] = useState<Array<number>>([])
+  const [mounted, setMounted] = useState<boolean>(false)
 
   useEffect(() => {
-    if (showAds && postCards.length > 0 && !placesToAddAds.length) {
-      let adsToInsert = adsPerPage
-
-      if (postCards.length < 6) {
-        adsToInsert = 1
-      }
-
-      if (postCards.length >= 6 && postCards.length < 12) {
-        adsToInsert = 2
-      }
-
-      if (postCards.length >= 12 && postCards.length < 24) {
-        adsToInsert = 3
-      }
-
-      const positions: Array<number> = []
-
-      Array.from(Array(adsToInsert).keys()).forEach(() => {
-        positions.push(PaginatedPostCardGalleryHelper.genRandomValue(1, postCards.length - 1, positions))
-      })
-
-      setPlacesToAddAds(positions)
-    }
+    setMounted(true)
   }, [])
 
   const skeletonPosts = useMemo(() => {
@@ -71,7 +50,7 @@ export const PostCardGallery: FC<Partial<Props> & Pick<Props, 'posts'>> = ({
     }
 
     return createSkeletonList(postsSkeletonNumber)
-  }, [posts])
+  }, [posts, loading])
 
   const postCards = useMemo(() => {
     const postCards = posts.map((post) => {
@@ -83,33 +62,46 @@ export const PostCardGallery: FC<Partial<Props> & Pick<Props, 'posts'>> = ({
       )
     })
 
-    if (showAds && postCards.length > 0 && placesToAddAds.length) {
+    if (showAds && postCards.length > 0) {
       const firstCardViews = posts[0].views
       const firstCardDate = posts[0].date
 
       const indexes: Array<number> = []
 
-      for (let i = 0; i < placesToAddAds.length; i++) {
-        const adIndex = PaginatedPostCardGalleryHelper.genRandomValue(0, nativeAdsData.length - 1, indexes)
+      for (let i = 0; i < PostCardGalleryAdsPreset.length; i++) {
+        const adPosition = PostCardGalleryAdsPreset[i]
 
-        indexes.push(adIndex)
+        if (adPosition > (postCards.length + 1)) {
+          break
+        }
 
-        postCards.splice(Math.floor(Math.random() * (postCards.length - 1) + 1), 0, (
-          <PostCardAdvertising
-            key={ nativeAdsData[adIndex].offerUrl }
-            offerUrl={ nativeAdsData[adIndex].offerUrl }
-            thumb={ PaginatedPostCardGalleryHelper.getRandomElementFromArray(nativeAdsData[adIndex].thumbs) }
-            title={ t(nativeAdsData[adIndex].titleKey) }
-            adNetworkName={ nativeAdsData[adIndex].adNetworkName }
-            views={ firstCardViews }
-            date={ firstCardDate }
-          />
-        ))
+        if (mounted) {
+          const adIndex = PaginatedPostCardGalleryHelper.genRandomValue(0, nativeAdsData.length - 1, indexes)
+
+          indexes.push(adIndex)
+
+          postCards.splice(adPosition, 0, (
+            <PostCardAdvertising
+              key={ nativeAdsData[adIndex].offerUrl }
+              offerUrl={ nativeAdsData[adIndex].offerUrl }
+              thumb={ PaginatedPostCardGalleryHelper.getRandomElementFromArray(nativeAdsData[adIndex].thumbs) }
+              title={ t(nativeAdsData[adIndex].titleKey) }
+              adNetworkName={ nativeAdsData[adIndex].adNetworkName }
+              views={ firstCardViews }
+              date={ firstCardDate }
+            />
+          ))
+        } else {
+          postCards.splice(adPosition, 0, (
+            <PostCardSkeleton loading={ true } key={ adPosition }/>
+          ))
+        }
       }
     }
 
     return postCards
-  }, [posts, placesToAddAds])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [posts, mounted])
 
   let content: ReactElement | null = (
     <div className={ `

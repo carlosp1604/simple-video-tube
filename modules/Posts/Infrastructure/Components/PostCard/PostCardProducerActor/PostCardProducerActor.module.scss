@@ -13,4 +13,9 @@
     @apply text-lg text-cyan-500 transition-colors
     dark:text-sky-500 dark:transition-colors;
   }
+
+  &__producer-iconAd {
+    @apply text-lg text-red transition-colors
+    dark:transition-colors;
+  }
 }

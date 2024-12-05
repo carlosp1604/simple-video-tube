@@ -13,10 +13,12 @@ import { AppProgressBar } from '~/components/AppProgressBar/AppProgressBar'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { LanguageMenuProvider } from '~/modules/Shared/Infrastructure/Components/LanguageMenu/LanguageMenuProvider'
 import { ReactElement, useState } from 'react'
-import {
-  TrafficstarsVideoSlider
-} from '~/modules/Shared/Infrastructure/Components/Advertising/Trafficstars/TrafficstarsVideoSlider'
 import { TopMobileMenu } from '~/components/TopMobileMenu/TopMobileMenu'
+import {
+  OctoclickInitializationCode
+} from '~/modules/Shared/Infrastructure/Components/Advertising/OctoClick/OctoclickInitializationCode'
+import { OctoClickInPage } from '~/modules/Shared/Infrastructure/Components/Advertising/OctoClick/OctoClickInPage'
+import { OctoclickPopUnder } from '~/modules/Shared/Infrastructure/Components/Advertising/OctoClick/OctoclickPopUnder'
 
 const AppFooter = dynamic(() => import('~/components/AppFooter/AppFooter')
   .then((module) => module.AppFooter),
@@ -25,9 +27,9 @@ const AppFooter = dynamic(() => import('~/components/AppFooter/AppFooter')
 const AppBanner = dynamic(() => import('~/modules/Shared/Infrastructure/Components/AppBanner/AppBanner')
   .then((module) => module.AppBanner))
 
-const LiveCams = dynamic(() =>
-  import('~/components/LiveCams/LiveCams').then((module) => module.LiveCams),
-{ ssr: false })
+// const LiveCams = dynamic(() =>
+// import('~/components/LiveCams/LiveCams').then((module) => module.LiveCams),
+// { ssr: false })
 
 const Menu = dynamic(() => import('~/components/Menu/Menu')
   .then((module) => module.Menu),
@@ -53,6 +55,7 @@ function App ({
   },
 }: AppProps) {
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
+  const [octoClickCodeInitializated, setOctoclickCodeInitializated] = useState<boolean>(false)
 
   let googleAnalytics: ReactElement | null = null
 
@@ -84,21 +87,21 @@ function App ({
 
               <MenuSideBar menuOpen={ menuOpen }/>
 
-              <TrafficstarsVideoSlider/>
+              <OctoclickInitializationCode onRender={ () => setOctoclickCodeInitializated(true) }/>
+              <OctoClickInPage initCodeRendered={ octoClickCodeInitializated }/>
+              <OctoclickPopUnder initCodeRendered={ octoClickCodeInitializated }/>
 
-                { /** Workaround to work with the sidebar fixed **/ }
-                <div className={
-                  `${styles.app__mainLayout} ${menuOpen ? styles.app__mainLayout__open : ''} ${roboto.variable}` }
-                >
-                  { /** Workaround to show tooltip in the sidebar menú **/ }
-                  <div id="tooltip-container" className={ 'z-tooltip fixed' }/>
-                  <main className={ styles.app__container }>
-                    <TopMobileMenu />
-                    <Component { ...pageProps }/>
-                    { googleAnalytics }
-
-                    <LiveCams/>
-                  </main>
+              { /** Workaround to work with the sidebar fixed **/ }
+              <div className={
+                `${styles.app__mainLayout} ${menuOpen ? styles.app__mainLayout__open : ''} ${roboto.variable}` }
+              >
+                { /** Workaround to show tooltip in the sidebar menú **/ }
+                <div id="tooltip-container" className={ 'z-tooltip fixed' }/>
+                <main className={ styles.app__container }>
+                  <TopMobileMenu />
+                  <Component { ...pageProps }/>
+                  { googleAnalytics }
+                </main>
 
                 <AppBanner/>
 
