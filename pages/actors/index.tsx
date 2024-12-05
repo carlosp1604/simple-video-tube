@@ -6,7 +6,7 @@ import {
   InfrastructureSortingCriteria,
   InfrastructureSortingOptions
 } from '~/modules/Shared/Infrastructure/InfrastructureSorting'
-import { defaultPerPage } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
+import { adsPerPage, defaultPerPage } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
 import { ActorCardDtoTranslator } from '~/modules/Actors/Infrastructure/ActorCardDtoTranslator'
 import { PaginationSortingType } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationSortingType'
 import {
@@ -95,7 +95,7 @@ export const getServerSideProps: GetServerSideProps<ActorsPageProps> = async (co
     }
 
     const actors = await getActors.get({
-      actorsPerPage: defaultPerPage,
+      actorsPerPage: defaultPerPage + adsPerPage,
       page,
       sortCriteria,
       sortOption,

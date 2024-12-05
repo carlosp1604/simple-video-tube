@@ -12,7 +12,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { ProducerCardDto } from '~/modules/Producers/Infrastructure/ProducerCardDto'
 import { CommonGalleryHeader } from '~/modules/Shared/Infrastructure/Components/CommonGalleryHeader/CommonGalleryHeader'
 import { SortingMenuDropdown } from '~/components/SortingMenuDropdown/SortingMenuDropdown'
-import { defaultPerPage, PaginationHelper } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
+import { adsPerPage, defaultPerPage, PaginationHelper } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
 import { PaginationBar } from '~/components/PaginationBar/PaginationBar'
 import {
   ProducersPaginationSortingType
@@ -132,7 +132,7 @@ export const Producers: FC<Props> = ({
 
     const newProducers = await (new ProducersApiService()).getProducers(
       page,
-      defaultPerPage,
+      defaultPerPage + adsPerPage,
       componentOrder.criteria,
       componentOrder.option,
       searchTerm ? [{ type: FilterOptions.PRODUCER_NAME, value: searchTerm }] : []
@@ -181,7 +181,7 @@ export const Producers: FC<Props> = ({
       activeOption={ pagination.order }
       options={ sortingOptions }
       loading={ loading }
-      visible={ producersNumber > defaultPerPage }
+      visible={ producersNumber > (defaultPerPage + adsPerPage) }
       linkMode={ linkMode }
     />
   )
@@ -250,7 +250,7 @@ export const Producers: FC<Props> = ({
       <PaginationBar
         key={ router.asPath }
         pageNumber={ pagination.page }
-        pagesNumber={ PaginationHelper.calculatePagesNumber(producersNumber, defaultPerPage) }
+        pagesNumber={ PaginationHelper.calculatePagesNumber(producersNumber, defaultPerPage + adsPerPage) }
         disabled={ loading }
         linkMode={ linkMode }
         onPageChange={ () => window.scrollTo({ top: 0, behavior: 'smooth' }) }

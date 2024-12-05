@@ -4,7 +4,7 @@ import { ActorsPaginationSortingType } from '~/modules/Actors/Infrastructure/Fro
 import { FC, useEffect, useState } from 'react'
 import { ElementLinkMode } from '~/modules/Shared/Infrastructure/FrontEnd/ElementLinkMode'
 import { ActorsApiService } from '~/modules/Actors/Infrastructure/Frontend/ActorsApiService'
-import { defaultPerPage, PaginationHelper } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
+import { adsPerPage, defaultPerPage, PaginationHelper } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
 import { ActorCardDtoTranslator } from '~/modules/Actors/Infrastructure/ActorCardDtoTranslator'
 import { useRouter } from 'next/router'
 import { useFirstRender } from '~/hooks/FirstRender'
@@ -131,7 +131,7 @@ export const Actors: FC<Props> = ({
 
     const newActors = await (new ActorsApiService()).getActors(
       page,
-      defaultPerPage,
+      defaultPerPage + adsPerPage,
       componentOrder.criteria,
       componentOrder.option,
       searchTerm ? [{ type: FilterOptions.ACTOR_NAME, value: searchTerm }] : []
@@ -179,7 +179,7 @@ export const Actors: FC<Props> = ({
       activeOption={ pagination.order }
       options={ sortingOptions }
       loading={ loading }
-      visible={ actorsNumber > defaultPerPage }
+      visible={ actorsNumber > (defaultPerPage + adsPerPage) }
       linkMode={ linkMode }
     />
   )
@@ -248,7 +248,7 @@ export const Actors: FC<Props> = ({
       <PaginationBar
         key={ router.asPath }
         pageNumber={ pagination.page }
-        pagesNumber={ PaginationHelper.calculatePagesNumber(actorsNumber, defaultPerPage) }
+        pagesNumber={ PaginationHelper.calculatePagesNumber(actorsNumber, defaultPerPage + adsPerPage) }
         disabled={ loading }
         linkMode={ linkMode }
         onPageChange={ () => window.scrollTo({ top: 0, behavior: 'smooth' }) }

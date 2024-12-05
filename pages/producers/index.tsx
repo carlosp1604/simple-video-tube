@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next'
 import { container } from '~/awilix.container'
-import { defaultPerPage } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
+import { adsPerPage, defaultPerPage } from '~/modules/Shared/Infrastructure/FrontEnd/PaginationHelper'
 import { ProducersPage, ProducersPageProps } from '~/components/pages/ProducersPage/ProducersPage'
 import { GetProducers } from '~/modules/Producers/Application/GetProducers/GetProducers'
 import { ProducerCardDtoTranslator } from '~/modules/Producers/Infrastructure/ProducerCardDtoTranslator'
@@ -95,7 +95,7 @@ export const getServerSideProps: GetServerSideProps<ProducersPageProps> = async 
     }
 
     const actors = await getProducers.get({
-      producersPerPage: defaultPerPage,
+      producersPerPage: defaultPerPage + adsPerPage,
       page,
       sortCriteria,
       sortOption,
